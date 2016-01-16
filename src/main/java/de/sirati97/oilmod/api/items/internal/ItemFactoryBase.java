@@ -13,9 +13,9 @@ public abstract class ItemFactoryBase {
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
     public static void setInstance(ItemFactoryBase instance) {
-        if (instance == null) {
+        if (ItemFactoryBase.instance == null) {
             synchronized (MUTEX) {
-                if (instance == null) {
+                if (ItemFactoryBase.instance == null) {
                     ItemFactoryBase.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);

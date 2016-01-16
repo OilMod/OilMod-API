@@ -13,9 +13,9 @@ public abstract class ItemRegisterHelperBase {
     private static final ModItemSetterHelper HELPER = new ModItemSetterHelper();
 
     public static void setInstance(ItemRegisterHelperBase instance) {
-        if (instance == null) {
+        if (ItemRegisterHelperBase.instance == null) {
             synchronized (MUTEX) {
-                if (instance == null) {
+                if (ItemRegisterHelperBase.instance == null) {
                     ItemRegisterHelperBase.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
