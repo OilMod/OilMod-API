@@ -1,8 +1,7 @@
 package de.sirati97.oilmod.api.config;
 
-public interface CompoundList extends CompoundCreator {
-	void add(Compound paramCompound); 
+public interface CompoundList {
+	Compound add();
 	Compound get(int index);
-	
 	
 }

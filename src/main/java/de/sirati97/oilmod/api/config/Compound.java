@@ -25,7 +25,7 @@ public interface Compound extends CompoundCreator {
 	byte[] getByteArray(String paramString);
 	int[] getIntArray(String paramString);
 	Compound getCompound(String paramString);
-	CompoundList getList(String paramString, int paramInt);
+	CompoundList getList(String paramString);
 	boolean getBoolean(String paramString);
 	Object getRaw(String paramString);
 	boolean containsKey(String paramString);
