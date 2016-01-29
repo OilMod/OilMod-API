@@ -29,4 +29,5 @@ public interface Compound extends CompoundCreator {
 	boolean getBoolean(String paramString);
 	Object getRaw(String paramString);
 	boolean containsKey(String paramString);
+	Object nbtClone();
 }
