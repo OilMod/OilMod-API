@@ -71,4 +71,6 @@ public class OilItemStack implements DataParent, InventoryHolder{
     public ModInventoryObject getMainInventory() {
         return mainInventory;
     }
+
+    public void onCloned(OilItemStack original) {}
 }
