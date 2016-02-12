@@ -9,7 +9,7 @@ public enum TypeSaveDataType {
     NBTEnd(0),Byte(1),Short(2),Int(3),Long(4),Float(5),Double(6),ByteArray(7),String(8),NBTList(10),Subsection(10),IntArray(11),Undefined(-1);
 
     private int nbtId;
-    private static TIntObjectHashMap<TypeSaveDataType> nbtMap = new TIntObjectHashMap<>(14);
+    private static TIntObjectHashMap<TypeSaveDataType> nbtMap;
 
     TypeSaveDataType(int nbtId) {
         this.nbtId = nbtId;
@@ -20,7 +20,10 @@ public enum TypeSaveDataType {
         return nbtId;
     }
 
-    private static void register(TypeSaveDataType type) {
+    private static void register( TypeSaveDataType type) {
+        if (nbtMap == null) {
+            nbtMap = new TIntObjectHashMap<>(14);
+        }
         nbtMap.put(type.getNbtId(), type);
     }
 
