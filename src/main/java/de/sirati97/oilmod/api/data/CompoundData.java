@@ -17,7 +17,7 @@ public abstract class CompoundData<T> implements IData<T>, ICompoundData<T>  {
     }
 
     public final void saveTo(Compound parent, String name) {
-        load(parent.createCompound(name));
+        save(parent.createCompound(name));
     }
 
     public final void loadFrom(Compound parent, String name) {

@@ -15,6 +15,7 @@ public interface Compound extends CompoundCreator {
 	void setByteArray(String paramString, byte[] paramArrayOfByte);
 	void setIntArray(String paramString, int[] paramArrayOfInt);
 	void setBoolean(String paramString, boolean paramBoolean);
+	void setNBT(String paramString, Object paramNBTTag);
 	byte getByte(String paramString);
 	short getShort(String paramString);
 	int getInt(String paramString);
@@ -29,5 +30,5 @@ public interface Compound extends CompoundCreator {
 	boolean getBoolean(String paramString);
 	Object getRaw(String paramString);
 	boolean containsKey(String paramString);
-	Object nbtClone();
+	TypeSaveCompound getTypeSaveCompound();
 }
