@@ -2,7 +2,8 @@ package de.sirati97.oilmod.api.items;
 
 import de.sirati97.oilmod.api.data.DataParent;
 import de.sirati97.oilmod.api.data.IData;
-import gnu.trove.set.hash.THashSet;
+import de.sirati97.oilmod.api.inventory.ModInventoryObject;
+import gnu.trove.map.hash.THashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Created by sirati97 on 16.01.2016.
@@ -20,9 +21,9 @@ import java.util.Set;
 public class OilItemStack implements DataParent, InventoryHolder{
     private NMSItemStack nmsItemStack;
     private OilItemBase item;
-    private final Set<IData<?>> registeredIData = new THashSet<>();
-    private final Set<IData<?>> readonly_registeredIData = Collections.unmodifiableSet(registeredIData);
-    private Inventory mainInventory;
+    private final Map<String,IData<?>> registeredIData = new THashMap<>();
+    private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
+    private ModInventoryObject mainInventory;
     public OilItemStack(NMSItemStack nmsItemStack, OilItemBase item) {
         this.nmsItemStack = nmsItemStack;
         this.item = item;
@@ -50,20 +51,24 @@ public class OilItemStack implements DataParent, InventoryHolder{
 
     @Override
     public void registerIData(IData<?> iData) {
-        registeredIData.add(iData);
+        registeredIData.put(iData.getName(),iData);
     }
 
     @Override
-    public Set<IData<?>> getRegisteredIData() {
+    public Map<String, IData<?>> getRegisteredIData() {
         return readonly_registeredIData;
     }
 
     @Override
     public Inventory getInventory() {
-        return mainInventory;
+        return mainInventory==null?null:mainInventory.getBukkitInventory();
     }
 
-    public void setMainInventory(Inventory mainInventory) {
+    public void setMainInventory(ModInventoryObject mainInventory) {
         this.mainInventory = mainInventory;
+    }
+
+    public ModInventoryObject getMainInventory() {
+        return mainInventory;
     }
 }

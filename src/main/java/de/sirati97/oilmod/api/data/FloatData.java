@@ -5,15 +5,11 @@ import de.sirati97.oilmod.api.config.Compound;
 /**
  * Created by sirati97 on 17.01.2016.
  */
-public class FloatData implements IData<Float> {
+public class FloatData extends IPrimaryDataBase<Float> {
     private float data;
-    private String name;
-    private DataParent dataParent;
 
     public FloatData(String name, DataParent dataParent) {
-        this.name = name;
-        this.dataParent = dataParent;
-        dataParent.registerIData(this);
+        super(name, dataParent);
     }
 
     public void saveTo(Compound parent, String name) {
@@ -24,19 +20,11 @@ public class FloatData implements IData<Float> {
         this.data = parent.getFloat(name);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Float getData() {
         return data;
     }
 
     public void setData(Float data) {
         this.data = data;
-    }
-
-    public DataParent getParent() {
-        return dataParent;
     }
 }

@@ -3,7 +3,6 @@ package de.sirati97.oilmod.api.inventory;
 import de.sirati97.oilmod.api.data.CompoundSerializableData;
 import de.sirati97.oilmod.api.data.ObjectFactory;
 import de.sirati97.oilmod.api.items.OilItemStack;
-import org.bukkit.inventory.Inventory;
 
 /**
  * Created by sirati97 on 15.01.2016.
@@ -40,11 +39,12 @@ public abstract class InventoryFactoryBase {
     public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, boolean mainItemstackInventory) {
         ObjectFactory<ModNMSIInventory> factory = getBasicInventoryFactory(itemStack, size, inventoryTitle);
         CompoundSerializableData<ModNMSIInventory> iData = new CompoundSerializableData<>(nbtName, itemStack, factory, false);
-        checkInventoryHolder(itemStack, iData.getData().getBukkitInventory(), mainItemstackInventory);
-        return new ModInventoryObject(iData);
+        ModInventoryObject result = new ModInventoryObject(iData);
+        checkInventoryHolder(itemStack, result, mainItemstackInventory);
+        return result;
     }
 
-    protected void checkInventoryHolder(OilItemStack itemStack, Inventory inventory, boolean mainItemstackInventory) {
+    protected void checkInventoryHolder(OilItemStack itemStack, ModInventoryObject inventory, boolean mainItemstackInventory) {
         if (mainItemstackInventory || itemStack.getInventory() == null) {
             itemStack.setMainInventory(inventory);
         }

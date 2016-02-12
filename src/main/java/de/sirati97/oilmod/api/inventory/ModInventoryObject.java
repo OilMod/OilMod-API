@@ -25,5 +25,9 @@ public class ModInventoryObject {
         return getSerializableDataHandler().getData().getNMSInventory();
     }
 
+    public String getNBTName() {
+        return getSerializableDataHandler().getName();
+    }
+
 
 }

@@ -1,11 +1,11 @@
 package de.sirati97.oilmod.api.data;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Created by sirati97 on 17.01.2016.
  */
 public interface DataParent {
     void registerIData(IData<?> iData);
-    Set<IData<?>> getRegisteredIData();
+    Map<String, IData<?>> getRegisteredIData();
 }

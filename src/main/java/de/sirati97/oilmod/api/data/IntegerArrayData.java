@@ -5,15 +5,11 @@ import de.sirati97.oilmod.api.config.Compound;
 /**
  * Created by sirati97 on 17.01.2016.
  */
-public class IntegerArrayData implements IData<int[]> {
+public class IntegerArrayData extends IClonableDataBase<int[]> {
     private int[] data;
-    private String name;
-    private DataParent dataParent;
 
     public IntegerArrayData(String name, DataParent dataParent) {
-        this.name = name;
-        this.dataParent = dataParent;
-        dataParent.registerIData(this);
+        super(name, dataParent);
     }
 
     public void saveTo(Compound parent, String name) {
@@ -24,10 +20,6 @@ public class IntegerArrayData implements IData<int[]> {
         this.data = parent.getIntArray(name);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public int[] getData() {
         return data;
     }
@@ -36,7 +28,8 @@ public class IntegerArrayData implements IData<int[]> {
         this.data = data;
     }
 
-    public DataParent getParent() {
-        return dataParent;
+    @Override
+    public void onCloned(IData<int[]> original) {
+
     }
 }

@@ -12,4 +12,6 @@ public interface IData<T> {
     T getData();
     void setData(T data);
     DataParent getParent();
+    void onCloned(IData<T> original);
+    void onCloned(Object original);
 }

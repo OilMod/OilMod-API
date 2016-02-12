@@ -41,4 +41,9 @@ public class CompoundSerializableData<T extends CompoundSerializable> extends Co
     public ObjectFactory<T> getFactory() {
         return factory;
     }
+
+    @Override
+    public void onCloned(IData<T> original) {
+        setData((T)original.getData().cloneIfClonable());
+    }
 }
