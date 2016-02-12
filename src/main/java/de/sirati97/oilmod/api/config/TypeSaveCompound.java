@@ -5,4 +5,5 @@ package de.sirati97.oilmod.api.config;
  */
 public interface TypeSaveCompound extends Compound {
     Object nbtClone();
+    TypeSaveDataType getType(String key);
 }
