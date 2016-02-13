@@ -2,7 +2,7 @@ package de.sirati97.oilmod.api.items;
 
 import de.sirati97.oilmod.api.data.DataParent;
 import de.sirati97.oilmod.api.data.IData;
-import de.sirati97.oilmod.api.inventory.ModInventoryObject;
+import de.sirati97.oilmod.api.inventory.ModInventoryObjectBase;
 import gnu.trove.map.hash.THashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -23,7 +23,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
     private OilItemBase item;
     private final Map<String,IData<?>> registeredIData = new THashMap<>();
     private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
-    private ModInventoryObject mainInventory;
+    private ModInventoryObjectBase mainInventory;
     public OilItemStack(NMSItemStack nmsItemStack, OilItemBase item) {
         this.nmsItemStack = nmsItemStack;
         this.item = item;
@@ -64,11 +64,11 @@ public class OilItemStack implements DataParent, InventoryHolder{
         return mainInventory==null?null:mainInventory.getBukkitInventory();
     }
 
-    public void setMainInventory(ModInventoryObject mainInventory) {
+    public void setMainInventory(ModInventoryObjectBase mainInventory) {
         this.mainInventory = mainInventory;
     }
 
-    public ModInventoryObject getMainInventory() {
+    public ModInventoryObjectBase getMainInventory() {
         return mainInventory;
     }
 

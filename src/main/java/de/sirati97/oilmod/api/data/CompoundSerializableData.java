@@ -15,6 +15,7 @@ public class CompoundSerializableData<T extends CompoundSerializable> extends Co
         this.factory = factory;
         this.recreateOnLoad = recreateOnLoad;
         setData(factory.create());
+        onCreated();
     }
 
     @Override
@@ -27,12 +28,15 @@ public class CompoundSerializableData<T extends CompoundSerializable> extends Co
         T result;
         if (recreateOnLoad()) {
             result = factory.create();
+            onCreated();
         } else {
             result = getData();
         }
         result.load(compound);
         return result;
     }
+
+    protected void onCreated(){}
 
     public boolean recreateOnLoad() {
         return recreateOnLoad;
