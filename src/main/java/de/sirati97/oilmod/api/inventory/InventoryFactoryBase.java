@@ -35,9 +35,16 @@ public abstract class InventoryFactoryBase {
         return createBasicInventory(nbtName, itemStack, size, inventoryTitle, false);
     }
 
-
     public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, boolean mainItemstackInventory) {
-        ObjectFactory<ModNMSIInventory> factory = getBasicInventoryFactory(itemStack, size, inventoryTitle);
+        return createBasicInventory(nbtName, itemStack, size, inventoryTitle, null, mainItemstackInventory);
+    }
+
+    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter) {
+        return createBasicInventory(nbtName, itemStack, size, inventoryTitle, filter, false);
+    }
+
+    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
+        ObjectFactory<ModNMSIInventory> factory = getBasicInventoryFactory(itemStack, size, inventoryTitle, filter);
         CompoundSerializableData<ModNMSIInventory> iData = new CompoundSerializableData<>(nbtName, itemStack, factory, false);
         ModInventoryObject result = new ModInventoryObject(iData);
         checkInventoryHolder(itemStack, result, mainItemstackInventory);
@@ -50,5 +57,5 @@ public abstract class InventoryFactoryBase {
         }
     }
 
-    protected abstract ObjectFactory<ModNMSIInventory> getBasicInventoryFactory(OilItemStack itemStack, int size, String inventoryTitle);
+    protected abstract ObjectFactory<ModNMSIInventory> getBasicInventoryFactory(OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter);
 }
