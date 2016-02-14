@@ -1,22 +1,22 @@
 package de.sirati97.oilmod.api.items.internal;
 
-import de.sirati97.oilmod.api.items.ItemRegister;
+import de.sirati97.oilmod.api.items.ItemRegistry;
 import de.sirati97.oilmod.api.items.OilItemBase;
 
 /**
  * Created by sirati97 on 15.01.2016.
  */
-public abstract class ItemRegisterHelperBase {
-    private static ItemRegisterHelperBase instance;
+public abstract class ItemRegistryHelperBase {
+    private static ItemRegistryHelperBase instance;
     private static final Object MUTEX = new Object();
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
     private static final ModItemSetterHelper HELPER = new ModItemSetterHelper();
 
-    public static void setInstance(ItemRegisterHelperBase instance) {
-        if (ItemRegisterHelperBase.instance == null) {
+    public static void setInstance(ItemRegistryHelperBase instance) {
+        if (ItemRegistryHelperBase.instance == null) {
             synchronized (MUTEX) {
-                if (ItemRegisterHelperBase.instance == null) {
-                    ItemRegisterHelperBase.instance = instance;
+                if (ItemRegistryHelperBase.instance == null) {
+                    ItemRegistryHelperBase.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                 }
@@ -37,7 +37,7 @@ public abstract class ItemRegisterHelperBase {
         void callback(boolean success, Object nmsObject);
     }
 
-    public static ItemRegisterHelperBase getInstance() {
+    public static ItemRegistryHelperBase getInstance() {
         return instance;
     }
 
@@ -45,9 +45,9 @@ public abstract class ItemRegisterHelperBase {
         HELPER.set(nmsItem, apiItem);
     }
 
-    public abstract void register(ItemRegister register, OilItemBase apiItem);
+    public abstract void register(ItemRegistry register, OilItemBase apiItem);
 
 
-    public abstract void initRegister(ItemRegister register, InitRegisterCallback callback);
+    public abstract void initRegister(ItemRegistry register, InitRegisterCallback callback);
 
 }

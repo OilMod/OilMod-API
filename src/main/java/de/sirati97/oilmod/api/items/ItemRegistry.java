@@ -1,11 +1,11 @@
 package de.sirati97.oilmod.api.items;
 
-import de.sirati97.oilmod.api.items.internal.ItemRegisterHelperBase;
+import de.sirati97.oilmod.api.items.internal.ItemRegistryHelperBase;
 
 /**
  * Created by sirati97 on 16.01.2016.
  */
-public class ItemRegister {
+public class ItemRegistry {
     private String id;
     private boolean registered;
     private Object nmsObject;
@@ -14,7 +14,7 @@ public class ItemRegister {
      *
      * @param id Short unique id. Do not change it later, otherwise your plugin becomes incompatible with older versions
      */
-    public ItemRegister(String id) {
+    public ItemRegistry(String id) {
         this.id = id;
     }
 
@@ -24,15 +24,15 @@ public class ItemRegister {
 
     public void register(OilItemBase apiItem) {
         if (!registered) throw new IllegalStateException("ItemRegister is not initialized");
-        ItemRegisterHelperBase.getInstance().register(this, apiItem);
+        ItemRegistryHelperBase.getInstance().register(this, apiItem);
     }
 
     public void init() {
         if (registered) throw new IllegalStateException("ItemRegister is already initialized");
-        ItemRegisterHelperBase.getInstance().initRegister(this, new ItemRegisterHelperBase.InitRegisterCallback() {
+        ItemRegistryHelperBase.getInstance().initRegister(this, new ItemRegistryHelperBase.InitRegisterCallback() {
             public void callback(boolean success, Object nmsObject) {
                 registered = success;
-                ItemRegister.this.nmsObject = nmsObject;
+                ItemRegistry.this.nmsObject = nmsObject;
             }
         });
     }
