@@ -6,6 +6,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.ref.WeakReference;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 /**
@@ -24,7 +25,7 @@ public class WeakReferenceTicker implements Runnable{
         this.times = times;
     }
 
-    public void tick(final int times) {
+    public synchronized void tick(final int times) {
         lastTick = System.currentTimeMillis();
         final Set<WeakReference<Tickable>> tickables_toDelete= new THashSet<>();
         tickables.forEach(new Consumer<WeakReference<Tickable>>() {
@@ -33,7 +34,12 @@ public class WeakReferenceTicker implements Runnable{
                 if (tickableWeakReference.get()==null) {
                     tickables_toDelete.add(tickableWeakReference);
                 } else {
-                    tickableWeakReference.get().tick(times);
+                    try {
+                        tickableWeakReference.get().tick(times);
+                    } catch (Throwable t) {
+                        Exception e = new ExecutionException("Error ticking " + tickableWeakReference.get().toString(),t);
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -49,22 +55,23 @@ public class WeakReferenceTicker implements Runnable{
     public void run() {
         tick(times);
         if (tickables.size() >0) {
-            Bukkit.getScheduler().runTaskLater(plugin, this, delay);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, delay);
         }
     }
 
-    public void add(Tickable tickable) {
+    public synchronized void add(Tickable tickable) {
         if (tickable == null || !tickable.isTickable())return;
         for (WeakReference<Tickable> tickableWeakReference:tickables) {
             if (tickableWeakReference.get()==tickable)return;
         }
         tickables.add(new WeakReference<>(tickable));
+
         if (tickables.size() == 1) {
             long timeSinceLastTick = (System.currentTimeMillis()-lastTick)/50;
             if (timeSinceLastTick >= delay) {
-                run();
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, this);
             } else {
-                Bukkit.getScheduler().runTaskLater(plugin, this, timeSinceLastTick);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, timeSinceLastTick);
             }
         }
     }

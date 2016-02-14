@@ -9,13 +9,28 @@ import de.sirati97.oilmod.api.config.CompoundSerializable;
 public class CompoundSerializableData<T extends CompoundSerializable> extends CompoundData<T> {
     private final ObjectFactory<T> factory;
     private final boolean recreateOnLoad;
+    private boolean initialized = false;
 
     public CompoundSerializableData(String name, DataParent dataParent, ObjectFactory<T> factory, boolean recreateOnLoad) {
         super(name, dataParent);
         this.factory = factory;
         this.recreateOnLoad = recreateOnLoad;
-        setData(factory.create());
-        onCreated();
+    }
+
+    @Override
+    public T getData() {
+        if (initialized) {
+            return super.getData();
+        } else {
+            T result = super.getData();
+            if (result==null) {
+                setData(result=factory.create());
+                onCreated();
+            }
+            initialized = true;
+            return result;
+        }
+        
     }
 
     @Override
