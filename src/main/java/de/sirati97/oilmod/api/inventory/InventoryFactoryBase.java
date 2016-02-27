@@ -93,6 +93,33 @@ public abstract class InventoryFactoryBase {
         return result;
     }
 
+
+    //###PortableCraftingInventory###
+
+    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle) {
+        return createPortableCraftingInventory(nbtName, itemStack, width, height, inventoryTitle, false);
+    }
+
+    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle, boolean mainItemstackInventory) {
+        return createPortableCraftingInventory(nbtName, itemStack, width, height, inventoryTitle, null, mainItemstackInventory);
+    }
+
+    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter) {
+        return createPortableCraftingInventory(nbtName, itemStack, width, height, inventoryTitle, filter, false);
+    }
+
+    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
+        ObjectFactory<ModNMSIInventory<ModPortableCraftingInventoryObject>> factory = getPortableCraftingInventoryFactory(itemStack, width, height, inventoryTitle, filter);
+        InventoryData<ModPortableCraftingInventoryObject> iData = new InventoryData<>(nbtName, itemStack, factory, false);
+        ModPortableCraftingInventoryObject result = new ModPortableCraftingInventoryObject(iData);
+        checkInventoryHolder(itemStack, result, mainItemstackInventory);
+        return result;
+    }
+
+
+
+    //ModPortableCraftingInventoryObject
+
     //###Other stuff###
     protected void checkInventoryHolder(OilItemStack itemStack, ModInventoryObjectBase inventory, boolean mainItemstackInventory) {
         if (mainItemstackInventory || itemStack.getInventory() == null) {
@@ -103,5 +130,6 @@ public abstract class InventoryFactoryBase {
     //###Factories###
     protected abstract ObjectFactory<ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter);
     protected abstract ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, ItemFilter filter);
+    protected abstract ObjectFactory<ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter);
 
 }
