@@ -68,7 +68,7 @@
         <snapshotRepository>
             <id>mod-team-nexus</id>
             <name>Mod-Team-Maven-Repository-Snapshots</name>
-            <url>http://nexus.vmt.ovh/content/repositories/snapshots/</url>
+            <url>http://nexus.vmt.ovh/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
