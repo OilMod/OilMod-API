@@ -18,7 +18,7 @@ public class OilItemBase {
     private String name;
     private Object nmsItem;
     private int maxStackSize;
-
+    private OilSpecificItemstackFactory[] creativeItems;
 
     public OilItemBase(Material material, int data, int modData, String name) {
         this(material, data, modData, 64, name);
@@ -50,6 +50,26 @@ public class OilItemBase {
 
     public final ItemStack createItemStack(Player player, int size) {
         return ItemFactoryBase.getInstance().createStack(this, player, size);
+    }
+
+    public final ItemStack createItemStack(int size) {
+        return createItemStack(null, size);
+    }
+
+    public final OilSpecificItemstackFactory[] getCreativeItems() {
+        if (creativeItems == null) {
+            creativeItems = createCreativeItems();
+        }
+        return creativeItems;
+    }
+
+    protected OilSpecificItemstackFactory[] createCreativeItems() {
+        return new OilSpecificItemstackFactory[] {new OilSpecificItemstackFactory() {
+            @Override
+            public ItemStack create() {
+                return createItemStack(1);
+            }
+        }};
     }
 
     void setNmsItem(Object nmsItem) {
