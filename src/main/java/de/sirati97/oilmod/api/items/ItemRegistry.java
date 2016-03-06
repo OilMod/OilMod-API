@@ -16,6 +16,12 @@ public class ItemRegistry {
      */
     public ItemRegistry(String id) {
         this.id = id;
+        ItemRegistryHelperBase.getInstance().initRegister(this, new ItemRegistryHelperBase.InitRegisterCallback() {
+            public void callback(boolean success, Object nmsObject) {
+                registered = success;
+                ItemRegistry.this.nmsObject = nmsObject;
+            }
+        });
     }
 
     public String getId() {
@@ -23,18 +29,8 @@ public class ItemRegistry {
     }
 
     public void register(OilItemBase apiItem) {
-        if (!registered) throw new IllegalStateException("ItemRegister is not initialized");
+        if (!registered) throw new IllegalStateException("ItemRegister was not successfully initialized");
         ItemRegistryHelperBase.getInstance().register(this, apiItem);
-    }
-
-    public void init() {
-        if (registered) throw new IllegalStateException("ItemRegister is already initialized");
-        ItemRegistryHelperBase.getInstance().initRegister(this, new ItemRegistryHelperBase.InitRegisterCallback() {
-            public void callback(boolean success, Object nmsObject) {
-                registered = success;
-                ItemRegistry.this.nmsObject = nmsObject;
-            }
-        });
     }
 
     public Object getNmsObject() {
