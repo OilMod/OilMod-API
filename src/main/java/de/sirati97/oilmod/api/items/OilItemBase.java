@@ -99,4 +99,12 @@ public class OilItemBase {
     public boolean onUseOnBlock(OilItemStack itemStack, Player player, Action action, Block blockClicked, BlockFace blockFace) {
         return false;
     }
+
+    public boolean onLeftClick(OilItemStack itemStack, Player player, Action action) {
+        return false;
+    }
+
+    public boolean onLeftClickOnBlock(OilItemStack itemStack, Player player, Action action, Block blockClicked, BlockFace blockFace) {
+        return false;
+    }
 }

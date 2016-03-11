@@ -37,6 +37,14 @@ public class OilItemStack implements DataParent, InventoryHolder{
         return false;
     }
 
+    public boolean onLeftClick(Player player, Action action) {
+        return false;
+    }
+
+    public boolean onLeftClickOnBlock(Player player, Action action, Block blockClicked, BlockFace blockFace) {
+        return false;
+    }
+
     public NMSItemStack getNmsItemStack() {
         return nmsItemStack;
     }
