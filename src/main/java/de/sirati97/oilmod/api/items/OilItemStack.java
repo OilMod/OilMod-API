@@ -6,6 +6,7 @@ import de.sirati97.oilmod.api.inventory.ModInventoryObjectBase;
 import gnu.trove.map.hash.THashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.Inventory;
@@ -81,4 +82,39 @@ public class OilItemStack implements DataParent, InventoryHolder{
     }
 
     public void onCloned(OilItemStack original) {}
+
+    public String getDisplayName() {
+        return getNmsItemStack().getDisplayName();
+    }
+
+    public void setDisplayName(String name) {
+        getNmsItemStack().setDisplayName(name);
+    }
+
+    public boolean isEnchantable() {
+        return getEnchantSelectModifier() > 0;
+    }
+
+    public int getEnchantmentLevel(Enchantment enchantment) {
+        return getNmsItemStack().asBukkitItemStack().getEnchantmentLevel(enchantment);
+    }
+
+    public boolean hasEnchantment(Enchantment enchantment) {
+        return getEnchantmentLevel(enchantment) > 0;
+    }
+
+    protected boolean canEnchant(Enchantment enchantment) {
+        return getItem().canEnchant(enchantment);
+    }
+
+    public final boolean canEnchantIntern(Enchantment enchantment) {
+        if (isEnchantable() && getEnchantSelectModifier() < 1) {
+            throw new IllegalStateException("EnchantSelectModifier is < 1 while item is enchantable");
+        }
+        return canEnchant(enchantment);
+    }
+
+    public int getEnchantSelectModifier() {
+        return getItem().getEnchantSelectModifier();
+    }
 }

@@ -4,6 +4,7 @@ import de.sirati97.oilmod.api.items.internal.ItemFactoryBase;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -105,6 +106,18 @@ public class OilItemBase {
     }
 
     public boolean onLeftClickOnBlock(OilItemStack itemStack, Player player, Action action, Block blockClicked, BlockFace blockFace) {
+        return false;
+    }
+
+    public boolean isEnchantable() {
+        return getEnchantSelectModifier() > 0;
+    }
+
+    public int getEnchantSelectModifier() {
+        return 0;
+    }
+
+    public boolean canEnchant(Enchantment enchantment) {
         return false;
     }
 }
