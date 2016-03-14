@@ -14,6 +14,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,9 +26,24 @@ public class OilItemStack implements DataParent, InventoryHolder{
     private final Map<String,IData<?>> registeredIData = new THashMap<>();
     private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
     private ModInventoryObjectBase mainInventory;
+    private ItemDescription itemDescription;
+    private boolean initiated = false;
+
     public OilItemStack(NMSItemStack nmsItemStack, OilItemBase item) {
         this.nmsItemStack = nmsItemStack;
         this.item = item;
+    }
+
+    public void init() {
+        if (initiated) {
+            throw new IllegalStateException(getClass().getSimpleName() + " is has already been initiated");
+        }
+        initiated = true;
+        List<String> description = createDescription();
+        if (description != null) {
+            itemDescription = new ItemDescription(createDescription(), nmsItemStack);
+            itemDescription.init();
+        }
     }
 
     public boolean onUse(Player player, Action action) {
@@ -116,5 +132,17 @@ public class OilItemStack implements DataParent, InventoryHolder{
 
     public int getEnchantSelectModifier() {
         return getItem().getEnchantSelectModifier();
+    }
+
+    protected List<String> createDescription() {
+        return getItem().getStandardDescription();
+    }
+
+    public ItemDescription getItemDescription() {
+        return itemDescription;
+    }
+
+    public boolean hasItemDescription() {
+        return itemDescription!=null;
     }
 }

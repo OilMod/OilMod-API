@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 /**
  * Created by sirati97 on 15.01.2016.
  */
@@ -89,8 +91,13 @@ public class OilItemBase {
         return modData;
     }
 
-    public OilItemStack createOilStack(NMSItemStack nmsItemStack) {
+    protected OilItemStack createOilItemStackInstance(NMSItemStack nmsItemStack) {
         return new OilItemStack(nmsItemStack, this);
+    }
+
+    public final OilItemStack createOilStack(NMSItemStack nmsItemStack) {
+        OilItemStack result = createOilItemStackInstance(nmsItemStack);
+        return result;
     }
 
     public boolean onUse(OilItemStack itemStack, Player player, Action action) {
@@ -119,5 +126,9 @@ public class OilItemBase {
 
     public boolean canEnchant(Enchantment enchantment) {
         return false;
+    }
+
+    public List<String> getStandardDescription() {
+        return null;
     }
 }
