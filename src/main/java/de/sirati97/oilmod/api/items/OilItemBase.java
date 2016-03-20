@@ -131,4 +131,20 @@ public class OilItemBase {
     public List<String> getStandardDescription() {
         return null;
     }
+
+    public boolean canRepairAnvil(ItemStack itemStack) {
+        return false;
+    }
+
+    public int repairAnvil(ItemStack itemStack) {
+        return 0;
+    }
+
+    public boolean canCombineAnvil(ItemStack itemStack) {
+        return false;
+    }
+
+    public void combineAnvil(ItemStack itemStack) {
+
+    }
 }

@@ -99,7 +99,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
 
     public void onCloned(OilItemStack original) {}
 
-    public String getDisplayName() {
+    public String getCurrentDisplayName() {
         return getNmsItemStack().getDisplayName();
     }
 
@@ -144,5 +144,25 @@ public class OilItemStack implements DataParent, InventoryHolder{
 
     public boolean hasItemDescription() {
         return itemDescription!=null;
+    }
+
+    public String createDisplayName() {
+        return getItem().getName();
+    }
+
+    public boolean canRepairAnvil(ItemStack itemStack) {
+        return getItem().canRepairAnvil(itemStack);
+    }
+
+    public int repairAnvil(ItemStack itemStack) {
+        return getItem().repairAnvil(itemStack);
+    }
+
+    public boolean canCombineAnvil(ItemStack itemStack) {
+        return getItem().canCombineAnvil(itemStack);
+    }
+
+    public void combineAnvil(ItemStack itemStack) {
+        getItem().combineAnvil(itemStack);
     }
 }

@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 import java.lang.ref.WeakReference;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 /**
  * Created by sirati97 on 14.02.2016.
@@ -28,27 +27,21 @@ public class WeakReferenceTicker implements Runnable{
     public synchronized void tick(final int times) {
         lastTick = System.currentTimeMillis();
         final Set<WeakReference<Tickable>> tickables_toDelete= new THashSet<>();
-        tickables.forEach(new Consumer<WeakReference<Tickable>>() {
-            @Override
-            public void accept(WeakReference<Tickable> tickableWeakReference) {
-                if (tickableWeakReference.get()==null) {
-                    tickables_toDelete.add(tickableWeakReference);
-                } else {
-                    try {
-                        tickableWeakReference.get().tick(times);
-                    } catch (Throwable t) {
-                        Exception e = new ExecutionException("Error ticking " + tickableWeakReference.get().toString(),t);
-                        e.printStackTrace();
-                    }
+        for (WeakReference<Tickable> tickableWeakReference:tickables) {
+            if (tickableWeakReference.get()==null) {
+                tickables_toDelete.add(tickableWeakReference);
+            } else {
+                try {
+                    tickableWeakReference.get().tick(times);
+                } catch (Throwable t) {
+                    Exception e = new ExecutionException("Error ticking " + tickableWeakReference.get().toString(),t);
+                    e.printStackTrace();
                 }
             }
-        });
-        tickables_toDelete.forEach(new Consumer<WeakReference<Tickable>>() {
-            @Override
-            public void accept(WeakReference<Tickable> tickableWeakReference) {
-                tickables.remove(tickableWeakReference);
-            }
-        });
+        }
+        for (WeakReference<Tickable> tickableWeakReference:tickables_toDelete) {
+            tickables.remove(tickableWeakReference);
+        }
     }
 
     @Override

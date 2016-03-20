@@ -22,20 +22,35 @@ public class ItemDescription {
 
     public void init() {
         if (!itemStack.hasLore() && lines.size() > 0) {
-//            System.out.println("setted lore first time for " + itemStack.toString() + " " + lines.get(0));
-//            Compound tag = itemStack.getTagCompound();
-//            System.out.println(tag != null);
-//            if (tag != null) {
-//                boolean hasDisplay = tag.containsKey("display");
-//                System.out.println(hasDisplay);
-//                if (hasDisplay) {
-//                    Compound display = tag.getCompound("display");
-//                    boolean hasLore = tag.containsKey("Lore");
-//                    System.out.println(hasLore);
-//                }
-//            }
-
+            /*System.out.println("setted lore first time for " + itemStack.toString() + " " + lines.get(0) + " " + Thread.currentThread().getName());
+            Compound tag = itemStack.getTagCompound();
+            System.out.println(tag != null);
+            if (tag != null) {
+                boolean hasDisplay = tag.containsKey("display");
+                System.out.println(hasDisplay);
+                if (hasDisplay) {
+                    Compound display = tag.getCompound("display");
+                    boolean hasLore = tag.containsKey("Lore");
+                    System.out.println(hasLore);
+                    if (hasLore) {
+                        System.out.println(tag.getList("Lore").get(1));
+                    }
+                }
+            }
+            if (Thread.currentThread().getName().equals("Server thread")) {
+                printTrace("Wrong item initialisation");
+            }*/
             itemStack.updateItemDescription(0, linesReadOnly);
+        }
+    }
+
+    public static void printTrace(String text) {
+        System.out.println("Printing stack trace for " + text + ":");
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        for (int i = 2; i < elements.length; i++) {
+            StackTraceElement s = elements[i];
+            System.out.println("\tat " + s.getClassName() + "." + s.getMethodName()
+                    + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
         }
     }
 
