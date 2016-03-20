@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by sirati97 on 15.01.2016.
  */
-public class OilItemBase {
+public class OilItemBase<T extends OilItemStack> {
     private Material material;
     private int data;
     private int modData;
@@ -91,13 +91,13 @@ public class OilItemBase {
         return modData;
     }
 
-    protected OilItemStack createOilItemStackInstance(NMSItemStack nmsItemStack) {
-        return new OilItemStack(nmsItemStack, this);
+    protected T createOilItemStackInstance(NMSItemStack nmsItemStack) {
+        return (T) new OilItemStack(nmsItemStack, this);
     }
 
-    public final OilItemStack createOilStack(NMSItemStack nmsItemStack) {
+    public final T createOilStack(NMSItemStack nmsItemStack) {
         OilItemStack result = createOilItemStackInstance(nmsItemStack);
-        return result;
+        return (T) result;
     }
 
     public boolean onUse(OilItemStack itemStack, Player player, Action action) {
@@ -132,19 +132,19 @@ public class OilItemBase {
         return null;
     }
 
-    public boolean canRepairAnvil(ItemStack itemStack) {
+    public boolean canRepairAnvil(T oilstack, ItemStack itemStack) {
         return false;
     }
 
-    public int repairAnvil(ItemStack itemStack) {
+    public int repairAnvil(T oilstack, ItemStack itemStack) {
         return 0;
     }
 
-    public boolean canCombineAnvil(ItemStack itemStack) {
+    public boolean canCombineAnvil(T oilstack, ItemStack itemStack) {
         return false;
     }
 
-    public void combineAnvil(ItemStack itemStack) {
+    public void combineAnvil(T oilstack, ItemStack itemStack) {
 
     }
 }

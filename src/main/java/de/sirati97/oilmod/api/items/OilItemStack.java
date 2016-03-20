@@ -151,18 +151,18 @@ public class OilItemStack implements DataParent, InventoryHolder{
     }
 
     public boolean canRepairAnvil(ItemStack itemStack) {
-        return getItem().canRepairAnvil(itemStack);
+        return getItem().canRepairAnvil(this, itemStack);
     }
 
     public int repairAnvil(ItemStack itemStack) {
-        return getItem().repairAnvil(itemStack);
+        return getItem().repairAnvil(this, itemStack);
     }
 
     public boolean canCombineAnvil(ItemStack itemStack) {
-        return getItem().canCombineAnvil(itemStack);
+        return getItem().canCombineAnvil(this, itemStack);
     }
 
     public void combineAnvil(ItemStack itemStack) {
-        getItem().combineAnvil(itemStack);
+        getItem().combineAnvil(this, itemStack);
     }
 }
