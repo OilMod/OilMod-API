@@ -14,7 +14,7 @@ public class VanillaMaterialOilCraftingComparator extends VanillaOilCraftingComp
     }
 
     @Override
-    public boolean match(ItemStack itemStack) {
-        return super.match(itemStack) && itemStack.getType().equals(material);
+    public boolean match(ItemStack itemStack, ComparatorData comparatorData) {
+        return super.match(itemStack, comparatorData) && itemStack.getType().equals(material);
     }
 }

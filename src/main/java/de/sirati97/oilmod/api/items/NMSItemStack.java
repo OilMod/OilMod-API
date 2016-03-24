@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface NMSItemStack {
     String getDisplayName();
-    void setDisplayName(String name);
+    void setDisplayName(String name, boolean renamed);
     Compound getTagCompound();
     ItemStack asBukkitItemStack();
     void updateItemDescription(int oldSize, List<String> description);

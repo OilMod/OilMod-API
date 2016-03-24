@@ -15,7 +15,7 @@ public class ModItemOilCraftingComparator implements OilCraftingComparator {
     }
 
     @Override
-    public boolean match(ItemStack itemStack) {
+    public boolean match(ItemStack itemStack, ComparatorData comparatorData) {
         return itemStack instanceof OilBukkitItemStack && ((OilBukkitItemStack) itemStack).getOilItemStack().getItem().getClass().equals(itemClass);
     }
 }

@@ -31,6 +31,6 @@ public abstract class ItemCraftingFactoryBase {
     }
 
     public abstract OilCraftingRecipe createShapedRecipe(int width, int height, OilCraftingResult result, OilCraftingComparator... ingredients);
-
+    public abstract OilCraftingRecipe createShapelessRecipe(OilCraftingResult result, OilCraftingComparator... ingredients);
     public abstract void registerGlobal(OilCraftingRecipe recipe);
 }

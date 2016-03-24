@@ -105,7 +105,10 @@ public class OilItemStack implements DataParent, InventoryHolder{
     }
 
     public void setDisplayName(String name) {
-        getNmsItemStack().setDisplayName(name);
+        setDisplayName(name, false);
+    }
+    public void setDisplayName(String name, boolean renamed) {
+        getNmsItemStack().setDisplayName(name, renamed);
     }
 
     public boolean isEnchantable() {

@@ -13,12 +13,28 @@ import org.bukkit.inventory.ItemStack;
 public final class ItemCraftingFactory {
     private ItemCraftingFactory(){}
 
-    public static OilCraftingRecipe createShapedRecipe(int width, int height, OilSpecificItemstackFactory result, Object... ingredients) {
-        return createShapedRecipe(width, height, new OilCraftingResultImpl(result), ingredients);
+    public static OilCraftingRecipe createShapedRecipe(int width, int height, OilSpecificItemstackFactory result, int amount, Object... ingredients) {
+        return createShapedRecipe(width, height, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
+    }
+
+    public static OilCraftingRecipe createShapedRecipe(int width, int height, ItemStack vanillaResult, Object... ingredients) {
+        return createShapedRecipe(width, height, new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
     public static OilCraftingRecipe createShapedRecipe(int width, int height, OilCraftingResult result, Object... ingredients) {
         return ItemCraftingFactoryBase.getInstance().createShapedRecipe(width, height, result, toOilItemComparators(ingredients));
+    }
+
+    public static OilCraftingRecipe createShapelessRecipe(OilSpecificItemstackFactory result, int amount, Object... ingredients) {
+        return createShapelessRecipe(new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
+    }
+
+    public static OilCraftingRecipe createShapelessRecipe(ItemStack vanillaResult, Object... ingredients) {
+        return createShapelessRecipe(new VanillaOilCraftingResult(vanillaResult), ingredients);
+    }
+
+    public static OilCraftingRecipe createShapelessRecipe(OilCraftingResult result, Object... ingredients) {
+        return ItemCraftingFactoryBase.getInstance().createShapelessRecipe(result, toOilItemComparators(ingredients));
     }
 
     public static void registerGlobal(OilCraftingRecipe recipe) {

@@ -13,7 +13,7 @@ public class VanillaItemStackOilCraftingComparator extends VanillaOilCraftingCom
     }
 
     @Override
-    public boolean match(ItemStack itemStack2) {
-        return super.match(itemStack) && itemStack.isSimilar(itemStack2);
+    public boolean match(ItemStack itemStack2, ComparatorData comparatorData) {
+        return super.match(itemStack, comparatorData) && itemStack.isSimilar(itemStack2);
     }
 }
