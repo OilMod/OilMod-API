@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -132,19 +133,21 @@ public class OilItemBase<T extends OilItemStack> {
         return null;
     }
 
-    public boolean canRepairAnvil(T oilstack, ItemStack itemStack) {
+    public boolean canRepairAnvil(T oilstack, ItemStack itemStack, HumanEntity human) {
         return false;
     }
 
-    public int repairAnvil(T oilstack, ItemStack itemStack) {
+    public int prepareRepairAnvil(T oilstack, ItemStack itemStack, HumanEntity human) {
         return 0;
     }
 
-    public boolean canCombineAnvil(T oilstack, ItemStack itemStack) {
+    public void repairAnvil(T oilstack, ItemStack itemStack, HumanEntity human) {}
+
+    public boolean canCombineAnvil(T oilstack, ItemStack itemStack, HumanEntity human) {
         return false;
     }
 
-    public void combineAnvil(T oilstack, ItemStack itemStack) {
+    public void prepareCombineAnvil(T oilstack, ItemStack itemStack, HumanEntity human) {}
 
-    }
+    public void combineAnvil(T oilstack, ItemStack itemStack, HumanEntity human) {}
 }

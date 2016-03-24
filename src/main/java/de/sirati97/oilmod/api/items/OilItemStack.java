@@ -7,6 +7,7 @@ import gnu.trove.map.hash.THashMap;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.Inventory;
@@ -150,19 +151,27 @@ public class OilItemStack implements DataParent, InventoryHolder{
         return getItem().getName();
     }
 
-    public boolean canRepairAnvil(ItemStack itemStack) {
-        return getItem().canRepairAnvil(this, itemStack);
+    public boolean canRepairAnvil(ItemStack itemStack, HumanEntity human) {
+        return getItem().canRepairAnvil(this, itemStack, human);
     }
 
-    public int repairAnvil(ItemStack itemStack) {
-        return getItem().repairAnvil(this, itemStack);
+    public int prepareRepairAnvil(ItemStack itemStack, HumanEntity human) {
+        return getItem().prepareRepairAnvil(this, itemStack, human);
     }
 
-    public boolean canCombineAnvil(ItemStack itemStack) {
-        return getItem().canCombineAnvil(this, itemStack);
+    public void repairAnvil(ItemStack itemStack, HumanEntity human) {
+        getItem().repairAnvil(this, itemStack, human);
     }
 
-    public void combineAnvil(ItemStack itemStack) {
-        getItem().combineAnvil(this, itemStack);
+    public boolean canCombineAnvil(ItemStack itemStack, HumanEntity human) {
+        return getItem().canCombineAnvil(this, itemStack, human);
+    }
+
+    public void prepareCombineAnvil(ItemStack itemStack, HumanEntity human) {
+        getItem().prepareCombineAnvil(this, itemStack, human);
+    }
+
+    public void combineAnvil(ItemStack itemStack, HumanEntity human) {
+        getItem().combineAnvil(this, itemStack, human);
     }
 }
