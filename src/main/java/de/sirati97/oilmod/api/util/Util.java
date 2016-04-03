@@ -1,7 +1,10 @@
 package de.sirati97.oilmod.api.util;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
 
 /**
  * Created by sirati97 on 12.03.2016.
@@ -33,6 +36,7 @@ public class Util {
         protected abstract ItemStack[] getDrops(Block block);
         protected abstract ItemStack[] getDropsSilktouch(Block block);
         protected abstract ItemStack[] getDropsFortune(Block block, int level);
+        protected abstract ItemStack getRandomValidVariation(Material mat, Random rnd);
     }
 
     public static ItemStack[] getDrops(Block block){
@@ -45,6 +49,9 @@ public class Util {
 
     public static ItemStack[] getDropsFortune(Block block, int level){
         return UtilImplBase.getInstance().getDropsFortune(block, level);
+    }
+    public static  ItemStack getRandomValidVariation(Material mat, Random rnd) {
+        return UtilImplBase.getInstance().getRandomValidVariation(mat, rnd);
     }
 
 }

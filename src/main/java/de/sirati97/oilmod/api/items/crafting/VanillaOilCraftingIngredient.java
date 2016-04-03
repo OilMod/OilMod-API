@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by sirati97 on 24.03.2016.
  */
-public abstract class VanillaOilCraftingComparator implements OilCraftingComparator {
+public abstract class VanillaOilCraftingIngredient extends NormalOilCraftingIngredientBase {
 
     @Override
     public boolean match(ItemStack itemStack2, ComparatorData comparatorData) {

@@ -23,6 +23,7 @@ public class OilItemBase<T extends OilItemStack> {
     private Object nmsItem;
     private int maxStackSize;
     private OilSpecificItemstackFactory[] creativeItems;
+    private ItemStack[] naturalExamples;
 
     public OilItemBase(Material material, int data, int modData, String name) {
         this(material, data, modData, 64, name);
@@ -74,6 +75,16 @@ public class OilItemBase<T extends OilItemStack> {
                 return createItemStack(1);
             }
         }};
+    }
+    public final ItemStack[] getNaturalExamples() {
+        if (naturalExamples == null) {
+            naturalExamples = createNaturalExamples();
+        }
+        return naturalExamples;
+    }
+
+    protected ItemStack[] createNaturalExamples() {
+        return new ItemStack[]{createItemStack(1)};
     }
 
     void setNmsItem(Object nmsItem) {

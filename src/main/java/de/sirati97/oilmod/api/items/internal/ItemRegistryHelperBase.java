@@ -45,7 +45,7 @@ public abstract class ItemRegistryHelperBase {
         HELPER.set(nmsItem, apiItem);
     }
 
-    public abstract void register(ItemRegistry register, OilItemBase apiItem);
+    public abstract <T extends OilItemBase> void register(ItemRegistry register, T apiItem);
 
 
     public abstract void initRegister(ItemRegistry register, InitRegisterCallback callback);

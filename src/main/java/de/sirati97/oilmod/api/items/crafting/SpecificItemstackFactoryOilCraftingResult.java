@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class SpecificItemstackFactoryOilCraftingResult implements OilCraftingResult {
     private final OilSpecificItemstackFactory itemstackFactory;
     private final int amount;
+    private ItemStack result;
 
     public SpecificItemstackFactoryOilCraftingResult(OilSpecificItemstackFactory itemstackFactory, int amount) {
         this.itemstackFactory = itemstackFactory;
@@ -16,9 +17,20 @@ public class SpecificItemstackFactoryOilCraftingResult implements OilCraftingRes
     }
 
     @Override
-    public ItemStack getResult(ItemStack[] matrix, boolean shaped, int width, int height) {
-        ItemStack result = itemstackFactory.create();
-        result.setAmount(amount);
+    public ItemStack preCraftResult(ItemStack[] matrix, boolean shaped, int width, int height) {
+        return getResult();
+    }
+
+    @Override
+    public void craftResult(ItemStack result, ItemStack[] matrix, boolean shaped, int width, int height) {
+        this.result = null;
+    }
+
+    public ItemStack getResult() {
+        if (result == null) {
+            result = itemstackFactory.create();
+            result.setAmount(amount);
+        }
         return result;
     }
 }

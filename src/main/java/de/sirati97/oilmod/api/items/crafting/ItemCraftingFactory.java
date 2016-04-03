@@ -41,8 +41,8 @@ public final class ItemCraftingFactory {
         ItemCraftingFactoryBase.getInstance().registerGlobal(recipe);
     }
 
-    private static OilCraftingComparator[] toOilItemComparators(Object[] ingredients) {
-        OilCraftingComparator[] result = new OilCraftingComparator[ingredients.length];
+    private static OilCraftingIngredient[] toOilItemComparators(Object[] ingredients) {
+        OilCraftingIngredient[] result = new OilCraftingIngredient[ingredients.length];
         for (int i=0;i<ingredients.length;i++) {
             result[i] = toOilItemComparator(ingredients[i]);
         }
@@ -50,18 +50,18 @@ public final class ItemCraftingFactory {
     }
 
 
-    private static OilCraftingComparator toOilItemComparator(Object ingredient) {
+    private static OilCraftingIngredient toOilItemComparator(Object ingredient) {
         if (ingredient == null) {
             return null;
-        } else if (ingredient instanceof OilCraftingComparator) {
-            return (OilCraftingComparator) ingredient;
+        } else if (ingredient instanceof OilCraftingIngredient) {
+            return (OilCraftingIngredient) ingredient;
         } else if (ingredient instanceof Material) {
-            return new VanillaMaterialOilCraftingComparator((Material) ingredient);
+            return new VanillaMaterialOilCraftingIngredient((Material) ingredient);
         } else if (ingredient instanceof ItemStack && !(ingredient instanceof OilBukkitItemStack)) {
-            return new VanillaItemStackOilCraftingComparator((ItemStack) ingredient);
+            return new VanillaItemStackOilCraftingIngredient((ItemStack) ingredient);
         } else if (ingredient instanceof Class) {
             try {
-                return new ModItemOilCraftingComparator((Class<? extends OilItemBase>) ingredient);
+                return new ModItemOilCraftingIngredient((Class<? extends OilItemBase>) ingredient);
             } catch (ClassCastException ex) {}
         }
         throw new IllegalStateException("Invalid ingredient: unknown type " + ingredient.getClass().getName());

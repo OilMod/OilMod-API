@@ -28,7 +28,7 @@ public class ItemRegistry {
         return id;
     }
 
-    public void register(OilItemBase apiItem) {
+    public <T extends OilItemBase> void register(T apiItem) {
         if (!registered) {
             throw new IllegalStateException("ItemRegister was not successfully initialized");
         } else if (apiItem.isEnchantable() && apiItem.getEnchantSelectModifier() < 1) {
