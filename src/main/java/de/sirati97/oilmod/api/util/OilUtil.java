@@ -5,13 +5,15 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by sirati97 on 12.03.2016.
  */
-public class Util {
+public class OilUtil {
     public static abstract class UtilImplBase {
         private static UtilImplBase instance;
         private static final Object MUTEX = new Object();
@@ -67,4 +69,34 @@ public class Util {
         return UtilImplBase.getInstance().canPlace(thePlayer, placedBlock, replacedBlockState, placedAgainst, itemInHand);
     }
 
+    public static ItemStack createItemStackNamed(Material material, String name) {
+        return createItemStackNamed(material, 1, name);
+    }
+
+    public static ItemStack createItemStackNamed(Material material, String name, List<String> lore) {
+        return createItemStackNamed(material, 1, name, lore);
+    }
+
+    public static ItemStack createItemStackNamed(Material material, int amount, String name) {
+        return createItemStackNamed(material, amount, (short) 0, name);
+    }
+
+    public static ItemStack createItemStackNamed(Material material, int amount, String name, List<String> lore) {
+        return createItemStackNamed(material, amount, (short) 0, name, lore);
+    }
+
+    public static ItemStack createItemStackNamed(Material material, int amount, short data, String name) {
+        return createItemStackNamed(material, amount, data, name, null);
+    }
+
+    public static ItemStack createItemStackNamed(Material material, int amount, short data, String name, List<String> lore) {
+        ItemStack result = new ItemStack(material, amount, data);
+        ItemMeta meta = result.getItemMeta();
+        meta.setDisplayName(name.startsWith("§")?name:("§f"+name));
+        if (lore != null && lore.size() > 0) {
+            meta.setLore(lore);
+        }
+        result.setItemMeta(meta);
+        return result;
+    }
 }

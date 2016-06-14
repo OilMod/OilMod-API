@@ -1,6 +1,6 @@
 package de.sirati97.oilmod.api.items.crafting;
 
-import de.sirati97.oilmod.api.util.Util;
+import de.sirati97.oilmod.api.util.OilUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,6 +23,6 @@ public class VanillaMaterialOilCraftingIngredient extends VanillaOilCraftingIngr
 
     @Override
     public ItemStack getRandomExample(Random rnd) {
-        return Util.getRandomValidVariation(material, rnd);
+        return OilUtil.getRandomValidVariation(material, rnd);
     }
 }

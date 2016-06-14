@@ -27,7 +27,7 @@ public class UIFormlessFixedSizePanel extends UIFormlessPanel implements NMSBase
     }
 
 
-    protected void setUIElement(int index, UIElement element) {
+    public void setUIElement(int index, UIElement element) {
         nmsPanel.setElement(index, element);
     }
 }

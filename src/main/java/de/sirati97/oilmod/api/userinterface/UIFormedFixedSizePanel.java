@@ -25,13 +25,12 @@ public class UIFormedFixedSizePanel extends UIFormedPanel implements NMSBasedUIP
     public NMSPanel getNmsPanel() {
         return nmsPanel;
     }
-
-
-    protected void setUIElement(int index, UIElement element) {
+    
+    public void setUIElement(int index, UIElement element) {
         nmsPanel.setElement(index, element);
     }
 
-    protected void setUIElement(int left, int top, UIElement element) {
+    public void setUIElement(int left, int top, UIElement element) {
         setUIElement(toIndex(left, top), element);
     }
 }
