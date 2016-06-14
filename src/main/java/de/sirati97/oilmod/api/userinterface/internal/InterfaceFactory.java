@@ -8,6 +8,6 @@ import org.bukkit.inventory.ItemStack;
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
 public interface InterfaceFactory {
-    Interface createChestInterace(Player player, UserInterfaceBuilder builder, String title, int rows);
-    Interface createChestInterace(Player player, UserInterfaceBuilder builder, String title, int rows, ItemStack background);
+    Interface createChestInterface(Player player, UserInterfaceBuilder builder, String title, int rows);
+    Interface createChestInterface(Player player, UserInterfaceBuilder builder, String title, int rows, ItemStack background);
 }
