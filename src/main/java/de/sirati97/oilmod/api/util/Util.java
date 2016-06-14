@@ -2,6 +2,8 @@ package de.sirati97.oilmod.api.util;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
@@ -37,6 +39,8 @@ public class Util {
         protected abstract ItemStack[] getDropsSilktouch(Block block);
         protected abstract ItemStack[] getDropsFortune(Block block, int level);
         protected abstract ItemStack getRandomValidVariation(Material mat, Random rnd);
+        protected abstract boolean canBreak(Player player, Block block);
+        protected abstract boolean canPlace(Player thePlayer, Block placedBlock, BlockState replacedBlockState, Block placedAgainst, ItemStack itemInHand);
     }
 
     public static ItemStack[] getDrops(Block block){
@@ -50,8 +54,17 @@ public class Util {
     public static ItemStack[] getDropsFortune(Block block, int level){
         return UtilImplBase.getInstance().getDropsFortune(block, level);
     }
+
     public static  ItemStack getRandomValidVariation(Material mat, Random rnd) {
         return UtilImplBase.getInstance().getRandomValidVariation(mat, rnd);
+    }
+
+    public static  boolean canBreak(Player player, Block block) {
+        return UtilImplBase.getInstance().canBreak(player, block);
+    }
+
+    public static  boolean canPlace(Player thePlayer, Block placedBlock, BlockState replacedBlockState, Block placedAgainst, ItemStack itemInHand) {
+        return UtilImplBase.getInstance().canPlace(thePlayer, placedBlock, replacedBlockState, placedAgainst, itemInHand);
     }
 
 }
