@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
  */
 public abstract class UserInterfaceBuilder<Argument extends UIArgument> {
 
-    public void displayNewUI(Player player, Argument argument) {
+    protected void displayNewUI(Player player, Argument argument) {
         Interface ui = buildDisplay(player, argument, UIHelperBase.getInstance().getInterfaceFactory());
-        displayNewUI(player, ui);
+        displayUI(player, ui);
     }
 
-    public void displayNewUI(Player player, Interface ui) {
+    public void displayUI(Player player, Interface ui) {
         if (ui.getBuilder() != this) {
             throw new IllegalArgumentException("Ui was not created by this builder");
         }
