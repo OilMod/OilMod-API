@@ -6,5 +6,5 @@ package de.sirati97.oilmod.api.userinterface;
 public interface UIPanel {
     int size();
     boolean hasForm();
-    UIElement getUIElement(int index);
+    UIElementResult getUIElement(int index);
 }

@@ -1,5 +1,7 @@
 package de.sirati97.oilmod.api.userinterface.internal;
 
+import de.sirati97.oilmod.api.userinterface.UIElement;
+import de.sirati97.oilmod.api.userinterface.UIElementResult;
 import de.sirati97.oilmod.api.userinterface.UIMultiPanel;
 import de.sirati97.oilmod.api.userinterface.UIPanel;
 
@@ -34,4 +36,6 @@ public abstract class UIHelperBase {
     public abstract NMSFixedSizePanel createFixedSizePanel(UIPanel oilPanel);
 
     public abstract InterfaceFactory getInterfaceFactory();
+
+    public abstract UIElementResult createUIElementResult(UIElement element, int index);
 }

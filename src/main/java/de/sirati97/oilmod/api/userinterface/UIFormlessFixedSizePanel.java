@@ -17,7 +17,7 @@ public class UIFormlessFixedSizePanel extends UIFormlessPanel implements NMSBase
     }
 
     @Override
-    public UIElement getUIElement(int index) {
+    public UIElementResult getUIElement(int index) {
         return nmsPanel.getElement(index);
     }
 

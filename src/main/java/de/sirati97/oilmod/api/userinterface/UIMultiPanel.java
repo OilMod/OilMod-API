@@ -17,7 +17,7 @@ public class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPanel {
     }
 
     @Override
-    public UIElement getUIElement(int index) {
+    public UIElementResult getUIElement(int index) {
         return nmsMultiPanel.getUIElement(index);
     }
 

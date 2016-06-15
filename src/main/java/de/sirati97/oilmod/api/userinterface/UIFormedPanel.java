@@ -31,15 +31,15 @@ public abstract class UIFormedPanel implements UIPanel{
     }
 
     @Override
-    public final UIElement getUIElement(int index) {
+    public final UIElementResult getUIElement(int index) {
         return _getUIElement(index%getWidth(), index/getWidth(), index);
     }
 
-    public final UIElement getUIElement(int left, int top) {
+    public final UIElementResult getUIElement(int left, int top) {
         return _getUIElement(left, top, left+top*getWidth());
     }
 
-    private UIElement _getUIElement(int left, int top, int rawIndex) {
+    private UIElementResult _getUIElement(int left, int top, int rawIndex) {
         checkIndex(left, top, rawIndex);
         return getUIElement(left, top, rawIndex);
     }
@@ -62,5 +62,5 @@ public abstract class UIFormedPanel implements UIPanel{
         }
     }
 
-    protected abstract UIElement getUIElement(int left, int top, int rawIndex);
+    protected abstract UIElementResult getUIElement(int left, int top, int rawIndex);
 }

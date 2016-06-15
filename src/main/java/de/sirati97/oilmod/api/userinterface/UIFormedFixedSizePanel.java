@@ -17,7 +17,7 @@ public class UIFormedFixedSizePanel extends UIFormedPanel implements NMSBasedUIP
     }
 
     @Override
-    protected UIElement getUIElement(int left, int top, int rawIndex) {
+    protected UIElementResult getUIElement(int left, int top, int rawIndex) {
         return nmsPanel.getElement(rawIndex);
     }
 

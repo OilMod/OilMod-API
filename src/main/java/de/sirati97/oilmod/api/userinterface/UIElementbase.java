@@ -9,11 +9,18 @@ public abstract class UIElementBase extends UIElement {
     private ItemStack displayed;
 
     @Override
+    public ItemStack getDisplayed(int index) {
+        return displayed;
+    }
     public ItemStack getDisplayed() {
         return displayed;
     }
 
+
     @Override
+    public void setDisplayed(int index, ItemStack itemStack) {
+        this.displayed = itemStack;
+    }
     public void setDisplayed(ItemStack itemStack) {
         this.displayed = itemStack;
     }
