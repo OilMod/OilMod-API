@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
-public abstract class UIElement {
+public abstract class UIElement implements IUIElement {
     private NMSUIElement nmsWrapper;
 
     public abstract ItemStack getDisplayed(int index);

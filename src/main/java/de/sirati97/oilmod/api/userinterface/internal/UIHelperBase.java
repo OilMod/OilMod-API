@@ -1,9 +1,12 @@
 package de.sirati97.oilmod.api.userinterface.internal;
 
+import de.sirati97.oilmod.api.userinterface.Click;
+import de.sirati97.oilmod.api.userinterface.IInteractableUIElement;
 import de.sirati97.oilmod.api.userinterface.UIElement;
 import de.sirati97.oilmod.api.userinterface.UIElementResult;
 import de.sirati97.oilmod.api.userinterface.UIMultiPanel;
 import de.sirati97.oilmod.api.userinterface.UIPanel;
+import org.bukkit.entity.Player;
 
 /**
  * Created by sirati97 on 15.01.2016.
@@ -35,7 +38,11 @@ public abstract class UIHelperBase {
 
     public abstract NMSFixedSizePanel createFixedSizePanel(UIPanel oilPanel);
 
-    public abstract InterfaceFactory getInterfaceFactory();
+    public abstract UserInterfaceFactory getInterfaceFactory();
 
     public abstract UIElementResult createUIElementResult(UIElement element, int index);
+
+    public abstract NMSClickData createNMSClickData(UserInterface userInterface);
+
+    public abstract void handleInventoryClick(IInteractableUIElement element, Player player, int index, Click click, NMSClickData data);
 }

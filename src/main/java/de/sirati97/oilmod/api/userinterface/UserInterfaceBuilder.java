@@ -1,7 +1,7 @@
 package de.sirati97.oilmod.api.userinterface;
 
-import de.sirati97.oilmod.api.userinterface.internal.Interface;
-import de.sirati97.oilmod.api.userinterface.internal.InterfaceFactory;
+import de.sirati97.oilmod.api.userinterface.internal.UserInterface;
+import de.sirati97.oilmod.api.userinterface.internal.UserInterfaceFactory;
 import de.sirati97.oilmod.api.userinterface.internal.UIHelperBase;
 import org.bukkit.entity.Player;
 
@@ -11,18 +11,18 @@ import org.bukkit.entity.Player;
 public abstract class UserInterfaceBuilder<Argument extends UIArgument> {
 
     protected void displayNewUI(Player player, Argument argument) {
-        Interface ui = buildDisplay(player, argument, UIHelperBase.getInstance().getInterfaceFactory());
+        UserInterface ui = buildDisplay(player, argument, UIHelperBase.getInstance().getInterfaceFactory());
         displayUI(player, ui);
     }
 
-    public void displayUI(Player player, Interface ui) {
+    public void displayUI(Player player, UserInterface ui) {
         if (ui.getBuilder() != this) {
             throw new IllegalArgumentException("Ui was not created by this builder");
         }
         ui.display(player);
     }
 
-    protected abstract Interface buildDisplay(Player player, Argument argument, InterfaceFactory factory);
+    protected abstract UserInterface buildDisplay(Player player, Argument argument, UserInterfaceFactory factory);
 
 
 }

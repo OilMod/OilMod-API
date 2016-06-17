@@ -1,6 +1,5 @@
 package de.sirati97.oilmod.api.userinterface;
 
-import de.sirati97.oilmod.api.userinterface.UIElement;
 import de.sirati97.oilmod.api.userinterface.internal.NMSUIElement;
 
 /**
@@ -9,5 +8,5 @@ import de.sirati97.oilmod.api.userinterface.internal.NMSUIElement;
 public interface UIElementResult {
     int getIndex();
     NMSUIElement getNMSUIElement();
-    UIElement getUIElement();
+    IUIElement getUIElement();
 }

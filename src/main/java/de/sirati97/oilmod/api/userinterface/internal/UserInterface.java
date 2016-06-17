@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
-public interface Interface {
+public interface UserInterface {
     Player getPlayer();
     void showPanel(UIPanel panel);
     void showPanel(UIPanel panelPlayer, UIPanel panelChest);
