@@ -1,9 +1,9 @@
 package de.sirati97.oilmod.api.userinterface.internal;
 
-import de.sirati97.oilmod.api.userinterface.UIElement;
+import de.sirati97.oilmod.api.userinterface.IUIElement;
 
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
-public abstract class NMSUIElement extends UIElement {
+public interface NMSUIElement extends IUIElement {
 }
