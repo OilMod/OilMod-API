@@ -8,7 +8,7 @@ import de.sirati97.oilmod.api.userinterface.internal.UIHelperBase;
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
-public class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPanel {
+public final class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPanel {
     private final NMSMultiPanel nmsMultiPanel;
 
     public UIMultiPanel(int size) {

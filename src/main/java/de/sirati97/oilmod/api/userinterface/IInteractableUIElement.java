@@ -1,5 +1,6 @@
 package de.sirati97.oilmod.api.userinterface;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -7,5 +8,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface IInteractableUIElement extends IUIElement {
     boolean isItemstackAllowed(int index, ItemStack itemStack);
+    boolean isPlayerAllowed(int index, Player player);
     boolean isReadOnly(int index);
+    int getMaxStackSize(int index, ItemStack itemStack);
+    int getMaxStackSize(int index);
 }
