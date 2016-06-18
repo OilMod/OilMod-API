@@ -14,8 +14,8 @@ public interface UserInterface {
     UIPanel getPanel();
     UserInterfaceBuilder<?> getBuilder();
     void display(Player player);
-    UIPanel createPlayerPanel(Player player, boolean armor, boolean offhand);
-    UIPanel getPlayerPanel(boolean armor, boolean offhand);
+    UIPanel createPlayerPanel(Player player, boolean hotbarPosSwitched, boolean armor, boolean offhand);
+    UIPanel createPlayerPanel(boolean hotbarPosSwitched, boolean armor, boolean offhand);
     void setDroppingAllowed(boolean value);
     boolean isDroppingAllowed();
 }

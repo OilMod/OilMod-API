@@ -1,5 +1,6 @@
 package de.sirati97.oilmod.api.userinterface.internal;
 
+import de.sirati97.oilmod.api.userinterface.UIPanel;
 import de.sirati97.oilmod.api.userinterface.UserInterfaceBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,4 +11,6 @@ import org.bukkit.inventory.ItemStack;
 public interface UserInterfaceFactory {
     UserInterface createChestInterface(Player player, UserInterfaceBuilder builder, String title, int rows);
     UserInterface createChestInterface(Player player, UserInterfaceBuilder builder, String title, int rows, ItemStack background);
+    UIPanel createPlayerPanel(UserInterface ui, Player player, boolean hotbarPosSwitched, boolean armor, boolean offhand);
+    UIPanel createPlayerPanel(UserInterface ui, boolean hotbarPosSwitched, boolean armor, boolean offhand);
 }
