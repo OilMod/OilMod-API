@@ -11,6 +11,6 @@ import org.bukkit.inventory.ItemStack;
 public interface UserInterfaceFactory {
     UserInterface createChestInterface(Player player, UserInterfaceBuilder builder, String title, int rows);
     UserInterface createChestInterface(Player player, UserInterfaceBuilder builder, String title, int rows, ItemStack background);
-    UIPanel createPlayerPanel(UserInterface ui, Player player, boolean hotbarPosSwitched, boolean armor, boolean offhand);
-    UIPanel createPlayerPanel(UserInterface ui, boolean hotbarPosSwitched, boolean armor, boolean offhand);
+    UIPanel createPlayerPanel(UserInterface ui, Player player, boolean hotbarPosSwitched, boolean armor, boolean offhand, boolean filterItems);
+    UIPanel createPlayerPanel(UserInterface ui, boolean hotbarPosSwitched, boolean armor, boolean offhand, boolean filterItems);
 }
