@@ -260,7 +260,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
     }
 
     /**
-     * Overrid this method when allowing enchanting
+     * Override this method when allowing enchanting
      * @param enchantment the enchantment that is checked
      * @return returns whether the enchantment can be applied to this item
      */
