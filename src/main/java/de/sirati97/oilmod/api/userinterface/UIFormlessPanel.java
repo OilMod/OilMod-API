@@ -9,10 +9,17 @@ public abstract class UIFormlessPanel implements UIPanel {
         this.size = size;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
     public int size() {
         return size;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public boolean hasForm() {
         return false;

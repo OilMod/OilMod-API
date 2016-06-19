@@ -11,6 +11,9 @@ public final class UIFormedFixedSizePanel extends UIFormedFixedSizePanelBase imp
         super(width, height);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public NMSPanel getNmsPanel() {
         return _getNmsPanel();

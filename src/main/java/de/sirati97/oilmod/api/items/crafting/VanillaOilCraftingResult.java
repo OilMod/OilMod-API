@@ -30,11 +30,17 @@ public class VanillaOilCraftingResult implements OilCraftingResult {
         this(new ItemStack(material, amount, data));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ItemStack preCraftResult(ItemStack[] matrix, boolean shaped, int width, int height) {
         return result.clone();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void craftResult(ItemStack result, ItemStack[] matrix, boolean shaped, int width, int height) {}
 }

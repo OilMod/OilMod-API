@@ -8,35 +8,86 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Created by sirati97 on 24.03.2016.
+ * Used to create OilMod Crafting Recipes and register them
  */
 public final class ItemCraftingFactory {
     private ItemCraftingFactory(){}
 
+    /**
+     * @param ingredients Ingredients can be the following:
+     *                    <li>Instances of OilCraftingIngredient</li>
+     *                    <li>Bukkit Material</li>
+     *                    <li>Bukkit ItemStack</li>
+     *                    <li>Class<? extends OilItemBase></li>
+     * @return instance of OilCraftingRecipe
+     */
     public static OilCraftingRecipe createShapedRecipe(int width, int height, OilSpecificItemstackFactory result, int amount, Object... ingredients) {
         return createShapedRecipe(width, height, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
     }
 
+    /**
+     * @param ingredients Ingredients can be the following:
+     *                    <li>Instances of OilCraftingIngredient</li>
+     *                    <li>Bukkit Material</li>
+     *                    <li>Bukkit ItemStack</li>
+     *                    <li>Class<? extends OilItemBase></li>
+     * @return instance of OilCraftingRecipe
+     */
     public static OilCraftingRecipe createShapedRecipe(int width, int height, ItemStack vanillaResult, Object... ingredients) {
         return createShapedRecipe(width, height, new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
+    /**
+     * @param ingredients Ingredients can be the following:
+     *                    <li>Instances of OilCraftingIngredient</li>
+     *                    <li>Bukkit Material</li>
+     *                    <li>Bukkit ItemStack</li>
+     *                    <li>Class<? extends OilItemBase></li>
+     * @return instance of OilCraftingRecipe
+     */
     public static OilCraftingRecipe createShapedRecipe(int width, int height, OilCraftingResult result, Object... ingredients) {
         return ItemCraftingFactoryBase.getInstance().createShapedRecipe(width, height, result, toOilItemComparators(ingredients));
     }
 
+    /**
+     * @param ingredients Ingredients can be the following:
+     *                    <li>Instances of OilCraftingIngredient</li>
+     *                    <li>Bukkit Material</li>
+     *                    <li>Bukkit ItemStack</li>
+     *                    <li>Class<? extends OilItemBase></li>
+     * @return instance of OilCraftingRecipe
+     */
     public static OilCraftingRecipe createShapelessRecipe(OilSpecificItemstackFactory result, int amount, Object... ingredients) {
         return createShapelessRecipe(new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
     }
 
+    /**
+     * @param ingredients Ingredients can be the following:
+     *                    <li>Instances of OilCraftingIngredient</li>
+     *                    <li>Bukkit Material</li>
+     *                    <li>Bukkit ItemStack</li>
+     *                    <li>Class<? extends OilItemBase></li>
+     * @return instance of OilCraftingRecipe
+     */
     public static OilCraftingRecipe createShapelessRecipe(ItemStack vanillaResult, Object... ingredients) {
         return createShapelessRecipe(new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
+    /**
+     * @param ingredients Ingredients can be the following:
+     *                    <li>Instances of OilCraftingIngredient</li>
+     *                    <li>Bukkit Material</li>
+     *                    <li>Bukkit ItemStack</li>
+     *                    <li>Class<? extends OilItemBase></li>
+     * @return instance of OilCraftingRecipe
+     */
     public static OilCraftingRecipe createShapelessRecipe(OilCraftingResult result, Object... ingredients) {
         return ItemCraftingFactoryBase.getInstance().createShapelessRecipe(result, toOilItemComparators(ingredients));
     }
 
+    /**
+     * Registers the recipe in the standard crafting table crafting manager
+     */
     public static void registerGlobal(OilCraftingRecipe recipe) {
         ItemCraftingFactoryBase.getInstance().registerGlobal(recipe);
     }

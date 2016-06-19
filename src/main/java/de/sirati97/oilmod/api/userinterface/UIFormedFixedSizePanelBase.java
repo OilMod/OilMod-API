@@ -15,6 +15,9 @@ public abstract class UIFormedFixedSizePanelBase extends UIFormedPanel{
         nmsPanel = UIHelperBase.getInstance().createFixedSizePanel(this);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected UIElementResult getUIElement(int left, int top, int rawIndex) {
         return nmsPanel.getElement(rawIndex);

@@ -16,12 +16,17 @@ public final class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPan
         nmsMultiPanel = UIHelperBase.getInstance().createMultiPanel(this);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public UIElementResult getUIElement(int index) {
         return nmsMultiPanel.getUIElement(index);
     }
 
-
+    /**
+     * @inheritDoc
+     */
     @Override
     public NMSPanel getNmsPanel() {
         return nmsMultiPanel;

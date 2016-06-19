@@ -1,9 +1,6 @@
 package de.sirati97.oilmod.api.userinterface;
 
-import de.sirati97.oilmod.api.userinterface.internal.NMSClickData;
 import de.sirati97.oilmod.api.userinterface.internal.NMSUIElement;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
@@ -11,14 +8,16 @@ import org.bukkit.inventory.ItemStack;
 public abstract class UIElement implements IUIElement {
     private NMSUIElement nmsWrapper;
 
-    public abstract ItemStack getDisplayed(int index);
-    public abstract void setDisplayed(int index, ItemStack itemStack);
-    public abstract void onClick(Player player, int index, Click click, NMSClickData data);
-
+    /**
+     * @inheritDoc
+     */
     public void setNmsWrapper(NMSUIElement nmsWrapper) {
         this.nmsWrapper = nmsWrapper;
     }
 
+    /**
+     * @inheritDoc
+     */
     public NMSUIElement getNmsWrapper() {
         return nmsWrapper;
     }

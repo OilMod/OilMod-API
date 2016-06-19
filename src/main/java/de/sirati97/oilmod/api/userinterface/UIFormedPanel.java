@@ -12,24 +12,41 @@ public abstract class UIFormedPanel implements UIPanel{
         this.width = width;
     }
 
+    /**
+     *
+     * @return the height of the panel
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     *
+     * @return the width of the panel
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int size() {
         return getHeight()*getWidth();
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public boolean hasForm() {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public final UIElementResult getUIElement(int index) {
         return _getUIElement(index%getWidth(), index/getWidth(), index);

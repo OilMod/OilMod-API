@@ -16,11 +16,17 @@ public class SpecificItemstackFactoryOilCraftingResult implements OilCraftingRes
         this.amount = amount;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ItemStack preCraftResult(ItemStack[] matrix, boolean shaped, int width, int height) {
         return getResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void craftResult(ItemStack result, ItemStack[] matrix, boolean shaped, int width, int height) {
         this.result = null;

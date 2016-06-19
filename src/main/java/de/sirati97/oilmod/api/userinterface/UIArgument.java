@@ -1,7 +1,7 @@
 package de.sirati97.oilmod.api.userinterface;
 
 /**
- * Created by sirati97 on 14.06.2016 for OilMod-Api.
+ * Used to allow an easy way of passing arguments in the UserInterfaceBuilder
  */
 public interface UIArgument {
 }
