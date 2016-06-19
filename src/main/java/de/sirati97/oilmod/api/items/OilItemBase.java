@@ -18,21 +18,21 @@ import java.util.List;
 public class OilItemBase<T extends OilItemStack> {
     private Material material;
     private int data;
-    private int modData;
+    private final String itemIdentifier;
     private String name;
     private Object nmsItem;
     private int maxStackSize;
     private OilSpecificItemstackFactory[] creativeItems;
     private ItemStack[] naturalExamples;
 
-    public OilItemBase(Material material, int data, int modData, String name) {
-        this(material, data, modData, 64, name);
+    public OilItemBase(Material material, int data, String itemIdentifier, String name) {
+        this(material, data, itemIdentifier, 64, name);
     }
 
-    public OilItemBase(Material material, int data, int modData, int maxStackSize, String name) {
+    public OilItemBase(Material material, int data, String itemIdentifier, int maxStackSize, String name) {
         this.material = material;
         this.data = data;
-        this.modData = modData;
+        this.itemIdentifier = itemIdentifier;
         this.maxStackSize = maxStackSize;
         this.name = name;
     }
@@ -99,17 +99,17 @@ public class OilItemBase<T extends OilItemStack> {
         return maxStackSize;
     }
 
-    public int getModData() {
-        return modData;
+    public String getItemIdentifier() {
+        return itemIdentifier;
     }
 
     protected T createOilItemStackInstance(NMSItemStack nmsItemStack) {
+        //noinspection unchecked
         return (T) new OilItemStack(nmsItemStack, this);
     }
 
     public final T createOilStack(NMSItemStack nmsItemStack) {
-        OilItemStack result = createOilItemStackInstance(nmsItemStack);
-        return (T) result;
+        return createOilItemStackInstance(nmsItemStack);
     }
 
     public boolean onUse(OilItemStack itemStack, Player player, Action action) {
