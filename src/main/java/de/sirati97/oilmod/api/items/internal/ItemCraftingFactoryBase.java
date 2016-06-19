@@ -5,7 +5,7 @@ import de.sirati97.oilmod.api.items.crafting.OilCraftingResult;
 import de.sirati97.oilmod.api.items.crafting.OilCraftingIngredient;
 
 /**
- * Created by sirati97 on 15.01.2016.
+ * Internal - should not be called by user code - Use ItemCraftingFactory instead
  */
 public abstract class ItemCraftingFactoryBase {
     private static ItemCraftingFactoryBase instance;

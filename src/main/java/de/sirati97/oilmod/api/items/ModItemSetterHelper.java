@@ -1,13 +1,13 @@
 package de.sirati97.oilmod.api.items;
 
 /**
- * DO NOT USE
+ * Internal - should not be called by user code
  */
 public class ModItemSetterHelper {
     protected ModItemSetterHelper(){}
 
     /**
-     * DO NOT USE
+     * Internal - should not be called by user code
      */
     protected void set(Object nmsItem, OilItemBase apiItem) {
         apiItem.setNmsItem(nmsItem);

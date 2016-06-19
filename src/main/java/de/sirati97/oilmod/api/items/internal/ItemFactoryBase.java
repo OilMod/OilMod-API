@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Created by sirati97 on 15.01.2016.
+ * Internal - shcould not be called by user code
  */
 public abstract class ItemFactoryBase {
     private static ItemFactoryBase instance;

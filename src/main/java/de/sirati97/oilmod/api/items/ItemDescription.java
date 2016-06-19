@@ -20,6 +20,9 @@ public class ItemDescription {
 
     }
 
+    /**
+     * Initialises this instance of ItemDescription
+     */
     public void init() {
         if (!itemStack.hasLore() && lines.size() > 0) {
             /*System.out.println("setted lore first time for " + itemStack.toString() + " " + lines.get(0) + " " + Thread.currentThread().getName());
@@ -44,28 +47,34 @@ public class ItemDescription {
         }
     }
 
-    public static void printTrace(String text) {
-        System.out.println("Printing stack trace for " + text + ":");
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        for (int i = 2; i < elements.length; i++) {
-            StackTraceElement s = elements[i];
-            System.out.println("\tat " + s.getClassName() + "." + s.getMethodName()
-                    + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
-        }
-    }
-
+    /**
+     *
+     * @return site of visible description of the itemstack
+     */
     public int getSize() {
         return lastSize;
     }
 
+    /**
+     *
+     * @return returns size of un-updated description
+     */
     public int getVirtualSize() {
         return lines.size();
     }
 
+    /**
+     *
+     * @return returns a read only version of all the lines
+     */
     public List<String> getLines() {
         return linesReadOnly;
     }
 
+    /**
+     * Removes the line at the given index
+     * @param update should the description of the itemstack be updated immediately? Use this in a way that you do not create overhead
+     */
     public void removeLine(int index, boolean update) {
         lines.remove(index);
         if (update) {
@@ -73,10 +82,18 @@ public class ItemDescription {
         }
     }
 
+    /**
+     *
+     * @return returns the line at the given index
+     */
     public String getLine(int index) {
         return lines.get(index);
     }
 
+    /**
+     * Sets the line at the index index to line
+     * @param update should the description of the itemstack be updated immediately? Use this in a way that you do not create overhead
+     */
     public void setLine(int index, String line, boolean update) {
         lines.set(index, line);
         if (update) {
@@ -85,6 +102,10 @@ public class ItemDescription {
 
     }
 
+    /**
+     * Inserts the line at the index index with the text line
+     * @param update should the description of the itemstack be updated immediately? Use this in a way that you do not create overhead
+     */
     public void insertLine(int index, String line, boolean update) {
         lines.add(index, line);
         if (update) {
@@ -93,6 +114,10 @@ public class ItemDescription {
 
     }
 
+    /**
+     * Appends line at the end of the description
+     * @param update should the description of the itemstack be updated immediately? Use this in a way that you do not create overhead
+     */
     public void appendLine(String line, boolean update) {
         lines.add(line);
         if (update) {
@@ -100,6 +125,9 @@ public class ItemDescription {
         }
     }
 
+    /**
+     *
+     */
     public void forceUpdate() {
         itemStack.updateItemDescription(lastSize, linesReadOnly);
         lastSize = lines.size();

@@ -3,7 +3,7 @@ package de.sirati97.oilmod.api.items.internal;
 import de.sirati97.oilmod.api.items.OilItemBase;
 
 /**
- * Created by sirati97 on 02.04.2016.
+ * Internal
  */
 public abstract class ItemClassMapSingleton {
     private static ItemClassMapSingleton instance;

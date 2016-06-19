@@ -4,7 +4,7 @@ import de.sirati97.oilmod.api.items.ItemRegistry;
 import de.sirati97.oilmod.api.items.OilItemBase;
 
 /**
- * Created by sirati97 on 15.01.2016.
+ * Internal - shoculd not be called by user code
  */
 public abstract class ItemRegistryHelperBase {
     private static ItemRegistryHelperBase instance;

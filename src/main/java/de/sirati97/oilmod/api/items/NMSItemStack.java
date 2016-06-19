@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 /**
- * Created by sirati97 on 16.01.2016.
+ * Internal
  */
 public interface NMSItemStack {
     String getDisplayName();

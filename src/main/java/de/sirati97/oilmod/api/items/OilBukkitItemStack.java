@@ -1,8 +1,12 @@
 package de.sirati97.oilmod.api.items;
 
 /**
- * Created by sirati97 on 13.02.2016.
+ * Bukkit versions of OilMod ItemStacks implement this interface
  */
 public interface OilBukkitItemStack {
+    /**
+     *
+     * @return OilMod version of Bukkit ItemStack
+     */
     OilItemStack getOilItemStack();
 }

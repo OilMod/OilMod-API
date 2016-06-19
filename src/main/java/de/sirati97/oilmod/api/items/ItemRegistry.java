@@ -11,8 +11,8 @@ public class ItemRegistry {
     private Object nmsObject;
 
     /**
-     *
-     * @param id Short unique id. Do not change it later, otherwise your plugin becomes incompatible with older versions
+     * Creates new instance of ItemRegistry
+     * @param id Short unique id. Do not change it later, otherwise your plugin becomes incompatible with older versions of you mod
      */
     public ItemRegistry(String id) {
         this.id = id;
@@ -24,10 +24,17 @@ public class ItemRegistry {
         });
     }
 
+    /**
+     *
+     * @return the id of you mod
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Registers an Item for your mod
+     */
     public <T extends OilItemBase> void register(T apiItem) {
         if (!registered) {
             throw new IllegalStateException("ItemRegister was not successfully initialized");
@@ -37,6 +44,10 @@ public class ItemRegistry {
         ItemRegistryHelperBase.getInstance().register(this, apiItem);
     }
 
+    /**
+     *
+     * @return nms version of this object
+     */
     public Object getNmsObject() {
         return nmsObject;
     }
