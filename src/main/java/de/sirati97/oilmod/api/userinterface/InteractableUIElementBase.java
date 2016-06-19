@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public abstract class InteractableUIElementBase extends UIElement implements IInteractableUIElement {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public boolean isItemstackAllowed(int index, ItemStack itemStack) {
@@ -18,7 +18,7 @@ public abstract class InteractableUIElementBase extends UIElement implements IIn
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public boolean isPlayerAllowed(int index, Player player) {
@@ -26,7 +26,7 @@ public abstract class InteractableUIElementBase extends UIElement implements IIn
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public boolean isReadOnly(int index) {
@@ -34,7 +34,7 @@ public abstract class InteractableUIElementBase extends UIElement implements IIn
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public int getMaxStackSize(int index, ItemStack itemStack) {
@@ -42,7 +42,7 @@ public abstract class InteractableUIElementBase extends UIElement implements IIn
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public int getMaxStackSize(int index) {
@@ -50,7 +50,7 @@ public abstract class InteractableUIElementBase extends UIElement implements IIn
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public void onClick(Player player, int index, Click click, NMSClickData data) {

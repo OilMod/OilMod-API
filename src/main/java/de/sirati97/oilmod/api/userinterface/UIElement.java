@@ -9,14 +9,14 @@ public abstract class UIElement implements IUIElement {
     private NMSUIElement nmsWrapper;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void setNmsWrapper(NMSUIElement nmsWrapper) {
         this.nmsWrapper = nmsWrapper;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public NMSUIElement getNmsWrapper() {
         return nmsWrapper;

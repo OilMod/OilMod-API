@@ -16,7 +16,7 @@ public abstract class UIFormlessFixedSizePanelBase extends UIFormlessPanel{
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public UIElementResult getUIElement(int index) {

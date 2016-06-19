@@ -10,7 +10,7 @@ public abstract class UIFormlessPanel implements UIPanel {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public int size() {
@@ -18,7 +18,7 @@ public abstract class UIFormlessPanel implements UIPanel {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public boolean hasForm() {

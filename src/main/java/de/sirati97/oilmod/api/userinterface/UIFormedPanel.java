@@ -29,7 +29,7 @@ public abstract class UIFormedPanel implements UIPanel{
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public int size() {
@@ -37,7 +37,7 @@ public abstract class UIFormedPanel implements UIPanel{
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public boolean hasForm() {
@@ -45,7 +45,7 @@ public abstract class UIFormedPanel implements UIPanel{
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public final UIElementResult getUIElement(int index) {

@@ -14,11 +14,11 @@ public final class ItemCraftingFactory {
     private ItemCraftingFactory(){}
 
     /**
-     * @param ingredients Ingredients can be the following:
+     * @param ingredients Ingredients can be the following:<ul>
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class<? extends OilItemBase></li>
+     *                    <li>Class&lt;? extends OilItemBase&gt;</li></ul>
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapedRecipe(int width, int height, OilSpecificItemstackFactory result, int amount, Object... ingredients) {
@@ -26,11 +26,11 @@ public final class ItemCraftingFactory {
     }
 
     /**
-     * @param ingredients Ingredients can be the following:
+     * @param ingredients Ingredients can be the following:<ul>
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class<? extends OilItemBase></li>
+     *                    <li>Class&lt;? extends OilItemBase&gt;</li></ul>
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapedRecipe(int width, int height, ItemStack vanillaResult, Object... ingredients) {
@@ -38,11 +38,11 @@ public final class ItemCraftingFactory {
     }
 
     /**
-     * @param ingredients Ingredients can be the following:
+     * @param ingredients Ingredients can be the following:<ul>
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class<? extends OilItemBase></li>
+     *                    <li>Class&lt;? extends OilItemBase&gt;</li></ul>
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapedRecipe(int width, int height, OilCraftingResult result, Object... ingredients) {
@@ -50,11 +50,11 @@ public final class ItemCraftingFactory {
     }
 
     /**
-     * @param ingredients Ingredients can be the following:
+     * @param ingredients Ingredients can be the following:<ul>
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class<? extends OilItemBase></li>
+     *                    <li>Class&lt;? extends OilItemBase&gt;</li></ul>
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapelessRecipe(OilSpecificItemstackFactory result, int amount, Object... ingredients) {
@@ -62,11 +62,11 @@ public final class ItemCraftingFactory {
     }
 
     /**
-     * @param ingredients Ingredients can be the following:
+     * @param ingredients Ingredients can be the following:<ul>
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class<? extends OilItemBase></li>
+     *                    <li>Class&lt;? extends OilItemBase&gt;</li></ul>
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapelessRecipe(ItemStack vanillaResult, Object... ingredients) {
@@ -74,11 +74,11 @@ public final class ItemCraftingFactory {
     }
 
     /**
-     * @param ingredients Ingredients can be the following:
+     * @param ingredients Ingredients can be the following:<ul>
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class<? extends OilItemBase></li>
+     *                    <li>Class&lt;? extends OilItemBase&gt;</li></ul>
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapelessRecipe(OilCraftingResult result, Object... ingredients) {

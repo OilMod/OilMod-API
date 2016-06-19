@@ -16,7 +16,7 @@ public abstract class UIFormedFixedSizePanelBase extends UIFormedPanel{
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected UIElementResult getUIElement(int left, int top, int rawIndex) {

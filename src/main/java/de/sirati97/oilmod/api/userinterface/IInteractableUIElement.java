@@ -44,6 +44,6 @@ public interface IInteractableUIElement extends IUIElement {
      */
     int getMaxStackSize(int index);
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
 }

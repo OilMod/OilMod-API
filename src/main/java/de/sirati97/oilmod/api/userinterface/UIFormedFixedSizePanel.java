@@ -12,7 +12,7 @@ public final class UIFormedFixedSizePanel extends UIFormedFixedSizePanelBase imp
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public NMSPanel getNmsPanel() {

@@ -9,7 +9,7 @@ public abstract class SimpleUIElementBase extends UIElement {
     private ItemStack displayed;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public final ItemStack getDisplayed(int index) {
@@ -25,7 +25,7 @@ public abstract class SimpleUIElementBase extends UIElement {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public final void setDisplayed(int index, ItemStack itemStack) {

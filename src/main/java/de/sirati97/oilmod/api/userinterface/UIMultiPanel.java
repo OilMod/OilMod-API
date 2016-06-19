@@ -17,7 +17,7 @@ public final class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPan
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public UIElementResult getUIElement(int index) {
@@ -25,7 +25,7 @@ public final class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPan
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public NMSPanel getNmsPanel() {
