@@ -6,5 +6,5 @@ package de.sirati97.oilmod.api.config;
 public interface CompoundSerializable {
     void load(Compound compound);
     void save(Compound compound);
-    CompoundSerializable cloneIfClonable();
+    CompoundSerializable cloneIfCloneable();
 }

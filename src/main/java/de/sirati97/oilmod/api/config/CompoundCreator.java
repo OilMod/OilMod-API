@@ -12,5 +12,5 @@ public interface CompoundCreator {
 	 * Creates a new CompoundList
 	 * @return
      */
-	CompoundList createCompoundList();
+	<Type> List<Type> createList(DataType type);
 }

@@ -63,6 +63,6 @@ public class CompoundSerializableData<T extends CompoundSerializable> extends Co
 
     @Override
     public void onCloned(IData<T> original) {
-        setData((T)original.getData().cloneIfClonable());
+        setData((T)original.getData().cloneIfCloneable());
     }
 }
