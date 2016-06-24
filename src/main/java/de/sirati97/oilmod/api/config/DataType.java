@@ -15,7 +15,7 @@ public enum DataType {
     Double(6, Double.class),
     ByteArray(7, (new byte[0]).getClass()),
     String(8, String.class),
-    NBTList(10, List.class),
+    NBTList(10, DataList.class),
     Subsection(10, Compound.class),
     IntArray(11, (new byte[0]).getClass()),
     Undefined(-1, void.class);

@@ -1,6 +1,6 @@
 package de.sirati97.oilmod.api.config;
 
-public interface List<Type> {
+public interface DataList<Type> {
     void append(Type type);
     void set(int index, Type type);
     Type get(int index);

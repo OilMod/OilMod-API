@@ -2,15 +2,14 @@ package de.sirati97.oilmod.api.config;
 
 public interface CompoundCreator {
 	/**
-	 * Creates a new Compound and adds it at the gives key. Keep in mind that you need to set the compound again after you changed something.
-	 * @param key
+	 * Creates a new Compound.
 	 * @return
      */
-	Compound createCompound(String key);
+	Compound createCompound();
 
 	/**
 	 * Creates a new CompoundList
 	 * @return
      */
-	<Type> List<Type> createList(DataType type);
+	<Type> DataList<Type> createList(DataType type);
 }

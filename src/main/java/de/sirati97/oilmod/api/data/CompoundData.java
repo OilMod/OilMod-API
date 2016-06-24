@@ -13,7 +13,9 @@ public abstract class CompoundData<T> extends IDataBase<T> implements ICompoundD
     }
 
     public final void saveTo(Compound parent, String name) {
-        save(parent.createCompound(name));
+        Compound compound = parent.createCompound();
+        save(compound);
+        parent.set(name, compound);
     }
 
     public final void loadFrom(Compound parent, String name) {

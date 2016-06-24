@@ -3,7 +3,7 @@ package de.sirati97.oilmod.api.config;
 
 public interface Compound extends CompoundCreator {
 	void set(String paramString, Compound paramCompound);
-	void setList(String paramString, List paramList);
+	void setList(String paramString, DataList paramDataList);
 	
 	void setByte(String paramString, byte paramByte);
 	void setShort(String paramString, short paramShort);
@@ -26,7 +26,7 @@ public interface Compound extends CompoundCreator {
 	byte[] getByteArray(String paramString);
 	int[] getIntArray(String paramString);
 	Compound getCompound(String paramString);
-    <Type> List<Type> getList(String paramString);
+    <Type> DataList<Type> getList(String paramString);
 	boolean getBoolean(String paramString);
 	Object getRaw(String paramString);
     boolean containsKey(String paramString);
