@@ -1,6 +1,6 @@
 package de.sirati97.oilmod.api.config;
 
-public interface DataList<Type> {
+public interface DataList<Type> extends Iterable<DataIndexedEntry<Type>>{
     void append(Type type);
     void set(int index, Type type);
     Type get(int index);
