@@ -5,7 +5,7 @@ import org.bukkit.inventory.Inventory;
 /**
  * Created by sirati97 on 12.02.2016.
  */
-public class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
+public abstract class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
     private final InventoryData<T> serializableDataHandler;
 
     public ModInventoryObjectBase(InventoryData<T> serializableDataHandler) {

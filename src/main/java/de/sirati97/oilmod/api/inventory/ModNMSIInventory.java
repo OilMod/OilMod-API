@@ -1,6 +1,7 @@
 package de.sirati97.oilmod.api.inventory;
 
 import de.sirati97.oilmod.api.config.CompoundSerializable;
+import de.sirati97.oilmod.api.userinterface.IInteractableUIElement;
 import de.sirati97.oilmod.api.util.Tickable;
 import org.bukkit.inventory.Inventory;
 
@@ -12,4 +13,5 @@ public interface ModNMSIInventory<T extends ModInventoryObjectBase> extends Comp
     Object getNMSInventory();
     Object getOilModInventory();
     void setOilApiMirror(T arg);
+    IInteractableUIElement createUIElement();
 }

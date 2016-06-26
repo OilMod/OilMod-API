@@ -1,5 +1,7 @@
 package de.sirati97.oilmod.api.inventory;
 
+import de.sirati97.oilmod.api.data.DataParent;
+import de.sirati97.oilmod.api.data.ItemStackData;
 import de.sirati97.oilmod.api.data.ObjectFactory;
 import de.sirati97.oilmod.api.items.OilItemStack;
 import de.sirati97.oilmod.api.util.WeakReferenceTicker;
@@ -119,6 +121,9 @@ public abstract class InventoryFactoryBase {
 
 
     //ModPortableCraftingInventoryObject
+
+    //###ItemStackData###
+    public abstract ItemStackData createItemStackData(String name, DataParent dataParent);
 
     //###Other stuff###
     protected void checkInventoryHolder(OilItemStack itemStack, ModInventoryObjectBase inventory, boolean mainItemstackInventory) {
