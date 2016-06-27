@@ -1,5 +1,6 @@
 package de.sirati97.oilmod.api.inventory;
 
+import de.sirati97.oilmod.api.userinterface.IInteractableUIElement;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -30,5 +31,7 @@ public abstract class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
         return getSerializableDataHandler().getName();
     }
 
-
+    public IInteractableUIElement createUIElement() {
+        return getSerializableDataHandler().getData().createUIElement();
+    }
 }

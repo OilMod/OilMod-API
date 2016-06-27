@@ -11,7 +11,7 @@ public final class UIElementResultFactory {
     /**
      * Will return null if element is null
      */
-    public static UIElementResult createResult(UIElement element, int index) {
+    public static UIElementResult createResult(IUIElement element, int index) {
         return UIHelperBase.getInstance().createUIElementResult(element, index);
     }
 }

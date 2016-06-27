@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
-public abstract class UserInterfaceBuilder<Argument extends UIArgument> {
+public abstract class UserInterfaceBuilder<Argument> {
 
     protected void displayNewUI(Player player, Argument argument) {
         UserInterface ui = buildDisplay(player, argument, UIHelperBase.getInstance().getInterfaceFactory());

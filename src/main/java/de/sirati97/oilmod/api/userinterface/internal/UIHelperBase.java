@@ -2,7 +2,7 @@ package de.sirati97.oilmod.api.userinterface.internal;
 
 import de.sirati97.oilmod.api.userinterface.Click;
 import de.sirati97.oilmod.api.userinterface.IInteractableUIElement;
-import de.sirati97.oilmod.api.userinterface.UIElement;
+import de.sirati97.oilmod.api.userinterface.IUIElement;
 import de.sirati97.oilmod.api.userinterface.UIElementResult;
 import de.sirati97.oilmod.api.userinterface.UIMultiPanel;
 import de.sirati97.oilmod.api.userinterface.UIPanel;
@@ -40,7 +40,7 @@ public abstract class UIHelperBase {
 
     public abstract UserInterfaceFactory getInterfaceFactory();
 
-    public abstract UIElementResult createUIElementResult(UIElement element, int index);
+    public abstract UIElementResult createUIElementResult(IUIElement element, int index);
 
     public abstract NMSClickData createNMSClickData(UserInterface userInterface);
 
