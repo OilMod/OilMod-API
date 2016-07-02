@@ -3,6 +3,7 @@ package de.sirati97.oilmod.api.util;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
@@ -52,6 +53,7 @@ public class OilUtil {
         protected abstract  <T extends Entity> List<T> getNearbyEntities(Location loc1, Location loc2, Class<T> clazz);
         protected abstract void setLastDamager(LivingEntity entity, LivingEntity source);
         protected abstract boolean damageEntity(LivingEntity entity, double amount, LivingEntity source);
+        protected abstract long getWorldTicksPlayed(World world);
     }
 
     public static ItemStack[] getDrops(Block block){
@@ -134,8 +136,24 @@ public class OilUtil {
         spawnParticleCloud(location, d.getEffect(), d.getId(), d.getData(), d.getOffsetX(), d.getOffsetY(), d.getOffsetZ(), d.getSpeed(), d.getParticleCount(), d.getRadius());
     }
 
+    public static void spawnParticleCloud(Location location, ParticleSpawnData d, int particleCount) {
+        spawnParticleCloud(location, d.getEffect(), d.getId(), d.getData(), d.getOffsetX(), d.getOffsetY(), d.getOffsetZ(), d.getSpeed(), particleCount, d.getRadius());
+    }
+
     public static void spawnParticleCloud(Location location, ParticleSpawnData d, Vector v) {
         spawnParticleCloud(location, d.getEffect(), d.getId(), d.getData(), (float) v.getX(), (float) v.getY(), (float) v.getZ(), d.getSpeed(), d.getParticleCount(), d.getRadius());
+    }
+
+    public static void spawnParticleCloud(Location location, ParticleSpawnData d, float offsetX, float offsetY, float offsetZ) {
+        spawnParticleCloud(location, d.getEffect(), d.getId(), d.getData(), offsetX, offsetY, offsetZ, d.getSpeed(), d.getParticleCount(), d.getRadius());
+    }
+
+    public static void spawnParticleCloud(Location location, ParticleSpawnData d, Vector v, int particleCount) {
+        spawnParticleCloud(location, d.getEffect(), d.getId(), d.getData(), (float) v.getX(), (float) v.getY(), (float) v.getZ(), d.getSpeed(), particleCount, d.getRadius());
+    }
+
+    public static void spawnParticleCloud(Location location, ParticleSpawnData d, float offsetX, float offsetY, float offsetZ, int particleCount) {
+        spawnParticleCloud(location, d.getEffect(), d.getId(), d.getData(), offsetX, offsetY, offsetZ, d.getSpeed(), particleCount, d.getRadius());
     }
 
 
@@ -158,5 +176,9 @@ public class OilUtil {
 
     public static boolean damageEntity(LivingEntity entity, double amount, LivingEntity source) {
         return UtilImplBase.getInstance().damageEntity(entity, amount, source);
+    }
+
+    public static long getWorldTicksPlayed(World world) {
+        return UtilImplBase.getInstance().getWorldTicksPlayed(world);
     }
 }
