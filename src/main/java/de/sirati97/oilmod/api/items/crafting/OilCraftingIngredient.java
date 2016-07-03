@@ -12,4 +12,5 @@ public interface OilCraftingIngredient {
     boolean match(ItemStack itemStack, DataHolder dataHolder);
     ItemStack getRandomExample(Random rnd, DataHolder dataHolder);
     ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder);
+    boolean matchesNull();
 }

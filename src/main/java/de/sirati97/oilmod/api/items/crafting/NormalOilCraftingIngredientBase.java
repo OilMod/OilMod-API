@@ -12,4 +12,9 @@ public abstract class NormalOilCraftingIngredientBase implements OilCraftingIngr
         oldItemStack.setAmount(oldItemStack.getAmount()-1);
         return oldItemStack.getAmount()>0?oldItemStack:null;
     }
+
+    @Override
+    public boolean matchesNull() {
+        return false;
+    }
 }

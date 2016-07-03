@@ -99,6 +99,11 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
         throw createIllegalStateException();
     }
 
+    @Override
+    public boolean matchesNull() {
+        return true;
+    }
+
     private ItemStack onCraftedChild(int i, ItemStack oldItemStack, DataHolder dataHolder) {
         OilCraftingIngredient ingredient = ingredients[i];
         if (ingredient == null) {
