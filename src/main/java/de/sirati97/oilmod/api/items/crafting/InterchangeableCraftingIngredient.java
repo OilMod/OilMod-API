@@ -70,6 +70,7 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
         }
         if (stillMissing.size() > 0) {
             int index = stillMissing.get(rnd.nextInt(stillMissing.size()));
+            data.setFlag(index);
             return getRandomExampleChild(index, rnd, dataHolder);
         } else {
             throw createIllegalStateException();
