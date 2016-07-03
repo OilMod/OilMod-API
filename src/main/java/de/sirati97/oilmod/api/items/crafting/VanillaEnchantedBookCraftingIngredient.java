@@ -1,5 +1,6 @@
 package de.sirati97.oilmod.api.items.crafting;
 
+import de.sirati97.oilmod.api.util.OilUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -12,11 +13,11 @@ import java.util.Random;
 /**
  * Created by sirati97 on 02.07.2016 for OilMod-TestPlugin.
  */
-public class VanillaEnchantedBookIngredient extends VanillaMaterialOilCraftingIngredient {
+public class VanillaEnchantedBookCraftingIngredient extends VanillaMaterialOilCraftingIngredient {
     private final Enchantment enchantment;
     private final int level;
 
-    public VanillaEnchantedBookIngredient(Enchantment enchantment, int level) {
+    public VanillaEnchantedBookCraftingIngredient(Enchantment enchantment, int level) {
         super(Material.ENCHANTED_BOOK);
         this.enchantment = enchantment;
         this.level = level;
@@ -39,7 +40,7 @@ public class VanillaEnchantedBookIngredient extends VanillaMaterialOilCraftingIn
         if (rnd.nextInt(4)!=0) {
             List<Enchantment> allowedEnchantments = new ArrayList<>(Enchantment.values().length);
             for (Enchantment enchantmentCurrent:Enchantment.values()) {
-                if (enchantmentCurrent != this.enchantment && !meta.hasConflictingStoredEnchant(enchantmentCurrent)) {
+                if (!enchantmentCurrent.equals(this.enchantment) && !OilUtil.isSimilarEnchantmentTarget(enchantment.getItemTarget(),enchantmentCurrent.getItemTarget())) {
                     allowedEnchantments.add(enchantmentCurrent);
                 }
             }

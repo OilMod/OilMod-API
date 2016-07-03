@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -180,5 +181,29 @@ public class OilUtil {
 
     public static long getWorldTicksPlayed(World world) {
         return UtilImplBase.getInstance().getWorldTicksPlayed(world);
+    }
+
+    public static boolean isSimilarEnchantmentTarget(EnchantmentTarget target1, EnchantmentTarget target2) {
+        return isEnchantmentTargetChild(target1, target2) || isEnchantmentTargetChild(target2, target1);
+    }
+
+    public static boolean isEnchantmentTargetChild(EnchantmentTarget targetParent, EnchantmentTarget targetChild) {
+        switch (targetParent) {
+            case ALL:
+                return true;
+            case ARMOR:
+                switch (targetChild) {
+                    case ARMOR:
+                    case ARMOR_FEET:
+                    case ARMOR_LEGS:
+                    case ARMOR_TORSO:
+                    case ARMOR_HEAD:
+                        return true;
+                    default:
+                        return false;
+                }
+            default:
+                return targetParent.equals(targetChild);
+        }
     }
 }
