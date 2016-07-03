@@ -17,12 +17,12 @@ public class VanillaMaterialOilCraftingIngredient extends VanillaOilCraftingIngr
     }
 
     @Override
-    public boolean match(ItemStack itemStack, ComparatorData comparatorData) {
-        return super.match(itemStack, comparatorData) && itemStack.getType().equals(material);
+    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
+        return super.match(itemStack, dataHolder) && itemStack.getType().equals(material);
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd) {
+    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
         return OilUtil.getRandomValidVariation(material, rnd);
     }
 }

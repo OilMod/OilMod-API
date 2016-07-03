@@ -24,8 +24,8 @@ public class VanillaEnchantedBookCraftingIngredient extends VanillaMaterialOilCr
     }
 
     @Override
-    public boolean match(ItemStack itemStack, ComparatorData comparatorData) {
-        if (!super.match(itemStack, comparatorData)) {
+    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
+        if (!super.match(itemStack, dataHolder)) {
             return false;
         }
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta)itemStack.getItemMeta();
@@ -33,7 +33,7 @@ public class VanillaEnchantedBookCraftingIngredient extends VanillaMaterialOilCr
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd) {
+    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
         ItemStack result = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta)result.getItemMeta();
         meta.addStoredEnchant(enchantment, level, true);

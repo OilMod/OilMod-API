@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 public abstract class NormalOilCraftingIngredientBase implements OilCraftingIngredient {
 
     @Override
-    public ItemStack onCrafted(ItemStack oldItemStack) {
+    public ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder) {
         oldItemStack.setAmount(oldItemStack.getAmount()-1);
         return oldItemStack.getAmount()>0?oldItemStack:null;
     }

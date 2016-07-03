@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public abstract class VanillaOilCraftingIngredient extends NormalOilCraftingIngredientBase {
 
     @Override
-    public boolean match(ItemStack itemStack2, ComparatorData comparatorData) {
+    public boolean match(ItemStack itemStack2, DataHolder dataHolder) {
         return !(itemStack2 instanceof OilBukkitItemStack);
     }
 }

@@ -27,7 +27,7 @@ public class VanillaPotionCraftingIngredient extends VanillaOilCraftingIngredien
     }
 
     @Override
-    public boolean match(ItemStack itemStack, ComparatorData comparatorData) {
+    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
         if (!matchMaterial(itemStack.getType())) {
             return false;
         }
@@ -45,7 +45,7 @@ public class VanillaPotionCraftingIngredient extends VanillaOilCraftingIngredien
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd) {
+    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
         ItemStack itemStack = new ItemStack(potionBottleTypes[rnd.nextInt(potionBottleTypes.length)].getBukkitMaterial());
         PotionMeta meta = (PotionMeta)itemStack.getItemMeta();
         meta.setBasePotionData(new PotionData(potionType, potionExtended.generateExtended(rnd), potionUpgraded.generateUpgradeed(rnd)));

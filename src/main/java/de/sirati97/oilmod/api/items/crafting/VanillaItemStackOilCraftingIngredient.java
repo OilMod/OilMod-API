@@ -15,12 +15,12 @@ public class VanillaItemStackOilCraftingIngredient extends VanillaOilCraftingIng
     }
 
     @Override
-    public boolean match(ItemStack itemStack2, ComparatorData comparatorData) {
-        return super.match(itemStack, comparatorData) && itemStack.isSimilar(itemStack2);
+    public boolean match(ItemStack itemStack2, DataHolder dataHolder) {
+        return super.match(itemStack, dataHolder) && itemStack.isSimilar(itemStack2);
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd) {
+    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
         return itemStack;
     }
 }

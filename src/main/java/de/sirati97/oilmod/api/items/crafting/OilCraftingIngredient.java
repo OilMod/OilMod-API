@@ -9,7 +9,7 @@ import java.util.Random;
  * Created by sirati97 on 24.03.2016.
  */
 public interface OilCraftingIngredient {
-    boolean match(ItemStack itemStack, ComparatorData comparatorData);
-    ItemStack getRandomExample(Random rnd);
-    ItemStack onCrafted(ItemStack oldItemStack);
+    boolean match(ItemStack itemStack, DataHolder dataHolder);
+    ItemStack getRandomExample(Random rnd, DataHolder dataHolder);
+    ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder);
 }
