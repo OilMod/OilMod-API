@@ -46,7 +46,7 @@ public class VanillaEnchantedBookCraftingIngredient extends VanillaMaterialOilCr
             }
             if (allowedEnchantments.size()>0) {
                 Enchantment enchantment2 = allowedEnchantments.get(rnd.nextInt(allowedEnchantments.size()));
-                meta.addStoredEnchant(enchantment, rnd.nextInt(enchantment2.getMaxLevel()-enchantment2.getStartLevel()+1)+enchantment2.getStartLevel(), false);
+                meta.addStoredEnchant(enchantment2, rnd.nextInt(enchantment2.getMaxLevel()-enchantment2.getStartLevel()+1)+enchantment2.getStartLevel(), false);
             }
         }
         result.setItemMeta(meta);
