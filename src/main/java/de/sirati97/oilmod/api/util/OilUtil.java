@@ -1,5 +1,6 @@
 package de.sirati97.oilmod.api.util;
 
+import de.sirati97.oilmod.api.entity.NMSEntity;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,6 +56,7 @@ public class OilUtil {
         protected abstract void setLastDamager(LivingEntity entity, LivingEntity source);
         protected abstract boolean damageEntity(LivingEntity entity, double amount, LivingEntity source);
         protected abstract long getWorldTicksPlayed(World world);
+        protected abstract  Class<? extends NMSEntity> getMappedNMSClass(Class<? extends Entity> bukkitClass);
     }
 
     public static ItemStack[] getDrops(Block block){
@@ -205,5 +207,10 @@ public class OilUtil {
             default:
                 return targetParent.equals(targetChild);
         }
+    }
+
+
+    public Class<? extends NMSEntity> getMappedNMSClass(Class<? extends Entity> bukkitClass) {
+        return UtilImplBase.getInstance().getMappedNMSClass(bukkitClass);
     }
 }
