@@ -3,6 +3,7 @@ package org.oilmod.api.items.internal;
 import org.oilmod.api.items.crafting.OilCraftingRecipe;
 import org.oilmod.api.items.crafting.OilCraftingResult;
 import org.oilmod.api.items.crafting.OilCraftingIngredient;
+import org.oilmod.api.util.OilKey;
 
 /**
  * Internal - should not be called by user code - Use ItemCraftingFactory instead
@@ -30,7 +31,7 @@ public abstract class ItemCraftingFactoryBase {
         return instance;
     }
 
-    public abstract OilCraftingRecipe createShapedRecipe(int width, int height, OilCraftingResult result, OilCraftingIngredient... ingredients);
-    public abstract OilCraftingRecipe createShapelessRecipe(OilCraftingResult result, OilCraftingIngredient... ingredients);
+    public abstract OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilCraftingResult result, OilCraftingIngredient... ingredients);
+    public abstract OilCraftingRecipe createShapelessRecipe(OilKey key, OilCraftingResult result, OilCraftingIngredient... ingredients);
     public abstract void registerGlobal(OilCraftingRecipe recipe);
 }

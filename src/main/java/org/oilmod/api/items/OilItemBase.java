@@ -9,6 +9,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.util.OilKey;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public abstract class OilItemBase<T extends OilItemStack> {
     private Material material;
     private int data;
-    private final String itemIdentifier;
+    private final OilKey key;
     private String name;
     private Object nmsItem;
     private int maxStackSize;
@@ -27,28 +28,26 @@ public abstract class OilItemBase<T extends OilItemStack> {
     private ItemStack[] naturalExamples;
 
     /**
-     *
+     *  @param key Mod unique key that identifies the item
      * @param material The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
-     * @param itemIdentifier Mod unique key that identifies the item
      * @param name displayed name of the item
      */
-    public OilItemBase(Material material, int data, String itemIdentifier, String name) {
-        this(material, data, itemIdentifier, 64, name);
+    public OilItemBase(OilKey key, Material material, int data, String name) {
+        this(key, material, data, 64, name);
     }
 
     /**
-     *
+     *  @param key Mod unique key that identifies the item
      * @param material The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
-     * @param itemIdentifier Mod unique key that identifies the item
      * @param maxStackSize Maximal stack size of this item
      * @param name displayed name of the item
      */
-    public OilItemBase(Material material, int data, String itemIdentifier, int maxStackSize, String name) {
+    public OilItemBase(OilKey key, Material material, int data, int maxStackSize, String name) {
         this.material = material;
         this.data = data;
-        this.itemIdentifier = itemIdentifier;
+        this.key = key;
         this.maxStackSize = maxStackSize;
         this.name = name;
     }
@@ -174,10 +173,10 @@ public abstract class OilItemBase<T extends OilItemStack> {
 
     /**
      *
-     * @return returns the mod unique identifier of this item
+     * @return returns the mod unique key of this item
      */
-    public String getItemIdentifier() {
-        return itemIdentifier;
+    public OilKey GetOilKey() {
+        return key;
     }
 
     /**

@@ -7,6 +7,7 @@ import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.items.OilSpecificItemStackFactory;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.util.OilKey;
 
 /**
  * Used to create OilMod Crafting Recipes and register them
@@ -23,8 +24,8 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapedRecipe(int width, int height, OilSpecificItemStackFactory result, int amount, Object... ingredients) {
-        return createShapedRecipe(width, height, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
+    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilSpecificItemStackFactory result, int amount, Object... ingredients) {
+        return createShapedRecipe(key, width, height, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
     }
 
     /**
@@ -36,8 +37,8 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapedRecipe(int width, int height, ItemStack vanillaResult, Object... ingredients) {
-        return createShapedRecipe(width, height, new VanillaOilCraftingResult(vanillaResult), ingredients);
+    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, ItemStack vanillaResult, Object... ingredients) {
+        return createShapedRecipe(key, width, height, new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
     /**
@@ -49,8 +50,8 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapedRecipe(int width, int height, OilCraftingResult result, Object... ingredients) {
-        return ItemCraftingFactoryBase.getInstance().createShapedRecipe(width, height, result, toOilCraftingIngredients(ingredients));
+    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilCraftingResult result, Object... ingredients) {
+        return ItemCraftingFactoryBase.getInstance().createShapedRecipe(key, width, height, result, toOilCraftingIngredients(ingredients));
     }
 
     /**
@@ -62,8 +63,8 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapelessRecipe(OilSpecificItemStackFactory result, int amount, Object... ingredients) {
-        return createShapelessRecipe(new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
+    public static OilCraftingRecipe createShapelessRecipe(OilKey key, OilSpecificItemStackFactory result, int amount, Object... ingredients) {
+        return createShapelessRecipe(key, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
     }
 
     /**
@@ -75,8 +76,8 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapelessRecipe(ItemStack vanillaResult, Object... ingredients) {
-        return createShapelessRecipe(new VanillaOilCraftingResult(vanillaResult), ingredients);
+    public static OilCraftingRecipe createShapelessRecipe(OilKey key, ItemStack vanillaResult, Object... ingredients) {
+        return createShapelessRecipe(key, new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
     /**
@@ -88,8 +89,8 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapelessRecipe(OilCraftingResult result, Object... ingredients) {
-        return ItemCraftingFactoryBase.getInstance().createShapelessRecipe(result, toOilCraftingIngredients(ingredients));
+    public static OilCraftingRecipe createShapelessRecipe(OilKey key, OilCraftingResult result, Object... ingredients) {
+        return ItemCraftingFactoryBase.getInstance().createShapelessRecipe(key, result, toOilCraftingIngredients(ingredients));
     }
 
     /**

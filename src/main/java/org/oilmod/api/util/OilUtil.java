@@ -57,7 +57,7 @@ public class OilUtil {
         protected abstract boolean damageEntity(LivingEntity entity, double amount, LivingEntity source);
         protected abstract long getWorldTicksPlayed(World world);
         protected abstract  Class<? extends NMSEntity> getMappedNMSClass(Class<? extends Entity> bukkitClass);
-        protected abstract OilKey createOilKey();
+        protected abstract NMSMinecraftKey registerOilKey(OilKey key);
     }
 
     public static ItemStack[] getDrops(Block block){

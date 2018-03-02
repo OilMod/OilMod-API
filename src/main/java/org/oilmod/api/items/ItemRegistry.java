@@ -1,35 +1,35 @@
 package org.oilmod.api.items;
 
+import org.oilmod.api.OilMod;
 import org.oilmod.api.items.internal.ItemRegistryHelperBase;
 
 /**
  * Created by sirati97 on 16.01.2016.
  */
 public class ItemRegistry {
-    private String id;
+    private OilMod mod;
     private boolean registered;
     private Object nmsObject;
 
     /**
      * Creates new instance of ItemRegistry
-     * @param id Short unique id. Do not change it later, otherwise your plugin becomes incompatible with older versions of you mod
+     * @param mod associated mod with this item registry
      */
-    public ItemRegistry(String id) {
-        this.id = id;
-        ItemRegistryHelperBase.getInstance().initRegister(this, new ItemRegistryHelperBase.InitRegisterCallback() {
-            public void callback(boolean success, Object nmsObject) {
-                registered = success;
-                ItemRegistry.this.nmsObject = nmsObject;
-            }
+    public ItemRegistry(OilMod mod) {
+        this.mod = mod;
+        ItemRegistryHelperBase.getInstance().initRegister(this, (success, nmsObject) -> {
+            registered = success;
+            ItemRegistry.this.nmsObject = nmsObject;
         });
     }
 
+
     /**
      *
-     * @return the id of you mod
+     * @return mod associated with this item registry
      */
-    public String getId() {
-        return id;
+    public OilMod getMod() {
+        return mod;
     }
 
     /**
