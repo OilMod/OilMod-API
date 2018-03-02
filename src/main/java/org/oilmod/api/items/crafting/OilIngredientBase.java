@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by sirati97 on 03.04.2016.
  */
-public abstract class NormalOilCraftingIngredientBase implements OilCraftingIngredient {
+public abstract class OilIngredientBase implements OilCraftingIngredient {
 
     @Override
     public ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder) {

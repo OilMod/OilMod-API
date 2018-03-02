@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * WIP - DO NOT USE
  */
-public class ModItemStackClassOilCraftingIngredient extends NormalOilCraftingIngredientBase {
+public class OilModItemStackClassIngredient extends OilIngredientBase {
     private final Class<? extends OilItemStack> itemClass;
     private int lastItemsCount;
 
@@ -18,7 +18,7 @@ public class ModItemStackClassOilCraftingIngredient extends NormalOilCraftingIng
      * @deprecated this was never finished. i do not know a way to create examples for this ingredient
      */
     @Deprecated
-    public ModItemStackClassOilCraftingIngredient(Class<? extends OilItemStack> itemClass) {
+    public OilModItemStackClassIngredient(Class<? extends OilItemStack> itemClass) {
         this.itemClass = itemClass;
         throw new UnsupportedOperationException("This ingredient type is not supported. :/ maybe in the future");
     }

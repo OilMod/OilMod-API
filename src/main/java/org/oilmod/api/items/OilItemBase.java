@@ -24,7 +24,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
     private String name;
     private Object nmsItem;
     private int maxStackSize;
-    private OilSpecificItemStackFactory[] creativeItems;
+    private OilItemStackFactory[] creativeItems;
     private ItemStack[] naturalExamples;
 
     /**
@@ -108,7 +108,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
      *
      * @return returns an array of factories that are displayed in the oilmod creative menu. Result never changes.
      */
-    public final OilSpecificItemStackFactory[] getCreativeItems() {
+    public final OilItemStackFactory[] getCreativeItems() {
         if (creativeItems == null) {
             creativeItems = createCreativeItems();
         }
@@ -119,8 +119,8 @@ public abstract class OilItemBase<T extends OilItemStack> {
      *
      * @return creates the array of factories that are displayed in the oilmod creative menu.
      */
-    protected OilSpecificItemStackFactory[] createCreativeItems() {
-        return new OilSpecificItemStackFactory[] {new OilSpecificItemStackFactory() {
+    protected OilItemStackFactory[] createCreativeItems() {
+        return new OilItemStackFactory[] {new OilItemStackFactory() {
             @Override
             public ItemStack create() {
                 return createItemStack(1);

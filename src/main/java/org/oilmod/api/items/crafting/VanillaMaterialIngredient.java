@@ -9,10 +9,10 @@ import java.util.Random;
 /**
  * Created by sirati97 on 24.03.2016.
  */
-public class VanillaMaterialOilCraftingIngredient extends VanillaOilCraftingIngredient {
+public class VanillaMaterialIngredient extends VanillaIngredientBase {
     private final Material material;
 
-    public VanillaMaterialOilCraftingIngredient(Material material) {
+    public VanillaMaterialIngredient(Material material) {
         this.material = material;
     }
 

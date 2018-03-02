@@ -7,10 +7,10 @@ import java.util.Random;
 /**
  * Created by sirati97 on 24.03.2016.
  */
-public class VanillaItemStackOilCraftingIngredient extends VanillaOilCraftingIngredient {
+public class VanillaItemStackIngredient extends VanillaIngredientBase {
     private final ItemStack itemStack;
 
-    public VanillaItemStackOilCraftingIngredient(ItemStack itemStack) {
+    public VanillaItemStackIngredient(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 

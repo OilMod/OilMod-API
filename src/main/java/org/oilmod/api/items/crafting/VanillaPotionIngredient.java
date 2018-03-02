@@ -11,13 +11,13 @@ import java.util.Random;
 /**
  * Created by sirati97 on 02.07.2016 for OilMod-Api.
  */
-public class VanillaPotionCraftingIngredient extends VanillaOilCraftingIngredient {
+public class VanillaPotionIngredient extends VanillaIngredientBase {
     private final PotionType potionType;
     private final PotionUpgraded potionUpgraded;
     private final PotionExtended potionExtended;
     private final PotionBottleType[] potionBottleTypes;
 
-    public VanillaPotionCraftingIngredient(PotionType potionType, PotionUpgraded potionUpgraded, PotionExtended potionExtended, PotionBottleType... potionBottleTypes) {
+    public VanillaPotionIngredient(PotionType potionType, PotionUpgraded potionUpgraded, PotionExtended potionExtended, PotionBottleType... potionBottleTypes) {
         this.potionType = potionType;
         this.potionUpgraded = potionUpgraded;
         this.potionExtended = potionExtended;

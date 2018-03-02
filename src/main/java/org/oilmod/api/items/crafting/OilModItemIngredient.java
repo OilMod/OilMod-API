@@ -9,12 +9,12 @@ import java.util.Random;
 /**
  * Created by sirati97 on 24.03.2016.
  */
-public class ModItemOilCraftingIngredient extends NormalOilCraftingIngredientBase {
+public class OilModItemIngredient extends OilIngredientBase {
     private final OilItemBase item;
     private ItemStack[] examples;
     private int lastItemsCount;
 
-    public ModItemOilCraftingIngredient(OilItemBase item) {
+    public OilModItemIngredient(OilItemBase item) {
         this.item = item;
     }
 

@@ -13,11 +13,11 @@ import java.util.Random;
 /**
  * Created by sirati97 on 02.07.2016 for OilMod-TestPlugin.
  */
-public class VanillaEnchantedBookCraftingIngredient extends VanillaMaterialOilCraftingIngredient {
+public class VanillaEnchantmentIngredient extends VanillaMaterialIngredient {
     private final Enchantment enchantment;
     private final int level;
 
-    public VanillaEnchantedBookCraftingIngredient(Enchantment enchantment, int level) {
+    public VanillaEnchantmentIngredient(Enchantment enchantment, int level) {
         super(Material.ENCHANTED_BOOK);
         this.enchantment = enchantment;
         this.level = level;

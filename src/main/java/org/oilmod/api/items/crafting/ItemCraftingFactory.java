@@ -4,7 +4,7 @@ import org.oilmod.api.items.internal.ItemCraftingFactoryBase;
 import org.oilmod.api.items.OilBukkitItemStack;
 import org.oilmod.api.items.OilItemBase;
 import org.oilmod.api.items.OilItemStack;
-import org.oilmod.api.items.OilSpecificItemStackFactory;
+import org.oilmod.api.items.OilItemStackFactory;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.oilmod.api.util.OilKey;
@@ -24,7 +24,7 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilSpecificItemStackFactory result, int amount, Object... ingredients) {
+    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilItemStackFactory result, int amount, Object... ingredients) {
         return createShapedRecipe(key, width, height, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
     }
 
@@ -63,7 +63,7 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapelessRecipe(OilKey key, OilSpecificItemStackFactory result, int amount, Object... ingredients) {
+    public static OilCraftingRecipe createShapelessRecipe(OilKey key, OilItemStackFactory result, int amount, Object... ingredients) {
         return createShapelessRecipe(key, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
     }
 
@@ -117,19 +117,19 @@ public final class ItemCraftingFactory {
         } else if (ingredient instanceof OilCraftingIngredient) {
             return (OilCraftingIngredient) ingredient;
         } else if (ingredient instanceof Material) {
-            return new VanillaMaterialOilCraftingIngredient((Material) ingredient);
+            return new VanillaMaterialIngredient((Material) ingredient);
         } else if (ingredient instanceof ItemStack && !(ingredient instanceof OilBukkitItemStack)) {
-            return new VanillaItemStackOilCraftingIngredient((ItemStack) ingredient);
+            return new VanillaItemStackIngredient((ItemStack) ingredient);
         } else if (ingredient instanceof OilItemBase) {
-            return new ModItemOilCraftingIngredient((OilItemBase) ingredient);
+            return new OilModItemIngredient((OilItemBase) ingredient);
         } else if (ingredient instanceof Class) {
             Class<?> clazz = (Class) ingredient;
             if (oilItemBaseClass.isAssignableFrom(clazz)) {
                 //noinspection unchecked
-                return new ModItemClassOilCraftingIngredient((Class<? extends OilItemBase>) ingredient);
+                return new OilModItemClassIngredient((Class<? extends OilItemBase>) ingredient);
             } else if (oilItemStackClass.isAssignableFrom(clazz)) {
                 //noinspection unchecked,deprecation
-                return new ModItemStackClassOilCraftingIngredient((Class<? extends OilItemStack>) ingredient);
+                return new OilModItemStackClassIngredient((Class<? extends OilItemStack>) ingredient);
             }
         }
         throw new IllegalStateException("Invalid ingredient: unknown type " + ingredient.getClass().getName());
