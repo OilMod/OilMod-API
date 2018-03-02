@@ -6,12 +6,12 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by sirati97 on 24.03.2016.
  */
-public class SpecificItemstackFactoryOilCraftingResult implements OilCraftingResult {
+public class ItemStackFactoryCraftingResult implements OilCraftingResult {
     private final OilItemStackFactory itemstackFactory;
     private final int amount;
     private ItemStack result;
 
-    public SpecificItemstackFactoryOilCraftingResult(OilItemStackFactory itemstackFactory, int amount) {
+    public ItemStackFactoryCraftingResult(OilItemStackFactory itemstackFactory, int amount) {
         this.itemstackFactory = itemstackFactory;
         this.amount = amount;
     }

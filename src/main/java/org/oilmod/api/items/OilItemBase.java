@@ -120,12 +120,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
      * @return creates the array of factories that are displayed in the oilmod creative menu.
      */
     protected OilItemStackFactory[] createCreativeItems() {
-        return new OilItemStackFactory[] {new OilItemStackFactory() {
-            @Override
-            public ItemStack create() {
-                return createItemStack(1);
-            }
-        }};
+        return new OilItemStackFactory[] {() -> createItemStack(1)};
     }
 
     /**
@@ -141,14 +136,14 @@ public abstract class OilItemBase<T extends OilItemStack> {
 
     /**
      *
-     * @return creates the array of instances of this item that represent this item in wildcard crafting recipes. Result never changes.
+     * @return creates the array of instances of this item that represent this item in wildcard crafting recipes. Result is not supposed to vary during runtime.
      */
     protected ItemStack[] createNaturalExamples() {
         return new ItemStack[]{createItemStack(1)};
     }
 
     /**
-     * Internal - should not e called by user code
+     * Internal - should not be called by user code
      * @param nmsItem the nms item
      */
     void setNmsItem(Object nmsItem) {
@@ -156,7 +151,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
     }
 
     /**
-     * Internal - should not e called by user code
+     * Internal - should not be called by user code
      * @return returns the nms item
      */
     public Object getNmsItem() {
@@ -190,7 +185,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
     }
 
     /**
-     * Internal - should not e called by user code
+     * Internal - should not be called by user code
      * @param nmsItemStack the NMS itemstack
      * @return instance of T
      */
@@ -259,7 +254,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
     }
 
     /**
-     * Override this method when allowing enchanting
+     * Override this method to allow enchanting
      * @param enchantment the enchantment that is checked
      * @return returns whether the enchantment can be applied to this item
      */
@@ -277,7 +272,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
 
     /**
      *
-     * @param itemStack The Itemstack is question to be used for repairing the OilItemStack
+     * @param itemStack ItemStack the player tries to repair the item with.
      * @param human The Human that is trying this
      * @return returns whether it is allowed to repair the OilItemStack with the itemstack
      */
@@ -285,11 +280,13 @@ public abstract class OilItemBase<T extends OilItemStack> {
         return false;
     }
 
+    //TODO fix this javadoc. fix ll the javadocs
     /**
+     * Called when a preview of the result is needed. This code should under no circumstances have any side effects.
      * Should modify the OilItemStack in a way that it looks visually like the ItemStack after the repair.
-     * This should only include lightweight and fast algorithms. This method should not modify itemStack in any way.
+     * This should only include lightweight and fast algorithms. This method should not modify the ingredients in any way.
      * This method is called when a player puts everything needed into the anvil and it is not certain if a repair is really executed.
-     * @param itemStack The itemstack that is used for repairing
+     * @param itemStack The ItemStack that is used for repairing
      * @param human The Human repairing the OilItemStack
      * @return how many of these items should be used
      */
@@ -299,14 +296,14 @@ public abstract class OilItemBase<T extends OilItemStack> {
 
     /**
      *
-     * @param itemStack The itemstack that is used for repairing
+     * @param itemStack The ItemStack that is used for repairing
      * @param human The Human repairing the OilItemStack
      */
     public void repairAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {}
 
     /**
      * This method is called when a player repairs the items in an anvil. It should do anything that could not be done in prepareRepairAnvil.
-     * @param itemStack The Itemstack is question to be combined with the OilItemStack
+     * @param itemStack The ItemStack is question to be combined with the OilItemStack
      * @param human The Human that is trying this
      * @return returns whether it is allowed to combine the itemstack with the OilItemStack
      */

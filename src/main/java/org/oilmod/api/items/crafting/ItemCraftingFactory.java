@@ -25,7 +25,7 @@ public final class ItemCraftingFactory {
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilItemStackFactory result, int amount, Object... ingredients) {
-        return createShapedRecipe(key, width, height, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
+        return createShapedRecipe(key, width, height, new ItemStackFactoryCraftingResult(result, amount), ingredients);
     }
 
     /**
@@ -64,7 +64,7 @@ public final class ItemCraftingFactory {
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapelessRecipe(OilKey key, OilItemStackFactory result, int amount, Object... ingredients) {
-        return createShapelessRecipe(key, new SpecificItemstackFactoryOilCraftingResult(result, amount), ingredients);
+        return createShapelessRecipe(key, new ItemStackFactoryCraftingResult(result, amount), ingredients);
     }
 
     /**
