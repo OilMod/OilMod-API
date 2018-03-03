@@ -35,7 +35,7 @@ public class ItemRegistry {
     /**
      * Registers an Item for your mod
      */
-    public <T extends OilItemBase> void register(T apiItem) {
+    public <T extends OilItem> void register(T apiItem) {
         if (!registered) {
             throw new IllegalStateException("ItemRegister was not successfully initialized");
         } else if (apiItem.isEnchantable() && apiItem.getEnchantSelectModifier() < 1) {

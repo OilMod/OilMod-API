@@ -1,6 +1,6 @@
 package org.oilmod.api.items.internal;
 
-import org.oilmod.api.items.OilItemBase;
+import org.oilmod.api.items.OilItem;
 
 /**
  * Internal
@@ -28,5 +28,5 @@ public abstract class ItemClassMapSingleton {
         return instance;
     }
 
-    public abstract <T extends OilItemBase> T[] getOilItemsByClass(Class<T> clazz);
+    public abstract <T extends OilItem> T[] getOilItemsByClass(Class<T> clazz);
 }

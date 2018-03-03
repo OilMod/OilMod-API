@@ -1,7 +1,7 @@
 package org.oilmod.api.items.internal;
 
 import org.oilmod.api.items.ItemRegistry;
-import org.oilmod.api.items.OilItemBase;
+import org.oilmod.api.items.OilItem;
 
 /**
  * Internal - should not be called by user code
@@ -28,7 +28,7 @@ public abstract class ItemRegistryHelperBase {
 
     private static class ModItemSetterHelper extends org.oilmod.api.items.ModItemSetterHelper {
         @Override
-        public void set(Object nmsItem, OilItemBase apiItem) {
+        public void set(Object nmsItem, OilItem apiItem) {
             super.set(nmsItem, apiItem);
         }
     }
@@ -41,11 +41,11 @@ public abstract class ItemRegistryHelperBase {
         return instance;
     }
 
-    protected void setNMSModItem(Object nmsItem, OilItemBase apiItem) {
+    protected void setNMSModItem(Object nmsItem, OilItem apiItem) {
         HELPER.set(nmsItem, apiItem);
     }
 
-    public abstract <T extends OilItemBase> void register(ItemRegistry register, T apiItem);
+    public abstract <T extends OilItem> void register(ItemRegistry register, T apiItem);
 
 
     public abstract void initRegister(ItemRegistry register, InitRegisterCallback callback);

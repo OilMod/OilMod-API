@@ -23,14 +23,14 @@ import java.util.Map;
  */
 public class OilItemStack implements DataParent, InventoryHolder{
     private NMSItemStack nmsItemStack;
-    private OilItemBase item;
+    private OilItem item;
     private final Map<String,IData<?>> registeredIData = new THashMap<>();
     private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
     private ModInventoryObjectBase mainInventory;
     private ItemDescription itemDescription;
     private boolean initiated = false;
 
-    public OilItemStack(NMSItemStack nmsItemStack, OilItemBase item) {
+    public OilItemStack(NMSItemStack nmsItemStack, OilItem item) {
         this.nmsItemStack = nmsItemStack;
         this.item = item;
     }
@@ -78,7 +78,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
      *
      * @return returns the OilItem
      */
-    public OilItemBase getItem() {
+    public OilItem getItem() {
         return item;
     }
 

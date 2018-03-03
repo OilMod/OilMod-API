@@ -1,8 +1,8 @@
 package org.oilmod.api.items.crafting;
 
+import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.internal.ItemCraftingFactoryBase;
 import org.oilmod.api.items.OilBukkitItemStack;
-import org.oilmod.api.items.OilItemBase;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.items.OilItemStackFactory;
 import org.bukkit.Material;
@@ -20,7 +20,7 @@ public final class ItemCraftingFactory {
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
@@ -33,7 +33,7 @@ public final class ItemCraftingFactory {
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
@@ -46,7 +46,7 @@ public final class ItemCraftingFactory {
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
@@ -59,7 +59,7 @@ public final class ItemCraftingFactory {
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
@@ -72,7 +72,7 @@ public final class ItemCraftingFactory {
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
@@ -85,7 +85,7 @@ public final class ItemCraftingFactory {
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
@@ -109,7 +109,7 @@ public final class ItemCraftingFactory {
     }
 
 
-    private static final Class<OilItemBase> oilItemBaseClass = OilItemBase.class;
+    private static final Class<OilItem> oilItemBaseClass = OilItem.class;
     private static final Class<OilItemStack> oilItemStackClass = OilItemStack.class;
     private static OilCraftingIngredient toOilCraftingIngredient(Object ingredient) {
         if (ingredient == null) {
@@ -120,13 +120,13 @@ public final class ItemCraftingFactory {
             return new VanillaMaterialIngredient((Material) ingredient);
         } else if (ingredient instanceof ItemStack && !(ingredient instanceof OilBukkitItemStack)) {
             return new VanillaItemStackIngredient((ItemStack) ingredient);
-        } else if (ingredient instanceof OilItemBase) {
-            return new OilModItemIngredient((OilItemBase) ingredient);
+        } else if (ingredient instanceof OilItem) {
+            return new OilModItemIngredient((OilItem) ingredient);
         } else if (ingredient instanceof Class) {
             Class<?> clazz = (Class) ingredient;
             if (oilItemBaseClass.isAssignableFrom(clazz)) {
                 //noinspection unchecked
-                return new OilModItemClassIngredient((Class<? extends OilItemBase>) ingredient);
+                return new OilModItemClassIngredient((Class<? extends OilItem>) ingredient);
             } else if (oilItemStackClass.isAssignableFrom(clazz)) {
                 //noinspection unchecked,deprecation
                 return new OilModItemStackClassIngredient((Class<? extends OilItemStack>) ingredient);

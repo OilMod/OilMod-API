@@ -17,7 +17,7 @@ import java.util.List;
  * This class is used to add new items to the game
  * @param <T> Determines which OilItemStack class is used
  */
-public abstract class OilItemBase<T extends OilItemStack> {
+public abstract class OilItem<T extends OilItemStack> {
     private Material material;
     private int data;
     private final OilKey key;
@@ -33,7 +33,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
      * @param data The Vanilla Material Data
      * @param name displayed name of the item
      */
-    public OilItemBase(OilKey key, Material material, int data, String name) {
+    public OilItem(OilKey key, Material material, int data, String name) {
         this(key, material, data, 64, name);
     }
 
@@ -44,7 +44,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
      * @param maxStackSize Maximal stack size of this item
      * @param name displayed name of the item
      */
-    public OilItemBase(OilKey key, Material material, int data, int maxStackSize, String name) {
+    public OilItem(OilKey key, Material material, int data, int maxStackSize, String name) {
         this.material = material;
         this.data = data;
         this.key = key;
@@ -170,7 +170,7 @@ public abstract class OilItemBase<T extends OilItemStack> {
      *
      * @return returns the mod unique key of this item
      */
-    public OilKey GetOilKey() {
+    public OilKey getOilKey() {
         return key;
     }
 

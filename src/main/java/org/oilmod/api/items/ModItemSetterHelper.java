@@ -9,7 +9,7 @@ public class ModItemSetterHelper {
     /**
      * Internal - should not be called by user code
      */
-    protected void set(Object nmsItem, OilItemBase apiItem) {
+    protected void set(Object nmsItem, OilItem apiItem) {
         apiItem.setNmsItem(nmsItem);
     }
 }

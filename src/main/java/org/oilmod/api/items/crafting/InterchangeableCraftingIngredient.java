@@ -21,7 +21,7 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
      *                    <li>Instances of OilCraftingIngredient</li>
      *                    <li>Bukkit Material</li>
      *                    <li>Bukkit ItemStack</li>
-     *                    <li>Class&lt;? extends OilItemBase&gt;</li>
+     *                    <li>Class&lt;? extends OilItem&gt;</li>
      *                    <li>OilMod Item</li></ul>
      */
     public InterchangeableCraftingIngredient(Object... ingredients) {
