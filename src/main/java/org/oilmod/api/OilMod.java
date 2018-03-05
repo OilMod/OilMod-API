@@ -1,5 +1,6 @@
 package org.oilmod.api;
 
+import org.apache.commons.lang.Validate;
 import org.oilmod.api.util.OilKey;
 
 public class OilMod {
@@ -9,7 +10,7 @@ public class OilMod {
 
     /**
      * Creates new instance of OilMod
-     * @param internalName Short unique name. Restricted to alphanumerical and underscores. Do not change it later (case matters), otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
+     * @param internalName Short unique name. Restricted to lowercase alphanumerical and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
      */
     public OilMod(String internalName) {
         this(internalName, internalName);
@@ -17,10 +18,11 @@ public class OilMod {
 
     /**
      * Creates new instance of OilMod
-     * @param internalName Short unique name. Restricted to alphanumerical and underscores. Do not change it later (case matters), otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
+     * @param internalName Short unique name. Restricted to lowercase alphanumerical and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
      * @param displayName This is used rarely and only where things are presented pretty.
      */
     public OilMod(String internalName, String displayName) {
+        Validate.isTrue(OilKey.alphanumericalPattern.matcher(internalName).find(), "Only lowercase alphanumerical characters and underscores are allowed");
         this.internalName = internalName;
         this.displayName = displayName;
     }
@@ -40,7 +42,7 @@ public class OilMod {
 
     /**
      *
-     * @param keyString Short unique string. Restricted to alphanumerical and underscores. Do not change it later (case matters), otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
+     * @param keyString Short unique string. Restricted to lowercase alphanumerical and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
      * @return Returns an unique key.
      */
     public OilKey createKey(String keyString) {

@@ -22,6 +22,7 @@ import java.util.Random;
  * Created by sirati97 on 12.03.2016.
  */
 public class OilUtil {
+
     public static abstract class UtilImplBase {
         private static UtilImplBase instance;
         private static final Object MUTEX = new Object();
@@ -57,7 +58,7 @@ public class OilUtil {
         protected abstract boolean damageEntity(LivingEntity entity, double amount, LivingEntity source);
         protected abstract long getWorldTicksPlayed(World world);
         protected abstract  Class<? extends NMSEntity> getMappedNMSClass(Class<? extends Entity> bukkitClass);
-        protected abstract NMSMinecraftKey registerOilKey(OilKey key);
+        protected abstract NMSKey registerOilKey(OilKey key);
     }
 
     public static ItemStack[] getDrops(Block block){
