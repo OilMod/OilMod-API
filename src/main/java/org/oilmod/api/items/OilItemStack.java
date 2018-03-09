@@ -243,11 +243,11 @@ public class OilItemStack implements DataParent, InventoryHolder{
 
     /**
      * Override the change the name of the Itemstack arcourding to properties of the ItemStack
-     * Standard implementation calls getName() of the OilItem
+     * Standard implementation calls getDisplayName() of the OilItem
      * @return returns standard display name for this itemstack
      */
     public String createDisplayName() {
-        return getItem().getName();
+        return getItem().getDisplayName();
     }
 
     /**

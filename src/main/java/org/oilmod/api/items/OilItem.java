@@ -1,5 +1,7 @@
 package org.oilmod.api.items;
 
+import org.bukkit.block.BlockState;
+import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.internal.ItemFactoryBase;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,20 +23,25 @@ public abstract class OilItem<T extends OilItemStack> {
     private Material material;
     private int data;
     private final OilKey key;
-    private String name;
+    private String displayName;
     private Object nmsItem;
     private int maxStackSize;
     private OilItemStackFactory[] creativeItems;
     private ItemStack[] naturalExamples;
+    private ItemType itemType;
+
+    //Constructor
+
+
 
     /**
      *  @param key Mod unique key that identifies the item
      * @param material The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
-     * @param name displayed name of the item
+     * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, Material material, int data, String name) {
-        this(key, material, data, 64, name);
+    public OilItem(OilKey key, Material material, int data, String displayName) {
+        this(key, material, data, 64, displayName);
     }
 
     /**
@@ -42,16 +49,26 @@ public abstract class OilItem<T extends OilItemStack> {
      * @param material The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
      * @param maxStackSize Maximal stack size of this item
-     * @param name displayed name of the item
+     * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, Material material, int data, int maxStackSize, String name) {
+    public OilItem(OilKey key, Material material, int data, int maxStackSize, String displayName) {
         this.material = material;
         this.data = data;
         this.key = key;
         this.maxStackSize = maxStackSize;
-        this.name = name;
+        this.displayName = displayName;
     }
 
+
+
+
+
+
+
+
+
+
+    //Normal getters
     /**
      *
      * @return returns that material data used to display this item on vanilla clients
@@ -69,22 +86,103 @@ public abstract class OilItem<T extends OilItemStack> {
     }
 
     /**
-     * This method returns the display name of the item that should be seen by the player. Will be used in the localisation api
-     * @param player The player that should see the name
-     * @return returns the display name of the item that should be seen by the player
+     * This method returns the display displayName of the item that should be seen by the player. Will be used in the localisation api
+     * @param player The player that should see the displayName
+     * @return returns the display displayName of the item that should be seen by the player
      */
-    public String getName(Player player) {
-        return name;
+    public String getDisplayName(Player player) {
+        return displayName;
     }
 
     /**
      *
-     * @return returns the display name of the item
+     * @return returns the display displayName of the item
      */
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    /**
+     *
+     * @return returns the maximal stack size of this item
+     */
+    public int getMaxStackSize() {
+        return maxStackSize==0?getItemType().getMaxStackSize():maxStackSize;
+    }
+
+    /**
+     *
+     * @return returns the mod unique key of this item
+     */
+    public OilKey getOilKey() {
+        return key;
+    }
+
+    /**
+     * You do no need to override this method. just override getEnchantSelectModifier() and let it return a value bigger than 0
+     * @return return whether the item is enchantable.
+     */
+    public boolean isEnchantable() {
+        return getEnchantSelectModifier() > 0;
+    }
+
+    /**
+     * Override this method and return a value greater than 0 to allow enchanting
+     * @return return the enchant select modifier. An item with the same enchant select modifier and the same allowed enchantments will behave the same when enchanted with the same seed
+     */
+    public int getEnchantSelectModifier() {
+        return 0;
+    }
+
+    /**
+     * Override this method to allow enchanting
+     * @param enchantment the enchantment that is checked
+     * @return returns whether the enchantment can be applied to this item
+     */
+    public boolean canEnchant(Enchantment enchantment) {
+        return false;
+    }
+
+    /**
+     *
+     * @return returns the standard description of your item
+     */
+    public List<String> getStandardDescription() {
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+    //OilMod Item methods
+    public boolean canDestroySpecialBlock(BlockState blockState, BlockType blockType) {
+        return getItemType().canDestroySpecialBlock(this, blockState, blockType);
+    }
+
+    public float getDestroySpeed(BlockState blockState, BlockType blockType) {
+        return getItemType().getDestroySpeed(this, blockState, blockType);
+    }
+
+
+
+
+
+
+
+
+
+
+    //OilMod Helper methods
     /**
      * Will be used in the localisation api
      * @param player the player the itemstack is for.
@@ -143,6 +241,26 @@ public abstract class OilItem<T extends OilItemStack> {
     }
 
     /**
+     * Should be overwritten to change which class represents the itemstack of this item - should not be called by user code
+     * @param nmsItemStack the NMS itemstack
+     * @return instance of T
+     */
+    protected T createOilItemStackInstance(NMSItemStack nmsItemStack) {
+        //noinspection unchecked
+        return (T) new OilItemStack(nmsItemStack, this); //TODO why are two methods needed
+    }
+
+
+
+
+
+
+
+
+
+
+    //OilMod internal
+    /**
      * Internal - should not be called by user code
      * @param nmsItem the nms item
      */
@@ -159,32 +277,6 @@ public abstract class OilItem<T extends OilItemStack> {
     }
 
     /**
-     *
-     * @return returns the maximal stack size of this item
-     */
-    public int getMaxStackSize() {
-        return maxStackSize;
-    }
-
-    /**
-     *
-     * @return returns the mod unique key of this item
-     */
-    public OilKey getOilKey() {
-        return key;
-    }
-
-    /**
-     * Should be overwritten to change which class represents the itemstack of this item - should not be called by user code
-     * @param nmsItemStack the NMS itemstack
-     * @return instance of T
-     */
-    protected T createOilItemStackInstance(NMSItemStack nmsItemStack) {
-        //noinspection unchecked
-        return (T) new OilItemStack(nmsItemStack, this);
-    }
-
-    /**
      * Internal - should not be called by user code
      * @param nmsItemStack the NMS itemstack
      * @return instance of T
@@ -193,6 +285,16 @@ public abstract class OilItem<T extends OilItemStack> {
         return createOilItemStackInstance(nmsItemStack);
     }
 
+
+
+
+
+
+
+
+
+
+    //OilMod Events
     /**
      * Called when a user uses this item
      * @param itemStack The OilItemStack that was used
@@ -235,39 +337,6 @@ public abstract class OilItem<T extends OilItemStack> {
      */
     public boolean onLeftClickOnBlock(OilItemStack itemStack, Player player, Action action, Block blockClicked, BlockFace blockFace) {
         return false;
-    }
-
-    /**
-     * You do no need to override this method. just override getEnchantSelectModifier() and let it return a value bigger than 0
-     * @return return whether the item is enchantable.
-     */
-    public boolean isEnchantable() {
-        return getEnchantSelectModifier() > 0;
-    }
-
-    /**
-     * Override this method and return a value greater than 0 to allow enchanting
-     * @return return the enchant select modifier. An item with the same enchant select modifier and the same allowed enchantments will behave the same when enchanted with the same seed
-     */
-    public int getEnchantSelectModifier() {
-        return 0;
-    }
-
-    /**
-     * Override this method to allow enchanting
-     * @param enchantment the enchantment that is checked
-     * @return returns whether the enchantment can be applied to this item
-     */
-    public boolean canEnchant(Enchantment enchantment) {
-        return false;
-    }
-
-    /**
-     *
-     * @return returns the standard description of your item
-     */
-    public List<String> getStandardDescription() {
-        return null;
     }
 
     /**
