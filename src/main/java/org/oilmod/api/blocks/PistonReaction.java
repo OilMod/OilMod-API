@@ -5,5 +5,6 @@ public enum PistonReaction {
     DESTROY,
     BLOCK,
     IGNORE,
-    PUSH_ONLY;
+    PUSH_ONLY,
+    MISSING
 }

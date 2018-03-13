@@ -1,11 +1,14 @@
 package org.oilmod.api.blocks;
 
+import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
 import org.oilmod.api.blocks.nms.NMSBlockType;
 import org.oilmod.api.util.OilKey;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class BlockType {
@@ -48,8 +51,9 @@ public abstract class BlockType {
     public static final BlockType UNKNOWN_J; //TODO: find out what this is
 
     private final static EnumMap<BlockTypeEnum, BlockType> enumMap = new EnumMap<>(BlockTypeEnum.class);
-    private final static Set<BlockType> registeredSet = new THashSet<>();
-    private final static Set<BlockType> registeredSetRead = Collections.unmodifiableSet(registeredSet);
+
+
+    private final static Map<OilKey, BlockType> registry = new THashMap<>();
 
     //Enum
     public enum BlockTypeEnum {
@@ -120,9 +124,8 @@ public abstract class BlockType {
         protected abstract void apiPostInit(); //register missing and so on
         protected abstract BlockType getVanillaBlockType(BlockTypeEnum blockType);
         protected abstract NMSBlockType registerCustom(BlockType blockType);
-        protected abstract BlockType getByKey(OilKey key);
-        protected void unregister(BlockType type) {
-            registeredSet.remove(type);
+        protected void unregister(OilKey key) {
+            registry.remove(key);
         }
     }
     
@@ -175,11 +178,11 @@ public abstract class BlockType {
 
 
     public static BlockType getByKey(OilKey key) {
-        return BlockTypeHelper.getInstance().getByKey(key);
+        return registry.get(key);
     }
 
-    public static Set<BlockType> getAll() {
-        return registeredSetRead;
+    public static Collection<BlockType> getAll() {
+        return registry.values();
     }
 
     /**
@@ -205,7 +208,7 @@ public abstract class BlockType {
         if (blockTypeEnum != BlockTypeEnum.CUSTOM && blockTypeEnum != BlockTypeEnum.ENUM_MISSING) {
             enumMap.put(blockTypeEnum, this);
         }
-        registeredSet.add(this);
+        registry.put(key, this);
     }
 
     private BlockType(OilKey key) {
@@ -251,7 +254,11 @@ public abstract class BlockType {
 
     public abstract boolean breakableBlade();
 
+    public abstract boolean isVanilla();
+
     public abstract PistonReaction getPistonReaction();
+
+    public abstract MapColor getColor();
 
     //Custom BlockType
     static class CustomBlockType extends BlockType {
@@ -268,9 +275,11 @@ public abstract class BlockType {
         private final boolean breakableShears;
         private final boolean breakableBlade;
         private final PistonReaction pistonReaction;
+        private final MapColor color;
 
-        CustomBlockType(OilKey key, boolean liquid, boolean buildable, boolean blocksLight, boolean solid, boolean burnable, boolean replaceable, boolean alwaysDestroyable, boolean breakablePickaxe, boolean breakableAxe, boolean breakableShovel, boolean breakableShears, boolean breakableBlade, PistonReaction pistonReaction) {
+        CustomBlockType(OilKey key, MapColor color, boolean liquid, boolean buildable, boolean blocksLight, boolean solid, boolean burnable, boolean replaceable, boolean alwaysDestroyable, boolean breakablePickaxe, boolean breakableAxe, boolean breakableShovel, boolean breakableShears, boolean breakableBlade, PistonReaction pistonReaction) {
             super(key);
+            this.color = color;
             this.liquid = liquid;
             this.buildable = buildable;
             this.blocksLight = blocksLight;
@@ -327,6 +336,11 @@ public abstract class BlockType {
         }
 
         @Override
+        public MapColor getColor() {
+            return color;
+        }
+
+        @Override
         public boolean breakableAxe() {
             return breakableAxe;
         }
@@ -334,6 +348,11 @@ public abstract class BlockType {
         @Override
         public boolean breakableBlade() {
             return breakableBlade;
+        }
+
+        @Override
+        public boolean isVanilla() {
+            return false;
         }
 
         @Override
@@ -355,6 +374,7 @@ public abstract class BlockType {
     //Custom BlockType Builder
     public static class CustomBlockTypeBuilder {
         private OilKey key;
+        private MapColor color; //TODO: assign standard later when MapColor actually exists
         private boolean liquid;
         private boolean buildable;
         private boolean blocksLight;
@@ -438,8 +458,13 @@ public abstract class BlockType {
             return this;
         }
 
+        public CustomBlockTypeBuilder setColor(MapColor color) {
+            this.color = color;
+            return this;
+        }
+
         public BlockType.CustomBlockType build() {
-            return new BlockType.CustomBlockType(key, liquid, buildable, blocksLight, solid, burnable, replaceable, alwaysDestroyable, breakablePickaxe, breakableAxe, breakableShovel, breakableShears, breakableBlade, pistonReaction);
+            return new BlockType.CustomBlockType(key, color, liquid, buildable, blocksLight, solid, burnable, replaceable, alwaysDestroyable, breakablePickaxe, breakableAxe, breakableShovel, breakableShears, breakableBlade, pistonReaction);
         }
     }
 }
