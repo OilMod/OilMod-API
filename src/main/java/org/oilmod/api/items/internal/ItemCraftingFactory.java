@@ -8,16 +8,16 @@ import org.oilmod.api.util.OilKey;
 /**
  * Internal - should not be called by user code - Use ItemCraftingFactory instead
  */
-public abstract class ItemCraftingFactoryBase {
-    private static ItemCraftingFactoryBase instance;
+public abstract class ItemCraftingFactory {
+    private static ItemCraftingFactory instance;
     private static final Object MUTEX = new Object();
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
-    public static void setInstance(ItemCraftingFactoryBase instance) {
-        if (ItemCraftingFactoryBase.instance == null) {
+    public static void setInstance(ItemCraftingFactory instance) {
+        if (ItemCraftingFactory.instance == null) {
             synchronized (MUTEX) {
-                if (ItemCraftingFactoryBase.instance == null) {
-                    ItemCraftingFactoryBase.instance = instance;
+                if (ItemCraftingFactory.instance == null) {
+                    ItemCraftingFactory.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                 }
@@ -27,7 +27,7 @@ public abstract class ItemCraftingFactoryBase {
         }
     }
 
-    public static ItemCraftingFactoryBase getInstance() {
+    public static ItemCraftingFactory getInstance() {
         return instance;
     }
 

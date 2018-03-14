@@ -2,7 +2,7 @@ package org.oilmod.api.items;
 
 import org.bukkit.block.BlockState;
 import org.oilmod.api.blocks.BlockType;
-import org.oilmod.api.items.internal.ItemFactoryBase;
+import org.oilmod.api.items.internal.ItemFactory;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -190,7 +190,7 @@ public abstract class OilItem<T extends OilItemStack> {
      * @return Bukkit ItemStack of this ModItem
      */
     public final ItemStack createItemStack(Player player, int size) {
-        return ItemFactoryBase.getInstance().createStack(this, player, size);
+        return ItemFactory.getInstance().createStack(this, player, size);
     }
 
     /**

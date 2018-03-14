@@ -9,16 +9,16 @@ import org.oilmod.api.util.WeakReferenceTicker;
 /**
  * Created by sirati97 on 15.01.2016.
  */
-public abstract class InventoryFactoryBase {
-    private static InventoryFactoryBase instance;
+public abstract class InventoryFactory {
+    private static InventoryFactory instance;
     private static final Object MUTEX = new Object();
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
-    public static void setInstance(InventoryFactoryBase instance) {
-        if (InventoryFactoryBase.instance == null) {
+    public static void setInstance(InventoryFactory instance) {
+        if (InventoryFactory.instance == null) {
             synchronized (MUTEX) {
-                if (InventoryFactoryBase.instance == null) {
-                    InventoryFactoryBase.instance = instance;
+                if (InventoryFactory.instance == null) {
+                    InventoryFactory.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                 }
@@ -28,7 +28,7 @@ public abstract class InventoryFactoryBase {
         }
     }
 
-    public static InventoryFactoryBase getInstance() {
+    public static InventoryFactory getInstance() {
         return instance;
     }
 

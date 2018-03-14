@@ -1,7 +1,7 @@
 package org.oilmod.api.items;
 
 import org.oilmod.api.OilMod;
-import org.oilmod.api.items.internal.ItemRegistryHelperBase;
+import org.oilmod.api.items.internal.ItemRegistryHelper;
 
 /**
  * Created by sirati97 on 16.01.2016.
@@ -17,7 +17,7 @@ public class ItemRegistry {
      */
     public ItemRegistry(OilMod mod) {
         this.mod = mod;
-        ItemRegistryHelperBase.getInstance().initRegister(this, (success, nmsObject) -> {
+        ItemRegistryHelper.getInstance().initRegister(this, (success, nmsObject) -> {
             registered = success;
             ItemRegistry.this.nmsObject = nmsObject;
         });
@@ -41,7 +41,7 @@ public class ItemRegistry {
         } else if (apiItem.isEnchantable() && apiItem.getEnchantSelectModifier() < 1) {
             throw new IllegalStateException("Item cannot be registered because EnchantSelectModifier is < 1 while item is enchantable");
         }
-        ItemRegistryHelperBase.getInstance().register(this, apiItem);
+        ItemRegistryHelper.getInstance().register(this, apiItem);
     }
 
     /**

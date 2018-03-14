@@ -1,20 +1,22 @@
 package org.oilmod.api.items.internal;
 
 import org.oilmod.api.items.OilItem;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
- * Internal
+ * Internal - should not be called by user code
  */
-public abstract class ItemClassMapSingleton {
-    private static ItemClassMapSingleton instance;
+public abstract class ItemFactory {
+    private static ItemFactory instance;
     private static final Object MUTEX = new Object();
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
-    public static void setInstance(ItemClassMapSingleton instance) {
-        if (ItemClassMapSingleton.instance == null) {
+    public static void setInstance(ItemFactory instance) {
+        if (ItemFactory.instance == null) {
             synchronized (MUTEX) {
-                if (ItemClassMapSingleton.instance == null) {
-                    ItemClassMapSingleton.instance = instance;
+                if (ItemFactory.instance == null) {
+                    ItemFactory.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                 }
@@ -24,9 +26,9 @@ public abstract class ItemClassMapSingleton {
         }
     }
 
-    public static ItemClassMapSingleton getInstance() {
+    public static ItemFactory getInstance() {
         return instance;
     }
 
-    public abstract <T extends OilItem> T[] getOilItemsByClass(Class<T> clazz);
+    public abstract ItemStack createStack(OilItem item, Player player, int size);
 }

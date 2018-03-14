@@ -11,16 +11,16 @@ import org.bukkit.entity.Player;
 /**
  * Created by sirati97 on 15.01.2016.
  */
-public abstract class UIHelperBase {
-    private static UIHelperBase instance;
+public abstract class UIHelper {
+    private static UIHelper instance;
     private static final Object MUTEX = new Object();
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
-    public static void setInstance(UIHelperBase instance) {
-        if (UIHelperBase.instance == null) {
+    public static void setInstance(UIHelper instance) {
+        if (UIHelper.instance == null) {
             synchronized (MUTEX) {
-                if (UIHelperBase.instance == null) {
-                    UIHelperBase.instance = instance;
+                if (UIHelper.instance == null) {
+                    UIHelper.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                 }
@@ -30,7 +30,7 @@ public abstract class UIHelperBase {
         }
     }
 
-    public static UIHelperBase getInstance() {
+    public static UIHelper getInstance() {
         return instance;
     }
 

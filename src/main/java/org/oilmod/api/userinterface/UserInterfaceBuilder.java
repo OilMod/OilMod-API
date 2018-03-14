@@ -1,6 +1,6 @@
 package org.oilmod.api.userinterface;
 
-import org.oilmod.api.userinterface.internal.UIHelperBase;
+import org.oilmod.api.userinterface.internal.UIHelper;
 import org.oilmod.api.userinterface.internal.UserInterface;
 import org.oilmod.api.userinterface.internal.UserInterfaceFactory;
 import org.bukkit.entity.Player;
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public abstract class UserInterfaceBuilder<Argument> {
 
     protected void displayNewUI(Player player, Argument argument) {
-        UserInterface ui = buildDisplay(player, argument, UIHelperBase.getInstance().getInterfaceFactory());
+        UserInterface ui = buildDisplay(player, argument, UIHelper.getInstance().getInterfaceFactory());
         displayUI(player, ui);
     }
 

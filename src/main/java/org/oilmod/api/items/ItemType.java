@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Set;
 
-public abstract class ItemType {
+public abstract class ItemType<ItemClass extends OilItem<?>> {
     //Static members
     public static final ItemType GENERIC;
     public static final ItemType PICKAXE;
@@ -24,9 +24,9 @@ public abstract class ItemType {
     public static final ItemType THROWABLE;
     public static final ItemType ARMOR;
 
-    private final static EnumMap<ItemTypeEnum, ItemType> enumMap = new EnumMap<>(ItemTypeEnum.class);
-    private final static Set<ItemType> registeredSet = new THashSet<>();
-    private final static Set<ItemType> registeredSetRead = Collections.unmodifiableSet(registeredSet);
+    private final static EnumMap<ItemTypeEnum, ItemType<?>> enumMap = new EnumMap<>(ItemTypeEnum.class);
+    private final static Set<ItemType<?>> registeredSet = new THashSet<>();
+    private final static Set<ItemType<?>> registeredSetRead = Collections.unmodifiableSet(registeredSet);
 
     //Enum
     public enum ItemTypeEnum {
@@ -67,8 +67,8 @@ public abstract class ItemType {
         }
         protected abstract void apiInit(); //prepare stuff
         protected abstract void apiPostInit(); //dunno for this one
-        protected abstract ItemType getVanillaItemType(ItemTypeEnum blockType);
-        protected void unregister(ItemType type) {
+        protected abstract <ItemClass extends OilItem<?>> ItemType<ItemClass> getVanillaItemType(ItemTypeEnum blockType);
+        protected void unregister(ItemType<?> type) {
             registeredSet.remove(type);
         }
     }
@@ -90,7 +90,7 @@ public abstract class ItemType {
         h.apiPostInit();
     }
 
-    public static Set<ItemType> getAll() {
+    public static Set<ItemType<?>> getAll() {
         return registeredSetRead;
     }
 

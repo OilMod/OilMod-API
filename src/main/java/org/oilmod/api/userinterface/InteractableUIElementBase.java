@@ -1,7 +1,7 @@
 package org.oilmod.api.userinterface;
 
 import org.oilmod.api.userinterface.internal.NMSClickData;
-import org.oilmod.api.userinterface.internal.UIHelperBase;
+import org.oilmod.api.userinterface.internal.UIHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -54,6 +54,6 @@ public abstract class InteractableUIElementBase extends UIElement implements IIn
      */
     @Override
     public void onClick(Player player, int index, Click click, NMSClickData data) {
-        UIHelperBase.getInstance().handleInventoryClick(this, player, index, click, data);
+        UIHelper.getInstance().handleInventoryClick(this, player, index, click, data);
     }
 }

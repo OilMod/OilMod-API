@@ -1,7 +1,6 @@
 package org.oilmod.api.items.crafting;
 
 import org.oilmod.api.items.OilItem;
-import org.oilmod.api.items.internal.ItemCraftingFactoryBase;
 import org.oilmod.api.items.OilBukkitItemStack;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.items.OilItemStackFactory;
@@ -51,7 +50,7 @@ public final class ItemCraftingFactory {
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, OilCraftingResult result, Object... ingredients) {
-        return ItemCraftingFactoryBase.getInstance().createShapedRecipe(key, width, height, result, toOilCraftingIngredients(ingredients));
+        return org.oilmod.api.items.internal.ItemCraftingFactory.getInstance().createShapedRecipe(key, width, height, result, toOilCraftingIngredients(ingredients));
     }
 
     /**
@@ -90,14 +89,14 @@ public final class ItemCraftingFactory {
      * @return instance of OilCraftingRecipe
      */
     public static OilCraftingRecipe createShapelessRecipe(OilKey key, OilCraftingResult result, Object... ingredients) {
-        return ItemCraftingFactoryBase.getInstance().createShapelessRecipe(key, result, toOilCraftingIngredients(ingredients));
+        return org.oilmod.api.items.internal.ItemCraftingFactory.getInstance().createShapelessRecipe(key, result, toOilCraftingIngredients(ingredients));
     }
 
     /**
      * Registers the recipe in the standard crafting table crafting manager
      */
     public static void registerGlobal(OilCraftingRecipe recipe) {
-        ItemCraftingFactoryBase.getInstance().registerGlobal(recipe);
+        org.oilmod.api.items.internal.ItemCraftingFactory.getInstance().registerGlobal(recipe);
     }
 
     public static OilCraftingIngredient[] toOilCraftingIngredients(Object... ingredients) {

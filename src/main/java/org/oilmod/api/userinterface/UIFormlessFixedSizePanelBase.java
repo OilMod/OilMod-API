@@ -2,7 +2,7 @@ package org.oilmod.api.userinterface;
 
 import org.oilmod.api.userinterface.internal.NMSFixedSizePanel;
 import org.oilmod.api.userinterface.internal.NMSPanel;
-import org.oilmod.api.userinterface.internal.UIHelperBase;
+import org.oilmod.api.userinterface.internal.UIHelper;
 
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
@@ -12,7 +12,7 @@ public abstract class UIFormlessFixedSizePanelBase extends UIFormlessPanel{
 
     public UIFormlessFixedSizePanelBase(int size) {
         super(size);
-        nmsPanel = UIHelperBase.getInstance().createFixedSizePanel(this);
+        nmsPanel = UIHelper.getInstance().createFixedSizePanel(this);
     }
 
     /**

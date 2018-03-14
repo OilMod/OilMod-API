@@ -2,6 +2,7 @@ package org.oilmod.api.blocks;
 
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
+import org.bukkit.Material;
 import org.oilmod.api.blocks.nms.NMSBlockType;
 import org.oilmod.api.util.OilKey;
 
@@ -108,6 +109,7 @@ public abstract class BlockType {
                 synchronized (MUTEX) {
                     if (BlockTypeHelper.instance == null) {
                         BlockTypeHelper.instance = instance;
+                        BlockType.init();
                     } else {
                         throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                     }
@@ -171,6 +173,8 @@ public abstract class BlockType {
         UNKNOWN_J = h.getVanillaBlockType(BlockTypeEnum.UNKNOWN_J);
         h.apiPostInit();
     }
+
+    private static void init() {}
 
     public static BlockType getStandard(BlockTypeEnum type) {
         return enumMap.get(type);
@@ -244,24 +248,22 @@ public abstract class BlockType {
 
     public abstract boolean isAlwaysDestroyable();
 
-    public abstract boolean breakablePickaxe();
+    public abstract boolean breakablePickaxe(Material material);
 
-    public abstract boolean breakableAxe();
+    public abstract boolean breakableAxe(Material material);
 
-    public abstract boolean breakableShovel();
+    public abstract boolean breakableShovel(Material material);
 
-    public abstract boolean breakableShears();
+    public abstract boolean breakableShears(Material material);
 
-    public abstract boolean breakableBlade();
-
-    public abstract boolean isVanilla();
+    public abstract boolean breakableBlade(Material material);
 
     public abstract PistonReaction getPistonReaction();
 
     public abstract MapColor getColor();
 
     //Custom BlockType
-    static class CustomBlockType extends BlockType {
+    public static class CustomBlockType extends BlockType {
         private final boolean liquid;
         private final boolean buildable;
         private final boolean blocksLight;
@@ -277,7 +279,7 @@ public abstract class BlockType {
         private final PistonReaction pistonReaction;
         private final MapColor color;
 
-        CustomBlockType(OilKey key, MapColor color, boolean liquid, boolean buildable, boolean blocksLight, boolean solid, boolean burnable, boolean replaceable, boolean alwaysDestroyable, boolean breakablePickaxe, boolean breakableAxe, boolean breakableShovel, boolean breakableShears, boolean breakableBlade, PistonReaction pistonReaction) {
+        public CustomBlockType(OilKey key, MapColor color, boolean liquid, boolean buildable, boolean blocksLight, boolean solid, boolean burnable, boolean replaceable, boolean alwaysDestroyable, boolean breakablePickaxe, boolean breakableAxe, boolean breakableShovel, boolean breakableShears, boolean breakableBlade, PistonReaction pistonReaction) {
             super(key);
             this.color = color;
             this.liquid = liquid;
@@ -293,6 +295,10 @@ public abstract class BlockType {
             this.breakableShears = breakableShears;
             this.breakableBlade = breakableBlade;
             this.pistonReaction = pistonReaction;
+        }
+
+        public CustomBlockType(CustomBlockTypeBuilder builder) {
+            this(builder.key, builder.color, builder.liquid, builder.buildable, builder.blocksLight, builder.solid, builder.burnable, builder.replaceable, builder.alwaysDestroyable, builder.breakablePickaxe, builder.breakableAxe, builder.breakableShovel, builder.breakableShears, builder.breakableBlade, builder.pistonReaction);
         }
 
         @Override
@@ -341,32 +347,27 @@ public abstract class BlockType {
         }
 
         @Override
-        public boolean breakableAxe() {
+        public boolean breakableAxe(Material material) {
             return breakableAxe;
         }
 
         @Override
-        public boolean breakableBlade() {
+        public boolean breakableBlade(Material material) {
             return breakableBlade;
         }
 
         @Override
-        public boolean isVanilla() {
-            return false;
-        }
-
-        @Override
-        public boolean breakablePickaxe() {
+        public boolean breakablePickaxe(Material material) {
             return breakablePickaxe;
         }
 
         @Override
-        public boolean breakableShears() {
+        public boolean breakableShears(Material material) {
             return breakableShears;
         }
 
         @Override
-        public boolean breakableShovel() {
+        public boolean breakableShovel(Material material) {
             return breakableShovel;
         }
     }
@@ -464,7 +465,7 @@ public abstract class BlockType {
         }
 
         public BlockType.CustomBlockType build() {
-            return new BlockType.CustomBlockType(key, color, liquid, buildable, blocksLight, solid, burnable, replaceable, alwaysDestroyable, breakablePickaxe, breakableAxe, breakableShovel, breakableShears, breakableBlade, pistonReaction);
+            return new BlockType.CustomBlockType(this);
         }
     }
 }

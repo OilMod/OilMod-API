@@ -25,7 +25,7 @@ public class OilKey {
     public static OilKey create(OilMod mod, String keyString) {
         Validate.isTrue(alphanumericalPattern.matcher(keyString).find(), "Only lowercase alphanumerical characters and underscores are allowed");
         OilKey result = new OilKey(mod, keyString);
-        result.nmsKey = OilUtil.UtilImplBase.getInstance().registerOilKey(result);
+        result.nmsKey = OilUtil.UtilImpl.getInstance().registerOilKey(result);
         return result;
     }
 

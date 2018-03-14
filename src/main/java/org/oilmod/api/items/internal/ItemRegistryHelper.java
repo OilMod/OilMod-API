@@ -6,17 +6,17 @@ import org.oilmod.api.items.OilItem;
 /**
  * Internal - should not be called by user code
  */
-public abstract class ItemRegistryHelperBase {
-    private static ItemRegistryHelperBase instance;
+public abstract class ItemRegistryHelper {
+    private static ItemRegistryHelper instance;
     private static final Object MUTEX = new Object();
     private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
     private static final ModItemSetterHelper HELPER = new ModItemSetterHelper();
 
-    public static void setInstance(ItemRegistryHelperBase instance) {
-        if (ItemRegistryHelperBase.instance == null) {
+    public static void setInstance(ItemRegistryHelper instance) {
+        if (ItemRegistryHelper.instance == null) {
             synchronized (MUTEX) {
-                if (ItemRegistryHelperBase.instance == null) {
-                    ItemRegistryHelperBase.instance = instance;
+                if (ItemRegistryHelper.instance == null) {
+                    ItemRegistryHelper.instance = instance;
                 } else {
                     throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                 }
@@ -37,7 +37,7 @@ public abstract class ItemRegistryHelperBase {
         void callback(boolean success, Object nmsObject);
     }
 
-    public static ItemRegistryHelperBase getInstance() {
+    public static ItemRegistryHelper getInstance() {
         return instance;
     }
 

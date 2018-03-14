@@ -3,7 +3,7 @@ package org.oilmod.api.userinterface;
 import org.oilmod.api.userinterface.internal.NMSBasedUIPanel;
 import org.oilmod.api.userinterface.internal.NMSMultiPanel;
 import org.oilmod.api.userinterface.internal.NMSPanel;
-import org.oilmod.api.userinterface.internal.UIHelperBase;
+import org.oilmod.api.userinterface.internal.UIHelper;
 
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
@@ -13,7 +13,7 @@ public final class UIMultiPanel extends UIFormlessPanel implements NMSBasedUIPan
 
     public UIMultiPanel(int size) {
         super(size);
-        nmsMultiPanel = UIHelperBase.getInstance().createMultiPanel(this);
+        nmsMultiPanel = UIHelper.getInstance().createMultiPanel(this);
     }
 
     /**

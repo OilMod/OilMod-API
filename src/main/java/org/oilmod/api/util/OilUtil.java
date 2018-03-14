@@ -23,16 +23,16 @@ import java.util.Random;
  */
 public class OilUtil {
 
-    public static abstract class UtilImplBase {
-        private static UtilImplBase instance;
+    public static abstract class UtilImpl {
+        private static UtilImpl instance;
         private static final Object MUTEX = new Object();
         private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
-        public static void setInstance(UtilImplBase instance) {
-            if (UtilImplBase.instance == null) {
+        public static void setInstance(UtilImpl instance) {
+            if (UtilImpl.instance == null) {
                 synchronized (MUTEX) {
-                    if (UtilImplBase.instance == null) {
-                        UtilImplBase.instance = instance;
+                    if (UtilImpl.instance == null) {
+                        UtilImpl.instance = instance;
                     } else {
                         throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
                     }
@@ -42,7 +42,7 @@ public class OilUtil {
             }
         }
 
-        public static UtilImplBase getInstance() {
+        public static UtilImpl getInstance() {
             return instance;
         }
 
@@ -62,32 +62,32 @@ public class OilUtil {
     }
 
     public static ItemStack[] getDrops(Block block){
-        return UtilImplBase.getInstance().getDrops(block);
+        return UtilImpl.getInstance().getDrops(block);
     }
 
     public static ItemStack[] getDropsSilktouch(Block block){
-        return UtilImplBase.getInstance().getDropsSilktouch(block);
+        return UtilImpl.getInstance().getDropsSilktouch(block);
     }
 
     public static ItemStack[] getDropsFortune(Block block, int level){
-        return UtilImplBase.getInstance().getDropsFortune(block, level);
+        return UtilImpl.getInstance().getDropsFortune(block, level);
     }
 
     public static ItemStack getRandomValidVariation(Material mat, Random rnd) {
-        return UtilImplBase.getInstance().getRandomValidVariation(mat, rnd);
+        return UtilImpl.getInstance().getRandomValidVariation(mat, rnd);
     }
 
     public static boolean canBreak(Player player, Block block) {
-        return UtilImplBase.getInstance().canBreak(player, block);
+        return UtilImpl.getInstance().canBreak(player, block);
     }
 
     public static boolean canPlace(Player player, Block placedBlock, BlockState replacedBlockState, Block placedAgainst, ItemStack itemInHand) {
-        return UtilImplBase.getInstance().canPlace(player, placedBlock, replacedBlockState, placedAgainst, itemInHand);
+        return UtilImpl.getInstance().canPlace(player, placedBlock, replacedBlockState, placedAgainst, itemInHand);
     }
 
 
     public static boolean canMultiPlace(Player player, List<BlockState> states, Block clicked, ItemStack itemInHand) {
-        return UtilImplBase.getInstance().canMultiPlace(player, states, clicked, itemInHand);
+        return UtilImpl.getInstance().canMultiPlace(player, states, clicked, itemInHand);
     }
 
 
@@ -123,7 +123,7 @@ public class OilUtil {
     }
 
     public static <T extends Entity> List<T> getNearbyEntities(Location loc1, Location loc2, Class<T> clazz) {
-        return UtilImplBase.getInstance().getNearbyEntities(loc1, loc2, clazz);
+        return UtilImpl.getInstance().getNearbyEntities(loc1, loc2, clazz);
     }
 
 
@@ -176,15 +176,15 @@ public class OilUtil {
     }
 
     public static void setLastDamager(LivingEntity entity, LivingEntity source) {
-        UtilImplBase.getInstance().setLastDamager(entity, source);
+        UtilImpl.getInstance().setLastDamager(entity, source);
     }
 
     public static boolean damageEntity(LivingEntity entity, double amount, LivingEntity source) {
-        return UtilImplBase.getInstance().damageEntity(entity, amount, source);
+        return UtilImpl.getInstance().damageEntity(entity, amount, source);
     }
 
     public static long getWorldTicksPlayed(World world) {
-        return UtilImplBase.getInstance().getWorldTicksPlayed(world);
+        return UtilImpl.getInstance().getWorldTicksPlayed(world);
     }
 
     public static boolean isSimilarEnchantmentTarget(EnchantmentTarget target1, EnchantmentTarget target2) {
@@ -213,6 +213,6 @@ public class OilUtil {
 
 
     public Class<? extends NMSEntity> getMappedNMSClass(Class<? extends Entity> bukkitClass) {
-        return UtilImplBase.getInstance().getMappedNMSClass(bukkitClass);
+        return UtilImpl.getInstance().getMappedNMSClass(bukkitClass);
     }
 }

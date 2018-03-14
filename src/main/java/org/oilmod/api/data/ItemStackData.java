@@ -1,6 +1,6 @@
 package org.oilmod.api.data;
 
-import org.oilmod.api.inventory.InventoryFactoryBase;
+import org.oilmod.api.inventory.InventoryFactory;
 import org.oilmod.api.userinterface.ItemStackHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,7 +13,7 @@ public abstract class ItemStackData extends IDataBase<ItemStack> implements Item
     }
 
     public static ItemStackData createInstance(String name, DataParent dataParent) {
-        return InventoryFactoryBase.getInstance().createItemStackData(name, dataParent);
+        return InventoryFactory.getInstance().createItemStackData(name, dataParent);
     }
 
     @Override

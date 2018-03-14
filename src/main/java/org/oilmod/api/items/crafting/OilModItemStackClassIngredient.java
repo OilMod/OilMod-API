@@ -30,7 +30,7 @@ public class OilModItemStackClassIngredient extends OilIngredientBase {
 
     @Override
     public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
-//        OilItemStack[] items = ItemClassMapSingleton.getInstance().getOilItemsByClass(itemClass);
+//        OilItemStack[] items = ItemClassMap.getInstance().getOilItemsByClass(itemClass);
 //        if (items.length != lastItemsCount || examples==null) {
 //            List<ItemStack> itemStacks = new ArrayList<>(items.length);
 //            for (OilItemStack item:items) {

@@ -1,7 +1,7 @@
 package org.oilmod.api.items.crafting;
 
 import org.oilmod.api.items.OilItem;
-import org.oilmod.api.items.internal.ItemClassMapSingleton;
+import org.oilmod.api.items.internal.ItemClassMap;
 import org.oilmod.api.items.OilBukkitItemStack;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,7 +29,7 @@ public class OilModItemClassIngredient extends OilIngredientBase {
 
     @Override
     public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
-        OilItem[] items = ItemClassMapSingleton.getInstance().getOilItemsByClass(itemClass);
+        OilItem[] items = ItemClassMap.getInstance().getOilItemsByClass(itemClass);
         if (items.length != lastItemsCount || examples==null) {
             List<ItemStack> itemStacks = new ArrayList<>(items.length);
             for (OilItem item:items) {
