@@ -1,7 +1,6 @@
 package org.oilmod.api.items;
 
 import org.oilmod.api.OilMod;
-import org.oilmod.api.items.internal.ItemRegistryHelper;
 
 /**
  * Created by sirati97 on 16.01.2016.
@@ -50,5 +49,46 @@ public class ItemRegistry {
      */
     public Object getNmsObject() {
         return nmsObject;
+    }
+
+    /**
+     * Internal - should not be called by user code
+     */
+    public static abstract class ItemRegistryHelper {
+        private static ItemRegistryHelper instance;
+        private static final Object MUTEX = new Object();
+        private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
+
+        public static void setInstance(ItemRegistryHelper instance) {
+            if (ItemRegistryHelper.instance == null) {
+                synchronized (MUTEX) {
+                    if (ItemRegistryHelper.instance == null) {
+                        ItemRegistryHelper.instance = instance;
+                    } else {
+                        throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
+                    }
+                }
+            } else {
+                throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
+            }
+        }
+
+        public interface InitRegisterCallback {
+            void callback(boolean success, Object nmsObject);
+        }
+
+        public static ItemRegistryHelper getInstance() {
+            return instance;
+        }
+
+        protected void setNMSModItem(Object nmsItem, OilItem apiItem) {
+            apiItem.setNmsItem(nmsItem);
+        }
+
+        public abstract <T extends OilItem> void register(ItemRegistry register, T apiItem);
+
+
+        public abstract void initRegister(ItemRegistry register, InitRegisterCallback callback);
+
     }
 }

@@ -13,6 +13,7 @@ public interface NMSItemStack {
     void setDisplayName(String name, boolean renamed);
     Compound getTagCompound();
     ItemStack asBukkitItemStack();
+    OilItemStack getOilItemStack();
     void updateItemDescription(int oldSize, List<String> description);
     boolean hasLore();
 }
