@@ -14,6 +14,7 @@ import java.util.Set;
 public abstract class ItemType<ItemClass extends OilItem<?>> {
     //Static members
     public static final ItemType GENERIC;
+    public static final ItemType GENERIC_TOOL;
     public static final ItemType PICKAXE;
     public static final ItemType AXE;
     public static final ItemType SHOVEL;
@@ -31,6 +32,7 @@ public abstract class ItemType<ItemClass extends OilItem<?>> {
     //Enum
     public enum ItemTypeEnum {
         GENERIC,
+        GENERIC_TOOL,
         PICKAXE,
         AXE,
         SHOVEL,
@@ -78,6 +80,7 @@ public abstract class ItemType<ItemClass extends OilItem<?>> {
         ItemTypeHelper h = ItemTypeHelper.getInstance();
         h.apiInit();
         GENERIC = h.getVanillaItemType(ItemTypeEnum.GENERIC);
+        GENERIC_TOOL = h.getVanillaItemType(ItemTypeEnum.GENERIC_TOOL);
         PICKAXE = h.getVanillaItemType(ItemTypeEnum.PICKAXE);
         AXE = h.getVanillaItemType(ItemTypeEnum.AXE);
         SHOVEL = h.getVanillaItemType(ItemTypeEnum.SHOVEL);

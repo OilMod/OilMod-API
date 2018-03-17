@@ -35,23 +35,26 @@ public abstract class OilItem<T extends OilItemStack> {
 
 
     /**
-     *  @param key Mod unique key that identifies the item
+     * @param key Mod unique key that identifies the item
+     * @param itemType
      * @param material The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, Material material, int data, String displayName) {
-        this(key, material, data, 64, displayName);
+    public OilItem(OilKey key, ItemType itemType, Material material, int data, String displayName) {
+        this(key, itemType, material, data, 64, displayName);
     }
 
     /**
-     *  @param key Mod unique key that identifies the item
+     * @param key Mod unique key that identifies the item
+     * @param itemType
      * @param material The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
      * @param maxStackSize Maximal stack size of this item
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, Material material, int data, int maxStackSize, String displayName) {
+    public OilItem(OilKey key, ItemType itemType, Material material, int data, int maxStackSize, String displayName) {
+        this.itemType = itemType;
         this.material = material;
         this.data = data;
         this.key = key;
