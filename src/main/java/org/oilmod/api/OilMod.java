@@ -1,15 +1,12 @@
 package org.oilmod.api;
 
 import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
 import org.apache.commons.lang.Validate;
-import org.oilmod.api.items.ItemType;
 import org.oilmod.api.util.OilKey;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 public class OilMod {
     private final static Map<String, OilMod> registeredMap = new THashMap<>();

@@ -1,7 +1,5 @@
 package org.oilmod.api.items;
 
-import org.bukkit.block.BlockState;
-import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.internal.ItemFactory;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,6 +9,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.items.type.IItemGeneric;
+import org.oilmod.api.items.type.ItemType;
 import org.oilmod.api.util.OilKey;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * This class is used to add new items to the game
  * @param <T> Determines which OilItemStack class is used
  */
-public abstract class OilItem<T extends OilItemStack> {
+public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
     private Material material;
     private int data;
     private final OilKey key;
@@ -168,13 +168,6 @@ public abstract class OilItem<T extends OilItemStack> {
 
 
     //OilMod Item methods
-    public boolean canDestroySpecialBlock(BlockState blockState, BlockType blockType) {
-        return getItemType().canDestroySpecialBlock(this, blockState, blockType);
-    }
-
-    public float getDestroySpeed(BlockState blockState, BlockType blockType) {
-        return getItemType().getDestroySpeed(this, blockState, blockType);
-    }
 
 
 
