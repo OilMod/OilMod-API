@@ -15,11 +15,11 @@ import java.util.Set;
  * @param <TType> ItemType interfaces needed for this ItemType
  * @param <TItem> completely the same as TType, this is needed due to https://stackoverflow.com/questions/197190/why-cant-i-use-a-type-argument-in-a-type-parameter-with-multiple-bounds. Thanks Java :(
  */
-public abstract class ItemType<TType extends IItemGeneric, TItem extends OilItem<?> & IItemGeneric> implements IItemGeneric {
+public class ItemType<TType extends IItemGeneric, TItem extends OilItem<?> & IItemGeneric> implements IItemGeneric {
     //Static members
     public static final ItemType<?, ?> GENERIC;
     public static final ItemType<ITool, ? extends ITool> TOOL;
-    public static final ItemType<IToolBlockBreaking, ? extends IToolBlockBreaking> BLOCK_BREAKING_TOOL;
+    public static final ItemType<IToolBlockBreaking, ? extends IToolBlockBreaking> TOOL_BLOCK_BREAKING;
     public static final ItemType<IPickaxe, ? extends IPickaxe> PICKAXE;
     public static final ItemType<IAxe, ? extends IAxe> AXE;
     public static final ItemType<IShovel, ? extends IShovel> SHOVEL;
@@ -44,7 +44,7 @@ public abstract class ItemType<TType extends IItemGeneric, TItem extends OilItem
     public enum ItemTypeEnum {
         GENERIC,
         TOOL,
-        BLOCK_BREAKING_TOOL,
+        TOOL_BLOCK_BREAKING,
         PICKAXE,
         AXE,
         SHOVEL,
@@ -87,9 +87,9 @@ public abstract class ItemType<TType extends IItemGeneric, TItem extends OilItem
         }
         protected abstract void apiInit(); //prepare stuff
         protected abstract void apiPostInit(); //dunno for this one
-        protected abstract <TType extends IItemGeneric, TItem extends OilItem<?> & IItemGeneric> ItemType<TType, TItem> getVanillaItemType(ItemTypeEnum blockType);
-        protected void unregister(ItemType<?, ?> type) {
-            registeredSet.remove(type);
+        protected abstract <TType extends IItemGeneric, TItem extends OilItem<?> & IItemGeneric> ItemType<TType, TItem> getVanillaItemType(ItemTypeEnum itemType);
+        protected void unregister(ItemType<?, ?> itemType) {
+            registeredSet.remove(itemType);
         }
     }
 
@@ -99,7 +99,7 @@ public abstract class ItemType<TType extends IItemGeneric, TItem extends OilItem
         h.apiInit();
         GENERIC = h.getVanillaItemType(ItemTypeEnum.GENERIC);
         TOOL = h.getVanillaItemType(ItemTypeEnum.TOOL);
-        BLOCK_BREAKING_TOOL = h.getVanillaItemType(ItemTypeEnum.BLOCK_BREAKING_TOOL);
+        TOOL_BLOCK_BREAKING = h.getVanillaItemType(ItemTypeEnum.TOOL_BLOCK_BREAKING);
         PICKAXE = h.getVanillaItemType(ItemTypeEnum.PICKAXE);
         AXE = h.getVanillaItemType(ItemTypeEnum.AXE);
         SHOVEL = h.getVanillaItemType(ItemTypeEnum.SHOVEL);
@@ -168,8 +168,9 @@ public abstract class ItemType<TType extends IItemGeneric, TItem extends OilItem
 
 
     //
-    public abstract boolean canDestroySpecialBlock(TItem item, BlockState blockState, BlockType blockType);
-    public abstract float getDestroySpeed(TItem item, OilItemStack itemStack, BlockState blockState, BlockType blockType);
-    public abstract int getMaxStackSize();
+    private static final String UNSUPPORTED = "This ItemType does not support this operation";
+    protected boolean canDestroySpecialBlock(TItem item, BlockState blockState, BlockType blockType) {throw new UnsupportedOperationException(UNSUPPORTED);}
+    protected float getDestroySpeed(TItem item, OilItemStack itemStack, BlockState blockState, BlockType blockType)  {throw new UnsupportedOperationException(UNSUPPORTED);}
+    public int getMaxStackSize() {return 64;}
 
 }

@@ -1,5 +1,5 @@
 package org.oilmod.api.items.type;
 
 public interface IConsumable extends IItemGeneric {
-    ItemType<? extends IConsumable, ? extends IConsumable> getItemType();
+    default ItemType<? extends IConsumable, ? extends IConsumable> getItemType() {return ItemType.CONSUMERABLE;}
 }

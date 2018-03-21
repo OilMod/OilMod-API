@@ -1,5 +1,5 @@
 package org.oilmod.api.items.type;
 
 public interface IHoe extends ITool {
-    ItemType<? extends IHoe, ? extends IHoe> getItemType();
+    default ItemType<? extends IHoe, ? extends IHoe> getItemType() {return ItemType.HOE;}
 }

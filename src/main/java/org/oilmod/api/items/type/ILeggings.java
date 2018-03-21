@@ -1,5 +1,5 @@
 package org.oilmod.api.items.type;
 
 public interface ILeggings extends IArmor {
-    ItemType<? extends ILeggings, ? extends ILeggings> getItemType();
+    default ItemType<? extends ILeggings, ? extends ILeggings> getItemType() {return ItemType.LEGGINGS;}
 }

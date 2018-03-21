@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.oilmod.api.items.type.IItemGeneric;
-import org.oilmod.api.items.type.ItemType;
 import org.oilmod.api.util.OilKey;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
  * @param <T> Determines which OilItemStack class is used
  */
 public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
-    private Material material;
+    private Material vanillaMaterial;
     private int data;
     private final OilKey key;
     private String displayName;
@@ -28,7 +27,6 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
     private int maxStackSize;
     private OilItemStackFactory[] creativeItems;
     private ItemStack[] naturalExamples;
-    private ItemType itemType;
 
     //Constructor
 
@@ -36,26 +34,23 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
 
     /**
      * @param key Mod unique key that identifies the item
-     * @param itemType
-     * @param material The Vanilla Material that is shown to the client
+     * @param vanillaMaterial The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, ItemType itemType, Material material, int data, String displayName) {
-        this(key, itemType, material, data, 64, displayName);
+    public OilItem(OilKey key, Material vanillaMaterial, int data, String displayName) {
+        this(key, vanillaMaterial, data, 64, displayName);
     }
 
     /**
      * @param key Mod unique key that identifies the item
-     * @param itemType
-     * @param material The Vanilla Material that is shown to the client
+     * @param vanillaMaterial The Vanilla Material that is shown to the client
      * @param data The Vanilla Material Data
      * @param maxStackSize Maximal stack size of this item
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, ItemType itemType, Material material, int data, int maxStackSize, String displayName) {
-        this.itemType = itemType;
-        this.material = material;
+    public OilItem(OilKey key, Material vanillaMaterial, int data, int maxStackSize, String displayName) {
+        this.vanillaMaterial = vanillaMaterial;
         this.data = data;
         this.key = key;
         this.maxStackSize = maxStackSize;
@@ -84,8 +79,8 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      *
      * @return returns that material used to display this item on vanilla clients
      */
-    public Material getMaterial() {
-        return material;
+    public Material getVanillaMaterial() {
+        return vanillaMaterial;
     }
 
     /**
@@ -103,10 +98,6 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      */
     public String getDisplayName() {
         return displayName;
-    }
-
-    public ItemType getItemType() {
-        return itemType;
     }
 
     /**
@@ -182,20 +173,39 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
     /**
      * Will be used in the localisation api
      * @param player the player the itemstack is for.
-     * @param size size of the itemstack
+     * @param count count of the itemstack
      * @return Bukkit ItemStack of this ModItem
      */
-    public final ItemStack createItemStack(Player player, int size) {
-        return ItemFactory.getInstance().createStack(this, player, size);
+    public final ItemStack createItemStack(Player player, int count, int data) {
+        return ItemFactory.getInstance().createStack(this, player, count, data);
     }
 
     /**
      *
-     * @param size size of the itemstack
+     * @param count count of the itemstack
      * @return Bukkit ItemStack of this ModItem
      */
-    public final ItemStack createItemStack(int size) {
-        return createItemStack(null, size);
+    public final ItemStack createItemStack(int count, int data) {
+        return createItemStack(null, count, data);
+    }
+
+    /**
+     * Will be used in the localisation api
+     * @param player the player the itemstack is for.
+     * @param count count of the itemstack
+     * @return Bukkit ItemStack of this ModItem
+     */
+    public final ItemStack createItemStack(Player player, int count) {
+        return createItemStack(player, count, 0);
+    }
+
+    /**
+     *
+     * @param count count of the itemstack
+     * @return Bukkit ItemStack of this ModItem
+     */
+    public final ItemStack createItemStack(int count) {
+        return createItemStack(null, count, 0);
     }
 
     /**

@@ -5,7 +5,7 @@ import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.OilItemStack;
 
 public interface IToolBlockBreaking extends ITool {
-    ItemType<? extends IToolBlockBreaking, ? extends IToolBlockBreaking> getItemType();
+    default ItemType<? extends IToolBlockBreaking, ? extends IToolBlockBreaking> getItemType() {return ItemType.TOOL_BLOCK_BREAKING;}
 
 
 

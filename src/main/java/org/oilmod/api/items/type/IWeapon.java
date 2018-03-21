@@ -1,5 +1,5 @@
 package org.oilmod.api.items.type;
 
 public interface IWeapon extends IItemGeneric {
-    ItemType<? extends IWeapon, ? extends IWeapon> getItemType();
+    default ItemType<? extends IWeapon, ? extends IWeapon> getItemType() {return ItemType.WEAPON;}
 }

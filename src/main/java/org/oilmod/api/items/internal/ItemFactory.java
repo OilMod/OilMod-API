@@ -30,5 +30,5 @@ public abstract class ItemFactory {
         return instance;
     }
 
-    public abstract ItemStack createStack(OilItem item, Player player, int size);
+    public abstract ItemStack createStack(OilItem item, Player player, int count, int data);
 }
