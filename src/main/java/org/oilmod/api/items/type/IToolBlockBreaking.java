@@ -4,16 +4,19 @@ import org.bukkit.block.BlockState;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.OilItemStack;
 
+@SuppressWarnings("unchecked")
 public interface IToolBlockBreaking extends ITool {
-    default ItemType<? extends IToolBlockBreaking, ? extends IToolBlockBreaking> getItemType() {return ItemType.TOOL_BLOCK_BREAKING;}
+    TBBType getTbbType();
 
 
 
     default boolean canDestroySpecialBlock(BlockState blockState, BlockType blockType) {
-        return getItemType().canDestroySpecialBlock(this, blockState, blockType);
+        return getTbbType().canDestroySpecialBlock(this, blockState, blockType);
     }
 
     default float getDestroySpeed(OilItemStack itemStack, BlockState blockState, BlockType blockType) {
-        return getItemType().getDestroySpeed(this, itemStack, blockState, blockType);
+        return getTbbType().getDestroySpeed(this, itemStack, blockState, blockType);
     }
+
+    float getBaseDestroySpeed(OilItemStack itemStack);
 }

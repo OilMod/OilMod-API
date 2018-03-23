@@ -248,14 +248,19 @@ public abstract class BlockType {
 
     public abstract boolean isAlwaysDestroyable();
 
+    @Deprecated
     public abstract boolean breakablePickaxe(Material material);
 
+    @Deprecated
     public abstract boolean breakableAxe(Material material);
 
+    @Deprecated
     public abstract boolean breakableShovel(Material material);
 
+    @Deprecated
     public abstract boolean breakableShears(Material material);
 
+    @Deprecated
     public abstract boolean breakableBlade(Material material);
 
     public abstract PistonReaction getPistonReaction();

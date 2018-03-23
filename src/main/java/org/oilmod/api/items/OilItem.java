@@ -105,8 +105,8 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @return returns the maximal stack size of this item
      */
     public int getMaxStackSize() {
-        return maxStackSize==0?getItemType().getMaxStackSize():maxStackSize;
-    }
+        return maxStackSize==0?64:maxStackSize;
+    } //
 
     /**
      *

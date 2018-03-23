@@ -1,5 +1,8 @@
 package org.oilmod.api.items.type;
 
 public interface IPickaxe extends IToolBlockBreaking {
-    default ItemType<? extends IPickaxe, ? extends IPickaxe> getItemType() {return ItemType.PICKAXE;}
+    @Override
+    default TBBType<? extends IPickaxe> getTbbType() {return TBBType.PICKAXE;}
+
+    int getPickaxeStrength();
 }
