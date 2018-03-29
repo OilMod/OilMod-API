@@ -109,7 +109,7 @@ public final class ItemCraftingFactory {
 
 
     private static final Class<OilItem> oilItemBaseClass = OilItem.class;
-    private static final Class<OilItemStack> oilItemStackClass = OilItemStack.class;
+    private static final Class oilItemStackClass = OilItemStack.class;
     private static OilCraftingIngredient toOilCraftingIngredient(Object ingredient) {
         if (ingredient == null) {
             return null;

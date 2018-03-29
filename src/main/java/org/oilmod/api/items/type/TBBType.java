@@ -1,23 +1,29 @@
 package org.oilmod.api.items.type;
 
 import gnu.trove.set.hash.THashSet;
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.oilmod.api.blocks.BlockType;
+import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.items.OilItemStack;
+import org.oilmod.api.util.InteractionResult;
 
 import java.util.Collections;
 import java.util.Set;
 
-public abstract class TBBType<TInterface extends IToolBlockBreaking> {
+public abstract class TBBType {
     //Static members
-    public static final TBBType<IPickaxe> PICKAXE; //removing final here gives more flexibility but requires to also change vanilla behaviour TODO: think about it
-    public static final TBBType<IAxe> AXE;
-    public static final TBBType<IShovel> SHOVEL;
-    public static final TBBType<IShears> SHEARS;
-    public static final TBBType<ISword> SWORD;
+    public static final TBBType PICKAXE; //removing final here gives more flexibility but requires to also change vanilla behaviour TODO: think about it
+    public static final TBBType AXE;
+    public static final TBBType SHOVEL;
+    public static final TBBType SHEARS;
+    public static final TBBType SWORD;
 
-    private final static Set<TBBType<?>> registeredSet = new THashSet<>();
-    private final static Set<TBBType<?>> registeredSetRead = Collections.unmodifiableSet(registeredSet);
+    private final static Set<TBBType> registeredSet = new THashSet<>();
+    private final static Set<TBBType> registeredSetRead = Collections.unmodifiableSet(registeredSet);
 
     //Enum
     public enum TBBEnum {
@@ -54,8 +60,8 @@ public abstract class TBBType<TInterface extends IToolBlockBreaking> {
         }
         protected abstract void apiInit(); //prepare stuff
         protected abstract void apiPostInit(); //dunno for this one
-        protected abstract <TInterface extends IToolBlockBreaking> TBBType<TInterface> getVanilla(TBBEnum itemType);
-        protected void unregister(TBBType<?> itemType) {
+        protected abstract TBBType getVanilla(TBBEnum itemType);
+        protected void unregister(TBBType itemType) {
             registeredSet.remove(itemType);
         }
     }
@@ -72,7 +78,7 @@ public abstract class TBBType<TInterface extends IToolBlockBreaking> {
         h.apiPostInit();
     }
 
-    public static Set<TBBType<?>> getAll() {
+    public static Set<TBBType> getAll() {
         return registeredSetRead;
     }
 
@@ -92,7 +98,9 @@ public abstract class TBBType<TInterface extends IToolBlockBreaking> {
     }
 
     //abstract methods
-    protected abstract boolean canDestroySpecialBlock(TInterface item, BlockState blockState, BlockType blockType);
-    protected abstract float getDestroySpeed(TInterface item, OilItemStack itemStack, BlockState blockState, BlockType blockType);
-
+    protected abstract boolean canHarvestBlock(IToolBlockBreaking item, BlockState blockState, BlockType blockType);
+    protected abstract float getDestroySpeed(IToolBlockBreaking item, OilItemStack stack, BlockState blockState, BlockType blockType);
+    protected abstract boolean onEntityHit(IToolBlockBreaking  item, OilItemStack stack, LivingEntity target, LivingEntity attacker);
+    protected abstract boolean onBlockDestroyed(IToolBlockBreaking item, OilItemStack stack, IBlockState blockState, Location location, LivingEntity entityLiving);
+    protected abstract InteractionResult onItemUseOnBlock(IToolBlockBreaking item, OilItemStack stack, HumanEntity humanEntity, Location pos, boolean offhand, BlockFace facing, float hitX, float hitY, float hitZ);
 }

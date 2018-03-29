@@ -9,11 +9,9 @@ import java.util.List;
  * Internal
  */
 public interface NMSItemStack {
-    String getDisplayName();
-    void setDisplayName(String name, boolean renamed);
-    Compound getTagCompound();
     ItemStack asBukkitItemStack();
     OilItemStack getOilItemStack();
-    void updateItemDescription(int oldSize, List<String> description);
-    boolean hasLore();
+    int getDataNMS();
+    void setDataNMS(int data);
+    String getRenameNMS();
 }

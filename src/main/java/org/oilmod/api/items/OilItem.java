@@ -16,44 +16,26 @@ import java.util.List;
 
 /**
  * This class is used to add new items to the game
- * @param <T> Determines which OilItemStack class is used
  */
-public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
+public abstract class OilItem implements IItemGeneric {
     private Material vanillaMaterial;
-    private int data;
     private final OilKey key;
     private String displayName;
     private Object nmsItem;
-    private int maxStackSize;
     private OilItemStackFactory[] creativeItems;
     private ItemStack[] naturalExamples;
 
     //Constructor
 
 
-
     /**
      * @param key Mod unique key that identifies the item
      * @param vanillaMaterial The Vanilla Material that is shown to the client
-     * @param data The Vanilla Material Data
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, Material vanillaMaterial, int data, String displayName) {
-        this(key, vanillaMaterial, data, 64, displayName);
-    }
-
-    /**
-     * @param key Mod unique key that identifies the item
-     * @param vanillaMaterial The Vanilla Material that is shown to the client
-     * @param data The Vanilla Material Data
-     * @param maxStackSize Maximal stack size of this item
-     * @param displayName displayed displayName of the item
-     */
-    public OilItem(OilKey key, Material vanillaMaterial, int data, int maxStackSize, String displayName) {
+    public OilItem(OilKey key, Material vanillaMaterial, String displayName) {
         this.vanillaMaterial = vanillaMaterial;
-        this.data = data;
         this.key = key;
-        this.maxStackSize = maxStackSize;
         this.displayName = displayName;
     }
 
@@ -67,19 +49,12 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
 
 
     //Normal getters
-    /**
-     *
-     * @return returns that material data used to display this item on vanilla clients
-     */
-    public int getData() {
-        return data;
-    }
 
     /**
      *
      * @return returns that material used to display this item on vanilla clients
      */
-    public Material getVanillaMaterial() {
+    public Material getVanillaMaterial(OilItemStack itemStack) {
         return vanillaMaterial;
     }
 
@@ -100,13 +75,6 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
         return displayName;
     }
 
-    /**
-     *
-     * @return returns the maximal stack size of this item
-     */
-    public int getMaxStackSize() {
-        return maxStackSize==0?64:maxStackSize;
-    } //
 
     /**
      *
@@ -251,9 +219,9 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param nmsItemStack the NMS itemstack
      * @return instance of T
      */
-    protected T createOilItemStackInstance(NMSItemStack nmsItemStack) {
+    protected OilItemStack createOilItemStackInstance(NMSItemStack nmsItemStack) {
         //noinspection unchecked
-        return (T) new OilItemStack(nmsItemStack, this); //TODO why are two methods needed
+        return new OilItemStack(nmsItemStack, this); //TODO why are two methods needed
     }
 
 
@@ -287,7 +255,7 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param nmsItemStack the NMS itemstack
      * @return instance of T
      */
-    public final T createOilStack(NMSItemStack nmsItemStack) {
+    public final OilItemStack createOilStack(NMSItemStack nmsItemStack) {
         return createOilItemStackInstance(nmsItemStack);
     }
 
@@ -351,7 +319,7 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param human The Human that is trying this
      * @return returns whether it is allowed to repair the OilItemStack with the itemstack
      */
-    public boolean canRepairAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {
+    public boolean canRepairAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {
         return false;
     }
 
@@ -365,7 +333,7 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param human The Human repairing the OilItemStack
      * @return how many of these items should be used
      */
-    public int prepareRepairAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {
+    public int prepareRepairAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {
         return 0;
     }
 
@@ -374,7 +342,7 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param itemStack The ItemStack that is used for repairing
      * @param human The Human repairing the OilItemStack
      */
-    public void repairAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {}
+    public void repairAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {}
 
     /**
      * This method is called when a player repairs the items in an anvil. It should do anything that could not be done in prepareRepairAnvil.
@@ -382,7 +350,7 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param human The Human that is trying this
      * @return returns whether it is allowed to combine the itemstack with the OilItemStack
      */
-    public boolean canCombineAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {
+    public boolean canCombineAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {
         return false;
     }
 
@@ -393,12 +361,12 @@ public abstract class OilItem<T extends OilItemStack> implements IItemGeneric {
      * @param itemStack The itemstack that is combined with the OilItemStack
      * @param human The Human combining the OilItemStack with the ItemStack
      */
-    public void prepareCombineAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {}
+    public void prepareCombineAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {}
 
     /**
      * This method is called when a player combines the items in an anvil. It should do anything that could not be done in prepareCombineAnvil.
      * @param itemStack The itemstack that is combined with the OilItemStack
      * @param human The Human combining the OilItemStack with the ItemStack
      */
-    public void combineAnvil(T oilItemStack, ItemStack itemStack, HumanEntity human) {}
+    public void combineAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {}
 }

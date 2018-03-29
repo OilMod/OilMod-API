@@ -34,4 +34,7 @@ public abstract class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
     public IInteractableUIElement createUIElement() {
         return getSerializableDataHandler().getData().createUIElement();
     }
+
+    public void setTitle(String title) {getSerializableDataHandler().getData().setTitle(title);}
+
 }

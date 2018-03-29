@@ -1,4 +1,7 @@
 package org.oilmod.api.items.type;
 
-public interface ITool extends IItemGeneric {
+import org.oilmod.api.items.OilItemStack;
+
+public interface ITool extends IUnique {
+
 }

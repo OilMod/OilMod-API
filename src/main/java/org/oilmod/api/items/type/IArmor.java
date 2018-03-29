@@ -1,4 +1,8 @@
 package org.oilmod.api.items.type;
 
-public interface IArmor extends IItemGeneric {
+import org.oilmod.api.items.OilItemStack;
+
+public interface IArmor extends IUnique {
+
+
 }

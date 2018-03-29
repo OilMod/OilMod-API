@@ -2,6 +2,7 @@ package org.oilmod.api.items.type;
 
 import gnu.trove.set.hash.THashSet;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.LivingEntity;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.OilItemStack;
@@ -10,7 +11,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Set;
 
-public class ItemTypeHelper {
+public abstract class ItemTypeHelper {
 
     private static ItemTypeHelper instance;
     private static final Object MUTEX = new Object();
@@ -35,7 +36,8 @@ public class ItemTypeHelper {
     }
 
 
-
+    public abstract boolean handleDamage(OilItemStack stack, int damage, LivingEntity entity);
+    public abstract void damageItem(OilItemStack stack, int damage, LivingEntity entity);
 
 
 

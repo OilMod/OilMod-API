@@ -1,55 +1,52 @@
 package org.oilmod.api.blocks;
 
 import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
 import org.bukkit.Material;
 import org.oilmod.api.blocks.nms.NMSBlockType;
 import org.oilmod.api.util.OilKey;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Set;
 
 public abstract class BlockType {
     //Static members
     public static final BlockType AIR;
     public static final BlockType GRASS;
-    public static final BlockType EARTH;
+    public static final BlockType GROUND;
     public static final BlockType WOOD;
-    public static final BlockType STONE;
-    public static final BlockType ORE;
-    public static final BlockType HEAVY;
+    public static final BlockType ROCK;
+    public static final BlockType IRON;
+    public static final BlockType ANVIL;
     public static final BlockType WATER;
     public static final BlockType LAVA;
     public static final BlockType LEAVES;
-    public static final BlockType PLANT;
-    public static final BlockType REPLACEABLE_PLANT;
+    public static final BlockType PLANTS;
+    public static final BlockType VINE;
     public static final BlockType SPONGE;
     public static final BlockType CLOTH;
     public static final BlockType FIRE;
     public static final BlockType SAND;
-    public static final BlockType ORIENTABLE;
-    public static final BlockType WOOL;
-    public static final BlockType SHATTERABLE;
-    public static final BlockType BUILDABLE_GLASS;
+    public static final BlockType CIRCUITS;
+    public static final BlockType CARPET;
+    public static final BlockType GLASS;
+    public static final BlockType REDSTONE_LIGHT;
     public static final BlockType TNT;
     public static final BlockType CORAL;
     public static final BlockType ICE;
-    public static final BlockType SNOW_LAYER;
     public static final BlockType PACKED_ICE;
-    public static final BlockType SNOW_BLOCK;
+    public static final BlockType SNOW;
+    public static final BlockType CRAFTED_SNOW;
     public static final BlockType CACTUS;
     public static final BlockType CLAY;
-    public static final BlockType PUMPKIN;
+    public static final BlockType GOURD;
     public static final BlockType DRAGON_EGG;
     public static final BlockType PORTAL;
     public static final BlockType CAKE;
     public static final BlockType WEB;
     public static final BlockType PISTON;
-    public static final BlockType BANNER;
-    public static final BlockType UNKNOWN_J; //TODO: find out what this is
+    public static final BlockType BARRIER;
+    public static final BlockType STRUCTURE_VOID; //TODO: find out what this is
 
     private final static EnumMap<BlockTypeEnum, BlockType> enumMap = new EnumMap<>(BlockTypeEnum.class);
 
@@ -60,40 +57,40 @@ public abstract class BlockType {
     public enum BlockTypeEnum {
         AIR,
         GRASS,
-        EARTH,
+        GROUND,
         WOOD,
-        STONE,
-        ORE,
-        HEAVY,
+        ROCK,
+        IRON,
+        ANVIL,
         WATER,
         LAVA,
         LEAVES,
-        PLANT,
-        REPLACEABLE_PLANT,
+        PLANTS,
+        VINE,
         SPONGE,
         CLOTH,
         FIRE,
         SAND,
-        ORIENTABLE,
-        WOOL,
-        SHATTERABLE,
-        BUILDABLE_GLASS,
+        CIRCUITS,
+        CARPET,
+        GLASS,
+        REDSTONE_LIGHT,
         TNT,
         CORAL,
         ICE,
-        SNOW_LAYER,
         PACKED_ICE,
-        SNOW_BLOCK,
+        SNOW,
+        CRAFTED_SNOW,
         CACTUS,
         CLAY,
-        PUMPKIN,
+        GOURD,
         DRAGON_EGG,
         PORTAL,
         CAKE,
         WEB,
         PISTON,
-        BANNER,
-        UNKNOWN_J,
+        BARRIER,
+        STRUCTURE_VOID,
         ENUM_MISSING,
         CUSTOM;
     }
@@ -137,40 +134,40 @@ public abstract class BlockType {
         h.apiInit();
         AIR = h.getVanillaBlockType(BlockTypeEnum.AIR);
         GRASS = h.getVanillaBlockType(BlockTypeEnum.GRASS);
-        EARTH = h.getVanillaBlockType(BlockTypeEnum.EARTH);
+        GROUND = h.getVanillaBlockType(BlockTypeEnum.GROUND);
         WOOD = h.getVanillaBlockType(BlockTypeEnum.WOOD);
-        STONE = h.getVanillaBlockType(BlockTypeEnum.STONE);
-        ORE = h.getVanillaBlockType(BlockTypeEnum.ORE);
-        HEAVY = h.getVanillaBlockType(BlockTypeEnum.HEAVY);
+        ROCK = h.getVanillaBlockType(BlockTypeEnum.ROCK);
+        IRON = h.getVanillaBlockType(BlockTypeEnum.IRON);
+        ANVIL = h.getVanillaBlockType(BlockTypeEnum.ANVIL);
         WATER = h.getVanillaBlockType(BlockTypeEnum.WATER);
         LAVA = h.getVanillaBlockType(BlockTypeEnum.LAVA);
         LEAVES = h.getVanillaBlockType(BlockTypeEnum.LEAVES);
-        PLANT = h.getVanillaBlockType(BlockTypeEnum.PLANT);
-        REPLACEABLE_PLANT = h.getVanillaBlockType(BlockTypeEnum.REPLACEABLE_PLANT);
+        PLANTS = h.getVanillaBlockType(BlockTypeEnum.PLANTS);
+        VINE = h.getVanillaBlockType(BlockTypeEnum.VINE);
         SPONGE = h.getVanillaBlockType(BlockTypeEnum.SPONGE);
         CLOTH = h.getVanillaBlockType(BlockTypeEnum.CLOTH);
         FIRE = h.getVanillaBlockType(BlockTypeEnum.FIRE);
         SAND = h.getVanillaBlockType(BlockTypeEnum.SAND);
-        ORIENTABLE = h.getVanillaBlockType(BlockTypeEnum.ORIENTABLE);
-        WOOL = h.getVanillaBlockType(BlockTypeEnum.ORIENTABLE);
-        SHATTERABLE = h.getVanillaBlockType(BlockTypeEnum.SHATTERABLE);
-        BUILDABLE_GLASS = h.getVanillaBlockType(BlockTypeEnum.BUILDABLE_GLASS);
+        CIRCUITS = h.getVanillaBlockType(BlockTypeEnum.CIRCUITS);
+        CARPET = h.getVanillaBlockType(BlockTypeEnum.CIRCUITS);
+        GLASS = h.getVanillaBlockType(BlockTypeEnum.GLASS);
+        REDSTONE_LIGHT = h.getVanillaBlockType(BlockTypeEnum.REDSTONE_LIGHT);
         TNT = h.getVanillaBlockType(BlockTypeEnum.TNT);
         CORAL = h.getVanillaBlockType(BlockTypeEnum.CORAL);
         ICE = h.getVanillaBlockType(BlockTypeEnum.ICE);
-        SNOW_LAYER = h.getVanillaBlockType(BlockTypeEnum.SNOW_LAYER);
+        SNOW = h.getVanillaBlockType(BlockTypeEnum.SNOW);
         PACKED_ICE = h.getVanillaBlockType(BlockTypeEnum.PACKED_ICE);
-        SNOW_BLOCK = h.getVanillaBlockType(BlockTypeEnum.SNOW_BLOCK);
+        CRAFTED_SNOW = h.getVanillaBlockType(BlockTypeEnum.CRAFTED_SNOW);
         CACTUS = h.getVanillaBlockType(BlockTypeEnum.CACTUS);
         CLAY = h.getVanillaBlockType(BlockTypeEnum.CLAY);
-        PUMPKIN = h.getVanillaBlockType(BlockTypeEnum.PUMPKIN);
+        GOURD = h.getVanillaBlockType(BlockTypeEnum.GOURD);
         DRAGON_EGG = h.getVanillaBlockType(BlockTypeEnum.DRAGON_EGG);
         PORTAL = h.getVanillaBlockType(BlockTypeEnum.PORTAL);
         CAKE = h.getVanillaBlockType(BlockTypeEnum.CAKE);
         WEB = h.getVanillaBlockType(BlockTypeEnum.WEB);
         PISTON = h.getVanillaBlockType(BlockTypeEnum.PISTON);
-        BANNER = h.getVanillaBlockType(BlockTypeEnum.BANNER);
-        UNKNOWN_J = h.getVanillaBlockType(BlockTypeEnum.UNKNOWN_J);
+        BARRIER = h.getVanillaBlockType(BlockTypeEnum.BARRIER);
+        STRUCTURE_VOID = h.getVanillaBlockType(BlockTypeEnum.STRUCTURE_VOID);
         h.apiPostInit();
     }
 

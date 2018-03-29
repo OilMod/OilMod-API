@@ -1,9 +1,6 @@
 package org.oilmod.api.items.type;
 
-import org.oilmod.api.items.OilItemStack;
-
-public interface IWeapon extends IUnique {
-
+public interface IUnique extends IItemGeneric {
     default int getMaxStackSize() {
         return 1;
     }

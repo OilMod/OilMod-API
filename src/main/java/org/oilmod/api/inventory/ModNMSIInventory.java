@@ -14,4 +14,6 @@ public interface ModNMSIInventory<T extends ModInventoryObjectBase> extends Comp
     Object getOilModInventory();
     void setOilApiMirror(T arg);
     IInteractableUIElement createUIElement();
+
+    void setTitle(String title);
 }

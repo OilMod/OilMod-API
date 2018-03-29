@@ -1,6 +1,8 @@
 package org.oilmod.api.items.type;
 
+import org.oilmod.api.items.OilItemStack;
+
 public interface IShears extends IToolBlockBreaking {
     @Override
-    default TBBType<? extends IShears> getTbbType() {return TBBType.SHEARS;}
+    default TBBType getTbbType() {return TBBType.SHEARS;}
 }

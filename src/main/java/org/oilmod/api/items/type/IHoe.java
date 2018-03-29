@@ -1,4 +1,4 @@
 package org.oilmod.api.items.type;
 
-public interface IHoe extends ITool {
+public interface IHoe extends ITool, IItemGeneric {
 }

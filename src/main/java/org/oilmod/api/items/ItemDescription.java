@@ -24,7 +24,7 @@ public class ItemDescription {
      * Initialises this instance of ItemDescription
      */
     public void init() {
-        if (!itemStack.hasLore() && lines.size() > 0) {
+        /*if (!itemStack.hasLore() && lines.size() > 0) {
             /*System.out.println("setted lore first time for " + itemStack.toString() + " " + lines.get(0) + " " + Thread.currentThread().getDisplayName());
             Compound tag = itemStack.getTagCompound();
             System.out.println(tag != null);
@@ -42,9 +42,11 @@ public class ItemDescription {
             }
             if (Thread.currentThread().getDisplayName().equals("Server thread")) {
                 printTrace("Wrong item initialisation");
-            }*/
+            }*//*
+
+
             itemStack.updateItemDescription(0, linesReadOnly);
-        }
+        }*/
     }
 
     /**
@@ -129,7 +131,7 @@ public class ItemDescription {
      *
      */
     public void forceUpdate() {
-        itemStack.updateItemDescription(lastSize, linesReadOnly);
+        //itemStack.updateItemDescription(lastSize, linesReadOnly);
         lastSize = lines.size();
     }
 
