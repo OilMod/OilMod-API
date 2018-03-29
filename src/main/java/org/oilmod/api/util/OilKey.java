@@ -19,7 +19,7 @@ public class OilKey {
     /**
      *
      * @param mod Mod this key is associated to.
-     * @param keyString Short unique string. Restricted to lowercase alphanumerical and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
+     * @param keyString Short unique string. Restricted to lowercase alphanumerical characters and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
      * @return Returns an unique key.
      */
     public static OilKey create(OilMod mod, String keyString) {
