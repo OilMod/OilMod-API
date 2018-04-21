@@ -48,7 +48,7 @@ public class OilMod {
     public String toString() {
         return internalName;
     }
-32
+
     /**
      *
      * @param keyString Short unique string. Restricted to lowercase alphanumerical characters and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
