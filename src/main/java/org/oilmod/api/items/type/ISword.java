@@ -27,4 +27,9 @@ public interface ISword extends IMeleeWeapon, IToolBlockBreaking {
     default int getMaxStackSize() {
         return IMeleeWeapon.super.getMaxStackSize();
     }
+
+    @Override
+    default float getDestroySpeed(OilItemStack itemStack) {
+        return 1.5f;
+    }
 }
