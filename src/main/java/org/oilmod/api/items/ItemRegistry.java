@@ -37,9 +37,10 @@ public class ItemRegistry {
     public <T extends OilItem> void register(T apiItem) {
         if (!registered) {
             throw new IllegalStateException("ItemRegister was not successfully initialized");
-        } else if (apiItem.isEnchantable() && apiItem.getEnchantSelectModifier() < 1) {
-            throw new IllegalStateException("Item cannot be registered because EnchantSelectModifier is < 1 while item is enchantable");
         }
+        //else if (apiItem.isEnchantable() && apiItem.getEnchantSelectModifier() < 1) {
+        //    throw new IllegalStateException("Item cannot be registered because EnchantSelectModifier is < 1 while item is enchantable");
+        //}
         ItemRegistryHelper.getInstance().register(this, apiItem);
     }
 

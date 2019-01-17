@@ -29,4 +29,10 @@ public interface IItemGeneric {
     default int getMaxStackSize() {
         return 64;
     }
+
+    /**
+     * reaches normally from 5 (stone) to 22 (gold)
+     * @return
+     */
+    default int getItemEnchantability() {return 0;}
 }

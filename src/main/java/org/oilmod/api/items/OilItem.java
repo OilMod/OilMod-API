@@ -89,16 +89,10 @@ public abstract class OilItem implements IItemGeneric {
      * @return return whether the item is enchantable.
      */
     public boolean isEnchantable() {
-        return getEnchantSelectModifier() > 0;
+        return getItemEnchantability() > 0;
     }
 
-    /**
-     * Override this method and return a value greater than 0 to allow enchanting
-     * @return return the enchant select modifier. An item with the same enchant select modifier and the same allowed enchantments will behave the same when enchanted with the same seed
-     */
-    public int getEnchantSelectModifier() {
-        return 0;
-    }
+
 
     /**
      * Override this method to allow enchanting
