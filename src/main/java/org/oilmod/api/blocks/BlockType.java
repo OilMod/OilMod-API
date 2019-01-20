@@ -3,13 +3,16 @@ package org.oilmod.api.blocks;
 import gnu.trove.map.hash.THashMap;
 import org.bukkit.Material;
 import org.oilmod.api.blocks.nms.NMSBlockType;
+import org.oilmod.api.util.IKeyed;
 import org.oilmod.api.util.OilKey;
+import org.oilmod.api.util.OilRegistry;
 
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 
-public abstract class BlockType {
+public abstract class BlockType implements IKeyed {
     //Static members
     public static final BlockType AIR;
     public static final BlockType GRASS;
@@ -51,7 +54,7 @@ public abstract class BlockType {
     private final static EnumMap<BlockTypeEnum, BlockType> enumMap = new EnumMap<>(BlockTypeEnum.class);
 
 
-    private final static Map<OilKey, BlockType> registry = new THashMap<>();
+    private final static OilRegistry<BlockType> registry = new OilRegistry<>();
 
     //Enum
     public enum BlockTypeEnum {
@@ -124,7 +127,7 @@ public abstract class BlockType {
         protected abstract BlockType getVanillaBlockType(BlockTypeEnum blockType);
         protected abstract NMSBlockType registerCustom(BlockType blockType);
         protected void unregister(OilKey key) {
-            registry.remove(key);
+            registry.unregister(key);
         }
     }
     
@@ -182,8 +185,8 @@ public abstract class BlockType {
         return registry.get(key);
     }
 
-    public static Collection<BlockType> getAll() {
-        return registry.values();
+    public static Set<BlockType> getAll() {
+        return registry.getRegistered();
     }
 
     /**
@@ -209,13 +212,14 @@ public abstract class BlockType {
         if (blockTypeEnum != BlockTypeEnum.CUSTOM && blockTypeEnum != BlockTypeEnum.ENUM_MISSING) {
             enumMap.put(blockTypeEnum, this);
         }
-        registry.put(key, this);
+        registry.register(this);
     }
 
     private BlockType(OilKey key) {
         this.key = key;
         this.blockTypeEnum = BlockTypeEnum.CUSTOM;
         this.nmsBlockType = BlockTypeHelper.getInstance().registerCustom(this);
+        registry.register(this);
     }
     
     //methods
@@ -227,7 +231,7 @@ public abstract class BlockType {
         return nmsBlockType;
     }
 
-    public OilKey getKey() {
+    public OilKey getOilKey() {
         return key;
     }
 
