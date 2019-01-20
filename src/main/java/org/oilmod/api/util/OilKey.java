@@ -23,7 +23,7 @@ public class OilKey {
      * @return Returns an unique key.
      */
     public static OilKey create(OilMod mod, String keyString) {
-        Validate.isTrue(alphanumericalPattern.matcher(keyString).find(), "Only lowercase alphanumerical characters and underscores are allowed");
+        Validate.isTrue(alphanumericalPattern.matcher(keyString).find(), "Only lowercase alphanumerical characters and underscores are allowed. Got: " + keyString);
         OilKey result = new OilKey(mod, keyString);
         result.nmsKey = OilUtil.UtilImpl.getInstance().registerOilKey(result);
         return result;

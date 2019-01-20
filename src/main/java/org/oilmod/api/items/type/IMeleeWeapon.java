@@ -6,6 +6,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.blocks.IBlockState;
+import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.OilItemStack;
 
 public interface IMeleeWeapon extends IWeapon {
@@ -15,4 +16,12 @@ public interface IMeleeWeapon extends IWeapon {
 
     @Override
     default boolean onBlockDestroyed(OilItemStack stack, IBlockState blockState, Location pos, LivingEntity entityLiving) {return true;}
+
+
+
+    @Override
+    int getItemEnchantability();
+
+    @Override
+    EnchantmentType getEnchantmentType();
 }

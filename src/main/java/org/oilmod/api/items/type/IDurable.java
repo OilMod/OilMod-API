@@ -1,6 +1,7 @@
 package org.oilmod.api.items.type;
 
 import org.bukkit.entity.LivingEntity;
+import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.OilItemStack;
 

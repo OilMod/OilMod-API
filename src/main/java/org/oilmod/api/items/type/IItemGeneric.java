@@ -7,6 +7,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.oilmod.api.blocks.IBlockState;
+import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.ItemInteractionResult;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.util.InteractionResult;
@@ -31,8 +32,12 @@ public interface IItemGeneric {
     }
 
     /**
-     * reaches normally from 5 (stone) to 22 (gold)
+     * reaches normally from 5 (stone) to 22 (gold). Higher value gives better enchantments
      * @return
      */
     default int getItemEnchantability() {return 0;}
+
+    default EnchantmentType getEnchantmentType() {
+        return EnchantmentType.NONE;
+    }
 }

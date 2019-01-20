@@ -6,6 +6,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.blocks.IBlockState;
+import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.OilItemStack;
 
 @SuppressWarnings("unchecked")
@@ -31,5 +32,14 @@ public interface IToolBlockBreaking extends ITool {
     @Override
     default boolean onBlockDestroyed(OilItemStack stack, IBlockState blockState, Location pos, LivingEntity entityLiving) {
         return getTbbType().onBlockDestroyed(this, stack, blockState, pos, entityLiving);
+    }
+
+
+    @Override
+    int getItemEnchantability();
+
+    @Override
+    default EnchantmentType getEnchantmentType() {
+        return EnchantmentType.DIGGER;
     }
 }

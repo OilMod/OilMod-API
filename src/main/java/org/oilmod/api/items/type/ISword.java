@@ -6,6 +6,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.LivingEntity;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.blocks.IBlockState;
+import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.OilItemStack;
 
 public interface ISword extends IMeleeWeapon, IToolBlockBreaking {
@@ -31,5 +32,15 @@ public interface ISword extends IMeleeWeapon, IToolBlockBreaking {
     @Override
     default float getDestroySpeed(OilItemStack itemStack) {
         return 1.5f;
+    }
+
+
+
+    @Override
+    int getItemEnchantability();
+
+    @Override
+    default EnchantmentType getEnchantmentType() {
+        return EnchantmentType.WEAPON;
     }
 }
