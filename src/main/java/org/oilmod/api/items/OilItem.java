@@ -84,6 +84,16 @@ public abstract class OilItem implements IItemGeneric {
         return key;
     }
 
+
+
+
+
+
+
+
+    //####EVERYTHING BELOW THIS IS OUTDATED AND CONSIDERED FOR REMOVAL. TODO: check for removal or improve/implement
+
+
     /**
      * You do no need to override this method. just override getEnchantSelectModifier() and let it return a value bigger than 0
      * @return return whether the item is enchantable.
@@ -92,16 +102,6 @@ public abstract class OilItem implements IItemGeneric {
         return getItemEnchantability() > 0;
     }
 
-
-
-    /**
-     * Override this method to allow enchanting
-     * @param enchantment the enchantment that is checked
-     * @return returns whether the enchantment can be applied to this item
-     */
-    public boolean canEnchant(Enchantment enchantment) {
-        return false;
-    }
 
     /**
      *
@@ -113,14 +113,9 @@ public abstract class OilItem implements IItemGeneric {
 
 
 
+    ///####SECTION END#####
 
 
-
-
-
-
-
-    //OilMod Item methods
 
 
 
@@ -307,60 +302,4 @@ public abstract class OilItem implements IItemGeneric {
         return false;
     }
 
-    /**
-     *
-     * @param itemStack ItemStack the player tries to repair the item with.
-     * @param human The Human that is trying this
-     * @return returns whether it is allowed to repair the OilItemStack with the itemstack
-     */
-    public boolean canRepairAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {
-        return false;
-    }
-
-    //TODO fix this javadoc. fix ll the javadocs
-    /**
-     * Called when a preview of the result is needed. This code should under no circumstances have any side effects.
-     * Should modify the OilItemStack in a way that it looks visually like the ItemStack after the repair.
-     * This should only include lightweight and fast algorithms. This method should not modify the ingredients in any way.
-     * This method is called when a player puts everything needed into the anvil and it is not certain if a repair is really executed.
-     * @param itemStack The ItemStack that is used for repairing
-     * @param human The Human repairing the OilItemStack
-     * @return how many of these items should be used
-     */
-    public int prepareRepairAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {
-        return 0;
-    }
-
-    /**
-     *
-     * @param itemStack The ItemStack that is used for repairing
-     * @param human The Human repairing the OilItemStack
-     */
-    public void repairAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {}
-
-    /**
-     * This method is called when a player repairs the items in an anvil. It should do anything that could not be done in prepareRepairAnvil.
-     * @param itemStack The ItemStack is question to be combined with the OilItemStack
-     * @param human The Human that is trying this
-     * @return returns whether it is allowed to combine the itemstack with the OilItemStack
-     */
-    public boolean canCombineAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {
-        return false;
-    }
-
-    /**
-     * Should modify the OilItemStack in a way that it looks visually like the ItemStack after the combination.
-     * This should only include lightweight and fast algorithms. This method should not modify itemStack in any way.
-     * This method is called when a player puts everything needed into the anvil and it is not certain if a combination is really executed.
-     * @param itemStack The itemstack that is combined with the OilItemStack
-     * @param human The Human combining the OilItemStack with the ItemStack
-     */
-    public void prepareCombineAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {}
-
-    /**
-     * This method is called when a player combines the items in an anvil. It should do anything that could not be done in prepareCombineAnvil.
-     * @param itemStack The itemstack that is combined with the OilItemStack
-     * @param human The Human combining the OilItemStack with the ItemStack
-     */
-    public void combineAnvil(OilItemStack oilItemStack, ItemStack itemStack, HumanEntity human) {}
 }

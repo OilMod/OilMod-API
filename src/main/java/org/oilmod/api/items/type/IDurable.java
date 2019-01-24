@@ -15,7 +15,7 @@ public interface IDurable extends IVDAdapter {
      * @param entity Entity using the item
      * @return Return true to destroy the item
      */
-    default boolean handleDamage(OilItemStack stack, int damage, LivingEntity entity) {
+    default boolean handleItemDamage(OilItemStack stack, int damage, LivingEntity entity) {
         return ItemTypeHelper.getInstance().handleDamage(stack, damage, entity);
     }
 
@@ -23,6 +23,12 @@ public interface IDurable extends IVDAdapter {
     default void damageItem(OilItemStack stack, int damage, LivingEntity entity) {
         ItemTypeHelper.getInstance().damageItem(stack, damage, entity);
     }
+
+    default int getItemDamage(OilItemStack stack) {
+        return ItemTypeHelper.getInstance().getItemDamage(stack);
+    }
+
+    default boolean usesVanillaDamageHandling() {return true;}
 
     default int getVanillaData(OilItemStack stack) {
         int v = ((OilItem)stack.getItem()).getVanillaMaterial(stack).getMaxDurability();

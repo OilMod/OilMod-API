@@ -38,6 +38,7 @@ public abstract class ItemTypeHelper {
 
     public abstract boolean handleDamage(OilItemStack stack, int damage, LivingEntity entity);
     public abstract void damageItem(OilItemStack stack, int damage, LivingEntity entity);
+    public abstract int getItemDamage(OilItemStack stack);
 
 
 
