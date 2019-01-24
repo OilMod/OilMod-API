@@ -124,6 +124,23 @@ public class OilItemStack implements DataParent, InventoryHolder{
         return mainInventory;
     }
 
+
+    /**
+     *
+     * @return returns the enchantment level of the enchantment in question.
+     */
+    public int getEnchantmentLevel(Enchantment enchantment) {
+        return getNmsItemStack().asBukkitItemStack().getEnchantmentLevel(enchantment);
+    }
+
+    /**
+     *
+     * @return returns whether the itemstack is enchanted with the enchantment in question
+     */
+    public boolean hasEnchantment(Enchantment enchantment) {
+        return getEnchantmentLevel(enchantment) > 0;
+    }
+
     /**
      * Called after the item was cloned
      * @param original old/original itemstack
@@ -136,6 +153,14 @@ public class OilItemStack implements DataParent, InventoryHolder{
      */
     public String getRename() {
         return getNmsItemStack().getRenameNMS();
+    }
+
+    public boolean isRenamed() {
+        return getNmsItemStack().isRenamedNMS();
+    }
+
+    public void setRename(String name) {
+        getNmsItemStack().setRenameNMS(name);
     }
 
 

@@ -14,4 +14,7 @@ public interface NMSItemStack {
     int getDataNMS();
     void setDataNMS(int data);
     String getRenameNMS();
+    void setRenameNMS(String name);
+
+    boolean isRenamedNMS();
 }

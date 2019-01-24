@@ -21,9 +21,11 @@ public interface IItemGeneric {
     default boolean onBlockDestroyed(OilItemStack stack, IBlockState blockState, Location pos, LivingEntity entityLiving) {return true;}
 
 
-    default InteractionResult onItemUseOnBlock(OilItemStack stack, HumanEntity human, Location pos, boolean offhand, BlockFace facing, float hitX, float hitY, float hitZ) {return InteractionResult.NONE;}
+    default InteractionResult onItemUseOnBlock(OilItemStack stack, HumanEntity human, Location loc, boolean offhand, BlockFace blockFace, float hitX, float hitY, float hitZ) {return InteractionResult.NONE;}
+    default InteractionResult onItemLeftClickOnBlock(OilItemStack stack, HumanEntity human, Location loc, boolean offhand, BlockFace blockFace, float hitX, float hitY, float hitZ) {return InteractionResult.NONE;}
 
     default ItemInteractionResult onItemRightClick(OilItemStack stack, World world, HumanEntity human, boolean offhand) {return new ItemInteractionResult(InteractionResult.NONE, stack.asBukkitItemStack());}
+    default ItemInteractionResult onItemLeftClick(OilItemStack stack, World world, HumanEntity human, boolean offhand) {return new ItemInteractionResult(InteractionResult.NONE, stack.asBukkitItemStack());}
 
     default boolean handleItemDamage(OilItemStack stack, int damage, LivingEntity entity) {return false;}
 
