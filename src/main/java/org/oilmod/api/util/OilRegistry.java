@@ -3,12 +3,9 @@ package org.oilmod.api.util;
 import gnu.trove.map.TMap;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
-import org.apache.commons.lang.Validate;
-import org.oilmod.api.items.EnchantmentType;
-import org.oilmod.api.util.OilKey;
+import org.apache.commons.lang3.Validate;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 public class OilRegistry<T extends IKeyed> {

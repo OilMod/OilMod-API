@@ -1,7 +1,7 @@
 package org.oilmod.api.userinterface;
 
 import org.oilmod.api.inventory.ItemFilter;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 26.06.2016 for OilMod-Api.
@@ -32,7 +32,7 @@ public class SingleStackInteractableUIElement extends InteractableUIElementBase 
     }
 
     @Override
-    public boolean isItemstackAllowed(int index, ItemStack itemStack) {
+    public boolean isItemstackAllowed(int index, ItemStackRep itemStack) {
         return itemFilter==null||itemFilter.allowed(itemStack);
     }
 
@@ -42,12 +42,12 @@ public class SingleStackInteractableUIElement extends InteractableUIElementBase 
     }
 
     @Override
-    public ItemStack getDisplayed(int index) {
+    public ItemStackRep getDisplayed(int index) {
         return itemStackHolder.getItemStack();
     }
 
     @Override
-    public void setDisplayed(int index, ItemStack itemStack) {
+    public void setDisplayed(int index, ItemStackRep itemStack) {
         itemStackHolder.setItemStack(itemStack);
     }
 }

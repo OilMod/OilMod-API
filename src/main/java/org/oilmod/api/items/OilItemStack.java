@@ -1,27 +1,21 @@
 package org.oilmod.api.items;
 
-import org.oilmod.api.inventory.ModInventoryObjectBase;
+import gnu.trove.map.hash.THashMap;
 import org.oilmod.api.data.DataParent;
 import org.oilmod.api.data.IData;
-import gnu.trove.map.hash.THashMap;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.inventory.ModInventoryObjectBase;
+import org.oilmod.api.rep.enchant.EnchantmentRep;
+import org.oilmod.api.rep.inventory.InventoryHolderRep;
+import org.oilmod.api.rep.inventory.InventoryRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
  * This class is used the handle special itemstack bound behavior.
  */
-public class OilItemStack implements DataParent, InventoryHolder{
+public class OilItemStack implements DataParent, InventoryHolderRep {
     private NMSItemStack nmsItemStack;
     private OilItem item;
     private final Map<String,IData<?>> registeredIData = new THashMap<>();
@@ -77,7 +71,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
      *
      * @return returns the item as a Bukkit ItemStack
      */
-    public ItemStack asBukkitItemStack() {
+    public ItemStackRep asBukkitItemStack() {
         return getNmsItemStack().asBukkitItemStack();
     }
 
@@ -104,7 +98,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
      * @return returns the main inventory as a bukkit inventory
      */
     @Override
-    public Inventory getInventory() {
+    public InventoryRep getInventory() {
         return mainInventory==null?null:mainInventory.getBukkitInventory();
     }
 
@@ -129,7 +123,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
      *
      * @return returns the enchantment level of the enchantment in question.
      */
-    public int getEnchantmentLevel(Enchantment enchantment) {
+    public int getEnchantmentLevel(EnchantmentRep enchantment) {
         return getNmsItemStack().asBukkitItemStack().getEnchantmentLevel(enchantment);
     }
 
@@ -137,7 +131,7 @@ public class OilItemStack implements DataParent, InventoryHolder{
      *
      * @return returns whether the itemstack is enchanted with the enchantment in question
      */
-    public boolean hasEnchantment(Enchantment enchantment) {
+    public boolean hasEnchantment(EnchantmentRep enchantment) {
         return getEnchantmentLevel(enchantment) > 0;
     }
 

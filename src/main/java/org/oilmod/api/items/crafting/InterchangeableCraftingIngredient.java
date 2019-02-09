@@ -1,8 +1,7 @@
 package org.oilmod.api.items.crafting;
 
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.Factory;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
 
 
     @Override
-    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
+    public boolean match(ItemStackRep itemStack, DataHolder dataHolder) {
         ICIData data = dataHolder.get(this, factory);
         for (int i = 0; i < ingredients.length; i++) {
             if (!data.getFlag(i)) {
@@ -50,17 +49,17 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
         return false;
     }
 
-    private boolean matchChild(int i, ItemStack itemStack, DataHolder dataHolder) {
+    private boolean matchChild(int i, ItemStackRep itemStack, DataHolder dataHolder) {
         OilCraftingIngredient ingredient = ingredients[i];
         if (ingredient == null) {
-            return itemStack == null || itemStack.getType().equals(Material.AIR) || itemStack.getAmount() < 0;
+            return itemStack == null || itemStack.isEmpty() || itemStack.getAmount() < 0;
         } else {
             return ingredient.match(itemStack, dataHolder);
         }
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
+    public ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder) {
         ICIData data = dataHolder.get(this, factory);
         List<Integer> stillMissing = new ArrayList<>(data.getUnflaggedCount());
         for (int i = 0; i < ingredients.length; i++) {
@@ -77,7 +76,7 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
         }
     }
 
-    private ItemStack getRandomExampleChild(int i, Random rnd, DataHolder dataHolder) {
+    private ItemStackRep getRandomExampleChild(int i, Random rnd, DataHolder dataHolder) {
         OilCraftingIngredient ingredient = ingredients[i];
         if (ingredient == null) {
             return null;
@@ -87,7 +86,7 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
     }
 
     @Override
-    public ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder) {
+    public ItemStackRep onCrafted(ItemStackRep oldItemStack, DataHolder dataHolder) {
         ICIData data = dataHolder.get(this, factory);
         for (int i = 0; i < ingredients.length; i++) {
             if (!data.getFlag(i)) {
@@ -105,7 +104,7 @@ public class InterchangeableCraftingIngredient implements OilCraftingIngredient 
         return true;
     }
 
-    private ItemStack onCraftedChild(int i, ItemStack oldItemStack, DataHolder dataHolder) {
+    private ItemStackRep onCraftedChild(int i, ItemStackRep oldItemStack, DataHolder dataHolder) {
         OilCraftingIngredient ingredient = ingredients[i];
         if (ingredient == null) {
             return oldItemStack;

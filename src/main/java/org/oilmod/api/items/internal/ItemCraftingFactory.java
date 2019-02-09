@@ -1,8 +1,8 @@
 package org.oilmod.api.items.internal;
 
+import org.oilmod.api.items.crafting.OilCraftingIngredient;
 import org.oilmod.api.items.crafting.OilCraftingRecipe;
 import org.oilmod.api.items.crafting.OilCraftingResult;
-import org.oilmod.api.items.crafting.OilCraftingIngredient;
 import org.oilmod.api.util.OilKey;
 
 /**

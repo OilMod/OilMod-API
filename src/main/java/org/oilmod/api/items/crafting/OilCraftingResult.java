@@ -1,7 +1,7 @@
 package org.oilmod.api.items.crafting;
 
 
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 24.03.2016.
@@ -15,7 +15,7 @@ public interface OilCraftingResult {
      * @param height height of the crafting grid
      * @return
      */
-    ItemStack preCraftResult(ItemStack[] matrix, boolean shaped, int width, int height);
+    ItemStackRep preCraftResult(ItemStackRep[] matrix, boolean shaped, int width, int height);
 
     /**
      * Called when the user actually crafts the item. It should do anything that could not be done in preCraftResult.
@@ -25,5 +25,5 @@ public interface OilCraftingResult {
      * @param width width of the crafting grid
      * @param height height of the crafting grid
      */
-    void craftResult(ItemStack result, ItemStack[] matrix, boolean shaped, int width, int height);
+    void craftResult(ItemStackRep result, ItemStackRep[] matrix, boolean shaped, int width, int height);
 }

@@ -1,6 +1,7 @@
 package org.oilmod.api.unidict;
 
-import org.apache.commons.lang.NotImplementedException;
+
+import org.apache.commons.lang3.NotImplementedException;
 
 public class  UniDict {
     public UniDict() {

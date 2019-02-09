@@ -1,18 +1,19 @@
 package org.oilmod.api.userinterface;
 
-import org.bukkit.inventory.ItemStack;
+
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 14.06.2016 for OilMod-Api.
  */
 public abstract class SimpleUIElementBase extends UIElement {
-    private ItemStack displayed;
+    private ItemStackRep displayed;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public final ItemStack getDisplayed(int index) {
+    public final ItemStackRep getDisplayed(int index) {
         return getDisplayed();
     }
 
@@ -20,7 +21,7 @@ public abstract class SimpleUIElementBase extends UIElement {
      *
      * @return stored itemstack
      */
-    public ItemStack getDisplayed() {
+    public ItemStackRep getDisplayed() {
         return displayed;
     }
 
@@ -28,14 +29,14 @@ public abstract class SimpleUIElementBase extends UIElement {
      * {@inheritDoc}
      */
     @Override
-    public final void setDisplayed(int index, ItemStack itemStack) {
+    public final void setDisplayed(int index, ItemStackRep itemStack) {
         setDisplayed(itemStack);
     }
 
     /**
      * sets stored itemstack
      */
-    public void setDisplayed(ItemStack itemStack) {
+    public void setDisplayed(ItemStackRep itemStack) {
         this.displayed = itemStack;
     }
 }

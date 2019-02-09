@@ -1,7 +1,7 @@
 package org.oilmod.api.inventory;
 
+import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.userinterface.IInteractableUIElement;
-import org.bukkit.inventory.Inventory;
 
 /**
  * Created by sirati97 on 12.02.2016.
@@ -19,7 +19,7 @@ public abstract class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
         return serializableDataHandler;
     }
 
-    public Inventory getBukkitInventory() {
+    public InventoryRep getBukkitInventory() {
         return getSerializableDataHandler().getData().getBukkitInventory();
     }
 

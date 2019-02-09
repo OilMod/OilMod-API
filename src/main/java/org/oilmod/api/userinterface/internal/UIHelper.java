@@ -1,12 +1,12 @@
 package org.oilmod.api.userinterface.internal;
 
+import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.userinterface.Click;
 import org.oilmod.api.userinterface.IInteractableUIElement;
 import org.oilmod.api.userinterface.IUIElement;
 import org.oilmod.api.userinterface.UIElementResult;
 import org.oilmod.api.userinterface.UIMultiPanel;
 import org.oilmod.api.userinterface.UIPanel;
-import org.bukkit.entity.Player;
 
 /**
  * Created by sirati97 on 15.01.2016.
@@ -44,5 +44,5 @@ public abstract class UIHelper {
 
     public abstract NMSClickData createNMSClickData(UserInterface userInterface);
 
-    public abstract void handleInventoryClick(IInteractableUIElement element, Player player, int index, Click click, NMSClickData data);
+    public abstract void handleInventoryClick(IInteractableUIElement element, EntityHumanRep player, int index, Click click, NMSClickData data);
 }

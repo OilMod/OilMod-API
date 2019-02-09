@@ -1,6 +1,7 @@
 package org.oilmod.api.inventory;
 
-import org.bukkit.inventory.FurnaceInventory;
+
+import org.oilmod.api.rep.inventory.InventoryRep;
 
 /**
  * Created by sirati97 on 13.02.2016.
@@ -12,7 +13,7 @@ public class ModFurnaceInventoryObject extends ModInventoryObjectBase<ModFurnace
     }
 
     @Override
-    public FurnaceInventory getBukkitInventory() {
-        return (FurnaceInventory) super.getBukkitInventory();
-    }
+    public InventoryRep getBukkitInventory() {
+        return (InventoryRep) super.getBukkitInventory();
+    } //TODO: add furnace specific inventory
 }

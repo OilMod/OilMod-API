@@ -1,8 +1,8 @@
 package org.oilmod.api.items.internal;
 
 import org.oilmod.api.items.OilItem;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.entity.EntityHumanRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Internal - should not be called by user code
@@ -30,5 +30,5 @@ public abstract class ItemFactory {
         return instance;
     }
 
-    public abstract ItemStack createStack(OilItem item, Player player, int count, int data);
+    public abstract ItemStackRep createStack(OilItem item, EntityHumanRep player, int count, int data);
 }

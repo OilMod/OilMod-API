@@ -1,7 +1,8 @@
 package org.oilmod.api.userinterface;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+
+import org.oilmod.api.rep.entity.EntityHumanRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 16.06.2016 for OilMod-Api.
@@ -13,7 +14,7 @@ public interface IInteractableUIElement extends IUIElement {
      * @param itemStack the itemstack in question
      * @return
      */
-    boolean isItemstackAllowed(int index, ItemStack itemStack);
+    boolean isItemstackAllowed(int index, ItemStackRep itemStack);
 
     /**
      *
@@ -21,7 +22,7 @@ public interface IInteractableUIElement extends IUIElement {
      * @param player the player in question
      * @return
      */
-    boolean isPlayerAllowed(int index, Player player);
+    boolean isPlayerAllowed(int index, EntityHumanRep player);
 
     /**
      *
@@ -35,7 +36,7 @@ public interface IInteractableUIElement extends IUIElement {
      * @param index the <b>local</b> index of the element
      * @return the maximal stack size for the itemstack
      */
-    int getMaxStackSize(int index, ItemStack itemStack);
+    int getMaxStackSize(int index, ItemStackRep itemStack);
 
     /**
      *

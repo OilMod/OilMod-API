@@ -1,13 +1,17 @@
 package org.oilmod.api.util;
 
-import org.bukkit.Effect;
-import org.bukkit.util.Vector;
+
+import org.oilmod.api.rep.particle.ParticlePre;
+import org.oilmod.api.rep.stdimpl.world.LocFactoryImpl;
+import org.oilmod.api.rep.world.VectorRep;
+
+import java.util.Vector;
 
 /**
  * Created by sirati97 on 27.06.2016 for OilMod-Api.
  */
 public class ParticleSpawnData {
-    private final Effect effect;
+    private final ParticlePre effect;
     private int id=0;
     private int data=0;
     private float offsetX=0;
@@ -17,11 +21,11 @@ public class ParticleSpawnData {
     private int particleCount=1;
     private int radius=64;
 
-    public ParticleSpawnData(Effect effect) {
+    public ParticleSpawnData(ParticlePre effect) {
         this.effect = effect;
     }
 
-    public Effect getEffect() {
+    public ParticlePre getParticle() {
         return effect;
     }
 
@@ -57,8 +61,8 @@ public class ParticleSpawnData {
         return radius;
     }
 
-    public Vector getOffsetAsVector() {
-        return new Vector(offsetX, offsetY, offsetZ);
+    public VectorRep getOffsetAsVector() {
+        return LocFactoryImpl.INSTANCE.createVector(offsetX, offsetY, offsetZ);
     }
 
     public ParticleSpawnData setData(int data) {
@@ -92,7 +96,7 @@ public class ParticleSpawnData {
         return this.setOffset((float)offsetX, (float)offsetY, (float)offsetZ);
     }
 
-    public ParticleSpawnData setOffset(Vector direction) {
+    public ParticleSpawnData setOffset(VectorRep direction) {
         return setOffset(direction.getX(), direction.getY(), direction.getZ());
     }
 

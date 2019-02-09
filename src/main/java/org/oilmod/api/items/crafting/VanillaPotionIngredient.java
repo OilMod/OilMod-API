@@ -1,17 +1,14 @@
 package org.oilmod.api.items.crafting;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionType;
+
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 import java.util.Random;
 
 /**
  * Created by sirati97 on 02.07.2016 for OilMod-Api.
  */
-public class VanillaPotionIngredient extends VanillaIngredientBase {
+/*public class VanillaPotionIngredient extends VanillaIngredientBase {
     private final PotionType potionType;
     private final PotionUpgraded potionUpgraded;
     private final PotionExtended potionExtended;
@@ -27,7 +24,7 @@ public class VanillaPotionIngredient extends VanillaIngredientBase {
     }
 
     @Override
-    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
+    public boolean match(ItemStackRep itemStack, DataHolder dataHolder) {
         if (!matchMaterial(itemStack.getType())) {
             return false;
         }
@@ -45,8 +42,8 @@ public class VanillaPotionIngredient extends VanillaIngredientBase {
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
-        ItemStack itemStack = new ItemStack(potionBottleTypes[rnd.nextInt(potionBottleTypes.length)].getBukkitMaterial());
+    public ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder) {
+        ItemStackRep itemStack = new ItemStack(potionBottleTypes[rnd.nextInt(potionBottleTypes.length)].getBukkitMaterial());
         PotionMeta meta = (PotionMeta)itemStack.getItemMeta();
         meta.setBasePotionData(new PotionData(potionType, potionExtended.generateExtended(rnd), potionUpgraded.generateUpgradeed(rnd)));
         itemStack.setItemMeta(meta);
@@ -145,4 +142,4 @@ public class VanillaPotionIngredient extends VanillaIngredientBase {
             return bukkitMaterial;
         }
     }
-}
+}*/ //TODO: readd

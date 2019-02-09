@@ -26,13 +26,19 @@
         <dependency>
             <groupId>org.oilmod</groupId>
             <artifactId>oilmod-representation-api</artifactId>
-            <version>LATEST</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <!--Trove-Lib-->
         <dependency>
             <groupId>net.sf.trove4j</groupId>
             <artifactId>trove4j</artifactId>
             <version>3.0.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
         </dependency>
 
     </dependencies>

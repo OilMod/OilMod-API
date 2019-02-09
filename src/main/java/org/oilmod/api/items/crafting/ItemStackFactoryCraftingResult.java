@@ -1,7 +1,7 @@
 package org.oilmod.api.items.crafting;
 
 import org.oilmod.api.items.OilItemStackFactory;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 24.03.2016.
@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class ItemStackFactoryCraftingResult implements OilCraftingResult {
     private final OilItemStackFactory itemstackFactory;
     private final int amount;
-    private ItemStack result;
+    private ItemStackRep result;
 
     public ItemStackFactoryCraftingResult(OilItemStackFactory itemstackFactory, int amount) {
         this.itemstackFactory = itemstackFactory;
@@ -20,7 +20,7 @@ public class ItemStackFactoryCraftingResult implements OilCraftingResult {
      * {@inheritDoc}
      */
     @Override
-    public ItemStack preCraftResult(ItemStack[] matrix, boolean shaped, int width, int height) {
+    public ItemStackRep preCraftResult(ItemStackRep[] matrix, boolean shaped, int width, int height) {
         return getResult();
     }
 
@@ -28,11 +28,11 @@ public class ItemStackFactoryCraftingResult implements OilCraftingResult {
      * {@inheritDoc}
      */
     @Override
-    public void craftResult(ItemStack result, ItemStack[] matrix, boolean shaped, int width, int height) {
+    public void craftResult(ItemStackRep result, ItemStackRep[] matrix, boolean shaped, int width, int height) {
         this.result = null;
     }
 
-    public ItemStack getResult() {
+    public ItemStackRep getResult() {
         if (result == null) {
             result = itemstackFactory.create();
             result.setAmount(amount);

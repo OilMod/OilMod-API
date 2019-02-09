@@ -1,13 +1,13 @@
 package org.oilmod.api.items;
 
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.InteractionResult;
 
 public class ItemInteractionResult {
     private final InteractionResult interactionResult;
-    private final ItemStack itemStack;
+    private final ItemStackRep itemStack;
 
-    public ItemInteractionResult(InteractionResult interactionResult, ItemStack itemStack) {
+    public ItemInteractionResult(InteractionResult interactionResult, ItemStackRep itemStack) {
         this.interactionResult = interactionResult;
         this.itemStack = itemStack;
     }
@@ -19,7 +19,7 @@ public class ItemInteractionResult {
         return interactionResult;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStackRep getItemStack() {
         return itemStack;
     }
 }

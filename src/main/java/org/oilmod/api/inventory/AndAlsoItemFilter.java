@@ -1,6 +1,7 @@
 package org.oilmod.api.inventory;
 
-import org.bukkit.inventory.ItemStack;
+
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 13.02.2016.
@@ -13,7 +14,7 @@ public class AndAlsoItemFilter implements ItemFilter {
     }
 
     @Override
-    public boolean allowed(ItemStack itemStack) {
+    public boolean allowed(ItemStackRep itemStack) {
         for (ItemFilter filter:filters) {
             if (!filter.allowed(itemStack))return false;
         }

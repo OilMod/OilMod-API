@@ -1,11 +1,11 @@
 package org.oilmod.api.items.crafting;
 
-import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.OilBukkitItemStack;
+import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.items.OilItemStackFactory;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.item.ItemRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.OilKey;
 
 /**
@@ -36,7 +36,7 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, ItemStack vanillaResult, Object... ingredients) {
+    public static OilCraftingRecipe createShapedRecipe(OilKey key, int width, int height, ItemStackRep vanillaResult, Object... ingredients) {
         return createShapedRecipe(key, width, height, new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
@@ -75,7 +75,7 @@ public final class ItemCraftingFactory {
      *                    <li>OilMod Item</li></ul>
      * @return instance of OilCraftingRecipe
      */
-    public static OilCraftingRecipe createShapelessRecipe(OilKey key, ItemStack vanillaResult, Object... ingredients) {
+    public static OilCraftingRecipe createShapelessRecipe(OilKey key, ItemStackRep vanillaResult, Object... ingredients) {
         return createShapelessRecipe(key, new VanillaOilCraftingResult(vanillaResult), ingredients);
     }
 
@@ -115,10 +115,10 @@ public final class ItemCraftingFactory {
             return null;
         } else if (ingredient instanceof OilCraftingIngredient) {
             return (OilCraftingIngredient) ingredient;
-        } else if (ingredient instanceof Material) {
-            return new VanillaMaterialIngredient((Material) ingredient);
-        } else if (ingredient instanceof ItemStack && !(ingredient instanceof OilBukkitItemStack)) {
-            return new VanillaItemStackIngredient((ItemStack) ingredient);
+        } else if (ingredient instanceof ItemRep) {
+            return new VanillaMaterialIngredient((ItemRep) ingredient);
+        } else if (ingredient instanceof ItemStackRep && !(ingredient instanceof OilBukkitItemStack)) {
+            return new VanillaItemStackIngredient((ItemStackRep) ingredient);
         } else if (ingredient instanceof OilItem) {
             return new OilModItemIngredient((OilItem) ingredient);
         } else if (ingredient instanceof Class) {

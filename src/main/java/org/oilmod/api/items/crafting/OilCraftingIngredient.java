@@ -1,7 +1,8 @@
 package org.oilmod.api.items.crafting;
 
 
-import org.bukkit.inventory.ItemStack;
+
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 import java.util.Random;
 
@@ -9,8 +10,8 @@ import java.util.Random;
  * Created by sirati97 on 24.03.2016.
  */
 public interface OilCraftingIngredient {
-    boolean match(ItemStack itemStack, DataHolder dataHolder);
-    ItemStack getRandomExample(Random rnd, DataHolder dataHolder);
-    ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder);
+    boolean match(ItemStackRep itemStack, DataHolder dataHolder);
+    ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder);
+    ItemStackRep onCrafted(ItemStackRep oldItemStack, DataHolder dataHolder);
     boolean matchesNull();
 }

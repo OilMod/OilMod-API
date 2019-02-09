@@ -1,6 +1,7 @@
 package org.oilmod.api.items.crafting;
 
-import org.bukkit.inventory.ItemStack;
+
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 03.04.2016.
@@ -8,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public abstract class OilIngredientBase implements OilCraftingIngredient {
 
     @Override
-    public ItemStack onCrafted(ItemStack oldItemStack, DataHolder dataHolder) {
+    public ItemStackRep onCrafted(ItemStackRep oldItemStack, DataHolder dataHolder) {
         oldItemStack.setAmount(oldItemStack.getAmount()-1);
         return oldItemStack.getAmount()>0?oldItemStack:null;
     }

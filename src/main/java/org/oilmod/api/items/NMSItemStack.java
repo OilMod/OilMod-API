@@ -1,15 +1,12 @@
 package org.oilmod.api.items;
 
-import org.oilmod.api.config.Compound;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Internal
  */
 public interface NMSItemStack {
-    ItemStack asBukkitItemStack();
+    ItemStackRep asBukkitItemStack();
     OilItemStack getOilItemStack();
     int getDataNMS();
     void setDataNMS(int data);

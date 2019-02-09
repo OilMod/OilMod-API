@@ -1,12 +1,12 @@
 package org.oilmod.api.blocks;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+
+import org.oilmod.api.rep.block.BlockRep;
+import org.oilmod.api.rep.world.LocationBlockRep;
 
 public interface IBlockState {
     BlockType getBlockType();
-    Material getMaterial();
-    float getBlockHardness(Location location);
+    BlockRep getBlock();
+    float getBlockHardness(LocationBlockRep location); //todo this is weird, improve
     Object getNMS();
 }

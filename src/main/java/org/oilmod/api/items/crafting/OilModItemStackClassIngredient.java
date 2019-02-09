@@ -2,7 +2,7 @@ package org.oilmod.api.items.crafting;
 
 import org.oilmod.api.items.OilBukkitItemStack;
 import org.oilmod.api.items.OilItemStack;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 import java.util.Random;
 
@@ -24,13 +24,13 @@ public class OilModItemStackClassIngredient extends OilIngredientBase {
     }
 
     @Override
-    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
+    public boolean match(ItemStackRep itemStack, DataHolder dataHolder) {
         return itemStack instanceof OilBukkitItemStack && ((OilBukkitItemStack) itemStack).getOilItemStack().getClass().equals(itemClass);
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
-//        OilItemStack[] items = ItemClassMap.getInstance().getOilItemsByClass(itemClass);
+    public ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder) {
+//        OilItemStackRep[] items = ItemClassMap.getInstance().getOilItemsByClass(itemClass);
 //        if (items.length != lastItemsCount || examples==null) {
 //            List<ItemStack> itemStacks = new ArrayList<>(items.length);
 //            for (OilItemStack item:items) {

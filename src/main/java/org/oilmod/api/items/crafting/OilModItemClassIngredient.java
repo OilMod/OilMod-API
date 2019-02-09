@@ -1,9 +1,9 @@
 package org.oilmod.api.items.crafting;
 
+import org.oilmod.api.items.OilBukkitItemStack;
 import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.internal.ItemClassMap;
-import org.oilmod.api.items.OilBukkitItemStack;
-import org.bukkit.inventory.ItemStack;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import java.util.Random;
  */
 public class OilModItemClassIngredient extends OilIngredientBase {
     private final Class<? extends OilItem> itemClass;
-    private ItemStack[] examples;
+    private ItemStackRep[] examples;
     private int lastItemsCount;
 
     public OilModItemClassIngredient(Class<? extends OilItem> itemClass) {
@@ -23,19 +23,19 @@ public class OilModItemClassIngredient extends OilIngredientBase {
     }
 
     @Override
-    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
+    public boolean match(ItemStackRep itemStack, DataHolder dataHolder) {
         return itemStack instanceof OilBukkitItemStack && ((OilBukkitItemStack) itemStack).getOilItemStack().getItem().getClass().equals(itemClass);
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
+    public ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder) {
         OilItem[] items = ItemClassMap.getInstance().getOilItemsByClass(itemClass);
         if (items.length != lastItemsCount || examples==null) {
-            List<ItemStack> itemStacks = new ArrayList<>(items.length);
+            List<ItemStackRep> itemStacks = new ArrayList<>(items.length);
             for (OilItem item:items) {
                 itemStacks.addAll(Arrays.asList(item.getNaturalExamples()));
             }
-            examples = itemStacks.toArray(new ItemStack[itemStacks.size()]);
+            examples = itemStacks.toArray(new ItemStackRep[itemStacks.size()]);
         }
         return examples[rnd.nextInt(examples.length)];
     }

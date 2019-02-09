@@ -1,18 +1,15 @@
 package org.oilmod.api.items;
 
-import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.oilmod.api.items.nms.NMSEnchantmentType;
 import org.oilmod.api.util.IKeyed;
 import org.oilmod.api.util.OilKey;
 import org.oilmod.api.util.OilRegistry;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class EnchantmentType implements IKeyed {

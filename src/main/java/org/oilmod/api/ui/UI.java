@@ -1,7 +1,7 @@
 package org.oilmod.api.ui;
 
-import org.bukkit.inventory.Inventory;
 import org.oilmod.api.inventory.ItemFilter;
+import org.oilmod.api.rep.inventory.InventoryRep;
 
 public final class UI {
     private static UIManagerHelper uiManager;
@@ -11,7 +11,7 @@ public final class UI {
         public abstract ISlotState[] createSlots(IUIInventory uiInventory, int size);
         public abstract IUIInventory createUIInventory(int size, ISlotInteraction interaction, ItemFilter filter, int maxstack);
 
-        public abstract IUIInventory createUIInventory(Inventory inventory);
+        public abstract IUIInventory createUIInventory(InventoryRep inventory);
     }
 
     public static ISlotState createSlot(IUIInventory uiInventory) {
@@ -26,7 +26,7 @@ public final class UI {
         return uiManager.createUIInventory(size, interaction, filter, maxstack);
     }
 
-    public static IUIInventory createUIInventory(Inventory inventory) {
+    public static IUIInventory createUIInventory(InventoryRep inventory) {
         return uiManager.createUIInventory(inventory);
     }
 

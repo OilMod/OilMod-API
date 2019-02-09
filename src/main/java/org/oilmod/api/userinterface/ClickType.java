@@ -29,7 +29,7 @@ public enum ClickType {
      */
     QUICK_CRAFT,
     /**
-     * Player double clicked. (Warning: Normal click is processed as well)
+     * EntityHumanRep double clicked. (Warning: Normal click is processed as well)
      */
     PICKUP_ALL;
 }

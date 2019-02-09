@@ -1,11 +1,10 @@
 package org.oilmod.api.ui;
 
-import org.bukkit.inventory.ItemStack;
-import org.oilmod.api.inventory.ItemFilter;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 public interface ISlotState {
-    void setItemStack(ItemStack itemStack);
-    ItemStack getItemStack();
+    void setItemStack(ItemStackRep itemStack);
+    ItemStackRep getItemStack();
     Object getNMSSlotState();
     IUIInventory getUIInventory();
 }

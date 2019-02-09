@@ -1,8 +1,8 @@
 package org.oilmod.api.items.crafting;
 
+import org.oilmod.api.rep.item.ItemRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.OilUtil;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
@@ -10,19 +10,19 @@ import java.util.Random;
  * Created by sirati97 on 24.03.2016.
  */
 public class VanillaMaterialIngredient extends VanillaIngredientBase {
-    private final Material material;
+    private final ItemRep material;
 
-    public VanillaMaterialIngredient(Material material) {
+    public VanillaMaterialIngredient(ItemRep material) {
         this.material = material;
     }
 
     @Override
-    public boolean match(ItemStack itemStack, DataHolder dataHolder) {
-        return super.match(itemStack, dataHolder) && itemStack.getType().equals(material);
+    public boolean match(ItemStackRep itemStack, DataHolder dataHolder) {
+        return super.match(itemStack, dataHolder) && itemStack.getItem().equals(material);
     }
 
     @Override
-    public ItemStack getRandomExample(Random rnd, DataHolder dataHolder) {
+    public ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder) {
         return OilUtil.getRandomValidVariation(material, rnd);
     }
 }

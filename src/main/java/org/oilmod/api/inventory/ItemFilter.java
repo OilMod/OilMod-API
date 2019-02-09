@@ -1,10 +1,11 @@
 package org.oilmod.api.inventory;
 
-import org.bukkit.inventory.ItemStack;
+
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
  * Created by sirati97 on 13.02.2016.
  */
 public interface ItemFilter {
-    boolean allowed(ItemStack itemStack);
+    boolean allowed(ItemStackRep itemStack);
 }

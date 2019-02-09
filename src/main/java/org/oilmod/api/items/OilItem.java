@@ -1,15 +1,10 @@
 package org.oilmod.api.items;
 
 import org.oilmod.api.items.internal.ItemFactory;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.inventory.ItemStack;
 import org.oilmod.api.items.type.IItemGeneric;
+import org.oilmod.api.rep.entity.EntityHumanRep;
+import org.oilmod.api.rep.item.ItemRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.OilKey;
 
 import java.util.List;
@@ -18,23 +13,23 @@ import java.util.List;
  * This class is used to add new items to the game
  */
 public abstract class OilItem implements IItemGeneric {
-    private Material vanillaMaterial;
+    private ItemRep vanillaItem;
     private final OilKey key;
     private String displayName;
     private Object nmsItem;
     private OilItemStackFactory[] creativeItems;
-    private ItemStack[] naturalExamples;
+    private ItemStackRep[] naturalExamples;
 
     //Constructor
 
 
     /**
      * @param key Mod unique key that identifies the item
-     * @param vanillaMaterial The Vanilla Material that is shown to the client
+     * @param vanillaItem The Vanilla Material that is shown to the client
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, Material vanillaMaterial, String displayName) {
-        this.vanillaMaterial = vanillaMaterial;
+    public OilItem(OilKey key, ItemRep vanillaItem, String displayName) {
+        this.vanillaItem = vanillaItem;
         this.key = key;
         this.displayName = displayName;
     }
@@ -54,8 +49,8 @@ public abstract class OilItem implements IItemGeneric {
      *
      * @return returns that material used to display this item on vanilla clients
      */
-    public Material getVanillaMaterial(OilItemStack itemStack) {
-        return vanillaMaterial;
+    public ItemRep getVanillaItem(OilItemStack itemStack) {
+        return vanillaItem;
     }
 
     /**
@@ -63,7 +58,7 @@ public abstract class OilItem implements IItemGeneric {
      * @param player The player that should see the displayName
      * @return returns the display displayName of the item that should be seen by the player
      */
-    public String getDisplayName(Player player) {
+    public String getDisplayName(EntityHumanRep player) {
         return displayName;
     }
 
@@ -131,18 +126,18 @@ public abstract class OilItem implements IItemGeneric {
      * Will be used in the localisation api
      * @param player the player the itemstack is for.
      * @param count count of the itemstack
-     * @return Bukkit ItemStack of this ModItem
+     * @return Bukkit ItemStackRep of this ModItem
      */
-    public final ItemStack createItemStack(Player player, int count, int data) {
+    public final ItemStackRep createItemStack(EntityHumanRep player, int count, int data) {
         return ItemFactory.getInstance().createStack(this, player, count, data);
     }
 
     /**
      *
      * @param count count of the itemstack
-     * @return Bukkit ItemStack of this ModItem
+     * @return Bukkit ItemStackRep of this ModItem
      */
-    public final ItemStack createItemStack(int count, int data) {
+    public final ItemStackRep createItemStack(int count, int data) {
         return createItemStack(null, count, data);
     }
 
@@ -150,18 +145,18 @@ public abstract class OilItem implements IItemGeneric {
      * Will be used in the localisation api
      * @param player the player the itemstack is for.
      * @param count count of the itemstack
-     * @return Bukkit ItemStack of this ModItem
+     * @return Bukkit ItemStackRep of this ModItem
      */
-    public final ItemStack createItemStack(Player player, int count) {
+    public final ItemStackRep createItemStack(EntityHumanRep player, int count) {
         return createItemStack(player, count, 0);
     }
 
     /**
      *
      * @param count count of the itemstack
-     * @return Bukkit ItemStack of this ModItem
+     * @return Bukkit ItemStackRep of this ModItem
      */
-    public final ItemStack createItemStack(int count) {
+    public final ItemStackRep createItemStack(int count) {
         return createItemStack(null, count, 0);
     }
 
@@ -188,7 +183,7 @@ public abstract class OilItem implements IItemGeneric {
      *
      * @return returns an array of instances of this item that represent this item in wildcard crafting recipes
      */
-    public final ItemStack[] getNaturalExamples() {
+    public final ItemStackRep[] getNaturalExamples() {
         if (naturalExamples == null) {
             naturalExamples = createNaturalExamples();
         }
@@ -199,8 +194,8 @@ public abstract class OilItem implements IItemGeneric {
      *
      * @return creates the array of instances of this item that represent this item in wildcard crafting recipes. Result is not supposed to vary during runtime.
      */
-    protected ItemStack[] createNaturalExamples() {
-        return new ItemStack[]{createItemStack(1)};
+    protected ItemStackRep[] createNaturalExamples() {
+        return new ItemStackRep[]{createItemStack(1)};
     }
 
     /**

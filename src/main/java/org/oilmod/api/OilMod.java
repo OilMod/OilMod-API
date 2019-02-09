@@ -1,7 +1,7 @@
 package org.oilmod.api;
 
 import gnu.trove.map.hash.THashMap;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.oilmod.api.util.OilKey;
 
 import java.util.Collection;

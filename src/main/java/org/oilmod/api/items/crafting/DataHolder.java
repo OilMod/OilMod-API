@@ -1,8 +1,8 @@
 package org.oilmod.api.items.crafting;
 
-import org.oilmod.api.util.Factory;
 import gnu.trove.map.TMap;
 import gnu.trove.map.hash.THashMap;
+import org.oilmod.api.util.Factory;
 
 /**
  * Created by sirati97 on 24.03.2016.
