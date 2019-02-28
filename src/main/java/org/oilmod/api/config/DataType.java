@@ -13,11 +13,12 @@ public enum DataType {
     Long(4, Long.class, (long)0),
     Float(5, Float.class, (float)0),
     Double(6, Double.class, (double)0),
-    ByteArray(7, (new byte[0]).getClass(), new byte[0]),
+    ByteArray(7, byte[].class, new byte[0]),
     String(8, String.class, ""),
     List(9, DataList.class, null),
     Subsection(10, Compound.class, null),
-    IntArray(11, (new int[0]).getClass(), new int[0]),
+    IntArray(11, int[].class, new int[0]),
+    LongArray(12, long[].class, new long[0]),
     Undefined(-1, void.class, null),
     Empty(-1, void.class, null);
 

@@ -6,4 +6,5 @@ package org.oilmod.api.util;
 public interface Tickable {
     void tick(int times);
     boolean isTickable();
+
 }

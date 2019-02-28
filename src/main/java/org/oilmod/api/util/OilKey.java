@@ -3,10 +3,9 @@ package org.oilmod.api.util;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
 
-import java.util.regex.Pattern;
+import static org.oilmod.api.util.Util.checkName;
 
 public class OilKey {
-    public static final Pattern alphanumericalPattern = Pattern.compile("^[a-z0-9_]*$");
     private OilMod mod;
     private String keyString;
     private NMSKey nmsKey;
@@ -23,7 +22,7 @@ public class OilKey {
      * @return Returns an unique key.
      */
     public static OilKey create(OilMod mod, String keyString) {
-        Validate.isTrue(alphanumericalPattern.matcher(keyString).find(), "Only lowercase alphanumerical characters and underscores are allowed. Got: " + keyString);
+        checkName(keyString);
         OilKey result = new OilKey(mod, keyString);
         result.nmsKey = OilUtil.UtilImpl.getInstance().registerOilKey(result);
         return result;

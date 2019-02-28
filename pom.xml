@@ -22,7 +22,6 @@
     </parent>
 
     <dependencies>
-        <!--Spigot-API-->
         <dependency>
             <groupId>org.oilmod</groupId>
             <artifactId>oilmod-representation-api</artifactId>

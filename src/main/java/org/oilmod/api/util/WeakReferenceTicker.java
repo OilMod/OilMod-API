@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by sirati97 on 14.02.2016.
  */
+@Deprecated
 public class WeakReferenceTicker implements Runnable{
     private Set<WeakReference<Tickable>> tickables= new THashSet<>();
     private int delay;

@@ -2,11 +2,17 @@ package org.oilmod.api;
 
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.Validate;
+import org.oilmod.api.unification.material.IUniMaterial;
+import org.oilmod.api.unification.material.MaterialHelper;
+import org.oilmod.api.unification.material.UniMaterial;
 import org.oilmod.api.util.OilKey;
+import org.oilmod.api.util.Util;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+
+import static org.oilmod.api.util.Util.checkName;
 
 public class OilMod {
     private final static Map<String, OilMod> registeredMap = new THashMap<>();
@@ -30,7 +36,7 @@ public class OilMod {
      * @param displayName This is used rarely and only where things are presented pretty.
      */
     public OilMod(String internalName, String displayName) {
-        Validate.isTrue(OilKey.alphanumericalPattern.matcher(internalName).find(), "Only lowercase alphanumerical characters and underscores are allowed");
+        checkName(internalName);
         this.internalName = internalName;
         this.displayName = displayName;
         ModHelper.getInstance().register(this);

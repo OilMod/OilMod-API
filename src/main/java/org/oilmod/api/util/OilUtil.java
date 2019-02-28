@@ -1,6 +1,7 @@
 package org.oilmod.api.util;
 
 import jdk.nashorn.internal.ir.Block;
+import org.oilmod.api.OilMod;
 import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.entity.NMSEntity;
 import org.oilmod.api.rep.entity.EntityHumanRep;
@@ -56,10 +57,11 @@ public class OilUtil {
         protected abstract void setLastDamager(EntityLivingRep entity, EntityLivingRep source);
         protected abstract boolean damageEntity(EntityLivingRep entity, double amount, EntityLivingRep source);
         protected abstract long getWorldTicksPlayed(WorldRep world);
-        protected abstract  Class<? extends NMSEntity> getMappedNMSClass(Class<? extends EntityRep> bukkitClass);
+        protected abstract Class<? extends NMSEntity> getMappedNMSClass(Class<? extends EntityRep> bukkitClass);
         protected abstract NMSKey registerOilKey(OilKey key);
-        protected abstract  void runTask(Runnable runnable);
-        protected abstract  void runTaskLater(Runnable runnable, long delay);
+        protected abstract void runTask(Runnable runnable);
+        protected abstract void runTaskLater(Runnable runnable, long delay);
+        protected abstract ITicker createTicker(OilMod mod, WorldRep mainWorld, int rate, int simulationSpeed);
     }
 
     public static ItemStackRep[] getDrops(Block block){
@@ -225,5 +227,9 @@ public class OilUtil {
 
     public static void runTaskLater(Runnable runnable, long delay) {
         UtilImpl.getInstance().runTaskLater(runnable, delay);
+    }
+
+    public static ITicker createTicker(OilMod mod, WorldRep mainWorld, int rate, int simulationSpeed) {
+        return UtilImpl.getInstance().createTicker(mod, mainWorld, rate, simulationSpeed);
     }
 }

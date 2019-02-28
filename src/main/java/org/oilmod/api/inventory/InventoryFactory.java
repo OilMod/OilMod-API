@@ -4,7 +4,7 @@ import org.oilmod.api.data.DataParent;
 import org.oilmod.api.data.ItemStackData;
 import org.oilmod.api.data.ObjectFactory;
 import org.oilmod.api.items.OilItemStack;
-import org.oilmod.api.util.WeakReferenceTicker;
+import org.oilmod.api.util.ITicker;
 
 /**
  * Created by sirati97 on 15.01.2016.
@@ -54,19 +54,19 @@ public abstract class InventoryFactory {
     }
 
     //###FurnaceInventory###
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker) {
+    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker) {
         return createFurnaceInventory(nbtName, itemStack, inventoryTitle, ticker, false);
     }
 
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, boolean mainItemstackInventory) {
+    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, boolean mainItemstackInventory) {
         return createFurnaceInventory(nbtName, itemStack, inventoryTitle, ticker, null, mainItemstackInventory);
     }
 
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, ItemFilter filter) {
+    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter) {
         return createFurnaceInventory(nbtName, itemStack, inventoryTitle, ticker, filter, false);
     }
 
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, ItemFilter filter, boolean mainItemstackInventory) {
+    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter, boolean mainItemstackInventory) {
         return createSpecialFurnaceInventory(new InventoryObjectFactory<ModFurnaceInventoryObject>() {
             @Override
             public ModFurnaceInventoryObject create(InventoryData<ModFurnaceInventoryObject> iData) {
@@ -75,19 +75,19 @@ public abstract class InventoryFactory {
         },nbtName,itemStack,inventoryTitle, ticker,filter,mainItemstackInventory);
     }
 
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker) {
+    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker) {
         return createSpecialFurnaceInventory(inventoryObjectFactory,nbtName, itemStack, inventoryTitle, ticker, false);
     }
 
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, boolean mainItemstackInventory) {
+    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, boolean mainItemstackInventory) {
         return createSpecialFurnaceInventory(inventoryObjectFactory,nbtName, itemStack, inventoryTitle, ticker, null, mainItemstackInventory);
     }
 
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, ItemFilter filter) {
+    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter) {
         return createSpecialFurnaceInventory(inventoryObjectFactory,nbtName, itemStack, inventoryTitle, ticker, filter, false);
     }
 
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, ItemFilter filter, boolean mainItemstackInventory) {
+    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter, boolean mainItemstackInventory) {
         ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> factory = getFurnaceInventoryFactory(itemStack, inventoryTitle, ticker, filter);
         InventoryData<ModFurnaceInventoryObject> iData = new InventoryData<>(nbtName, itemStack, factory, false);
         ModFurnaceInventoryObject result = inventoryObjectFactory.create(iData);
@@ -134,7 +134,7 @@ public abstract class InventoryFactory {
 
     //###Factories###
     protected abstract ObjectFactory<ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter);
-    protected abstract ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(OilItemStack itemStack, String inventoryTitle, WeakReferenceTicker ticker, ItemFilter filter);
+    protected abstract ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter);
     protected abstract ObjectFactory<ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter);
 
 }
