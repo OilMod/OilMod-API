@@ -9,10 +9,7 @@ import org.oilmod.api.rep.entity.EntityLivingRep;
 import org.oilmod.api.rep.entity.EntityRep;
 import org.oilmod.api.rep.item.ItemRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
-import org.oilmod.api.rep.particle.ParticlePre;
-import org.oilmod.api.rep.world.LocBuilder;
 import org.oilmod.api.rep.world.LocationRep;
-import org.oilmod.api.rep.world.VectorRep;
 import org.oilmod.api.rep.world.WorldRep;
 
 import java.util.List;
@@ -138,7 +135,7 @@ public class OilUtil {
     }
 
     /*
-    public static void spawnParticleCloud(LocationRep location, ParticlePre effect, int id, int data, float offsetX, float offsetY, float offsetZ, float speed, int particleCount, int radius) {
+    public static void spawnParticleCloud(LocationRep location, ParticleRep effect, int id, int data, float offsetX, float offsetY, float offsetZ, float speed, int particleCount, int radius) {
         location.getWorld().spigot().playEffect(location, effect, id, data, offsetX, offsetY, offsetZ, speed, particleCount, radius);
     }
 

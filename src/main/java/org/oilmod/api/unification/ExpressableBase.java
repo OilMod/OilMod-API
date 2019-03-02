@@ -7,9 +7,9 @@ import org.oilmod.api.unification.material.UniMaterial;
 
 import java.util.Set;
 
-public abstract class ExpressableBase<Expression extends IExpression> implements IExpressable<Expression> {
+public abstract class ExpressableBase<Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>> implements IExpressable<Expression, Builder> {
     private final TMap<UniMaterial, Expression> expressionMap = new THashMap<>();
-    private final TMap<UniMaterial, IExpressionBuilder<Expression>> builderMap = new THashMap<>();
+    private TMap<UniMaterial, Builder> builderMap = new THashMap<>();
     public final Set<ISelector> selectors = new THashSet<>();
     public final Set<ISelector> antiselectors = new THashSet<>();
 
@@ -31,8 +31,18 @@ public abstract class ExpressableBase<Expression extends IExpression> implements
     }
 
     @Override
-    public IExpressionBuilder<Expression> addExpression(UniMaterial mat) {
-        return builderMap.computeIfAbsent(mat, material -> getStandardBuilder(material).clone());
+    public Builder addExpression(UniMaterial mat) {
+        return builderMap.computeIfAbsent(mat, this::createStandardBuilder);
     }
 
+    @Override
+    public void freeze() {
+
+        builderMap = null;
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return builderMap != null;
+    }
 }

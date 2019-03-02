@@ -22,6 +22,6 @@ public class UniItem extends OilItem implements IExpression {
 
     @Override
     public UniMaterialWrapper getUniMaterial() {
-        return null;
+        return uniMaterial;
     }
 }

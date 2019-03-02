@@ -70,23 +70,23 @@ public class MaterialBuilder {
         return result;
     }
 
-    protected Category createCategory() {
+    public Category createCategory() {
         Validate.notEmpty(identifiers);
         return init(helper.createCategory(requester, identifiers.toArray(String_EMPTY_ARRAY)));
     }
 
-    protected Composite createComposite() {
+    public Composite createComposite() {
         Validate.notEmpty(identifiers);
         Validate.notEmpty(constituents);
         return init(helper.createComposite(requester, constituents.toArray(MATERIALS_EMPTY_ARRAY), identifiers.toArray(String_EMPTY_ARRAY)));
     }
 
-    protected Element createElement() {
+    public Element createElement() {
         Validate.notEmpty(identifiers);
         return init(helper.createElement(requester, identifiers.toArray(String_EMPTY_ARRAY)));
     }
 
-    protected OrganicComponent createOrganic() {
+    public OrganicComponent createOrganic() {
         Validate.notEmpty(identifiers);
         return init(helper.createOrganic(requester, identifiers.toArray(String_EMPTY_ARRAY)));
     }

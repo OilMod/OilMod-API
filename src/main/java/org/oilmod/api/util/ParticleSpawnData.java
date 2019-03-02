@@ -1,17 +1,15 @@
 package org.oilmod.api.util;
 
 
-import org.oilmod.api.rep.particle.ParticlePre;
+import org.oilmod.api.rep.particle.ParticleRep;
 import org.oilmod.api.rep.stdimpl.world.LocFactoryImpl;
 import org.oilmod.api.rep.world.VectorRep;
-
-import java.util.Vector;
 
 /**
  * Created by sirati97 on 27.06.2016 for OilMod-Api.
  */
 public class ParticleSpawnData {
-    private final ParticlePre effect;
+    private final ParticleRep effect;
     private int id=0;
     private int data=0;
     private float offsetX=0;
@@ -21,11 +19,11 @@ public class ParticleSpawnData {
     private int particleCount=1;
     private int radius=64;
 
-    public ParticleSpawnData(ParticlePre effect) {
+    public ParticleSpawnData(ParticleRep effect) {
         this.effect = effect;
     }
 
-    public ParticlePre getParticle() {
+    public ParticleRep getParticle() {
         return effect;
     }
 
