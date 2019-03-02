@@ -21,4 +21,9 @@ public interface IMeleeWeapon extends IWeapon {
 
     @Override
     EnchantmentType getEnchantmentType();
+
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.MELEE_WEAPON_CUSTOM;
+    }
 }

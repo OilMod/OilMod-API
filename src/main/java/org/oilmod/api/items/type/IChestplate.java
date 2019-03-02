@@ -11,4 +11,9 @@ public interface IChestplate extends IArmor {
     default EnchantmentType getEnchantmentType() {
         return EnchantmentType.ARMOR_CHEST;
     }
+
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.ARMOR_CHESTPLATE;
+    }
 }

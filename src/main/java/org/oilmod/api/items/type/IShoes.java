@@ -12,4 +12,10 @@ public interface IShoes extends IArmor {
     default EnchantmentType getEnchantmentType() {
         return EnchantmentType.ARMOR_BOOTS;
     }
+
+
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.ARMOR_SHOES;
+    }
 }

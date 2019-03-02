@@ -40,4 +40,9 @@ public interface IToolBlockBreaking extends ITool {
     default EnchantmentType getEnchantmentType() {
         return EnchantmentType.DIGGER;
     }
+
+
+    default ImplementationProvider getImplementationProvider() {
+        return getTbbType().getImplementationProvider();
+    }
 }

@@ -102,4 +102,5 @@ public abstract class TBBType {
     protected abstract boolean onEntityHit(IToolBlockBreaking  item, OilItemStack stack, EntityLivingRep target, EntityLivingRep attacker);
     protected abstract boolean onBlockDestroyed(IToolBlockBreaking item, OilItemStack stack, IBlockState blockState, LocationBlockRep location, EntityLivingRep entityLiving);
     protected abstract InteractionResult onItemUseOnBlock(IToolBlockBreaking item, OilItemStack stack, EntityHumanRep humanEntity, LocationBlockRep pos, boolean offhand, BlockFaceRep facing, float hitX, float hitY, float hitZ);
+    protected abstract ImplementationProvider getImplementationProvider();
 }

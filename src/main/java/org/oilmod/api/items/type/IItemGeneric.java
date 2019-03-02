@@ -104,4 +104,8 @@ public interface IItemGeneric {
      * @return returns whether the enchantment can be applied to this item
      */ //TODO: replace boolean with enum like class
     default boolean canEnchantSpecial(EnchantmentRep enchantment, boolean anvil) {return false;}
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.CUSTOM;
+    }
 }

@@ -11,4 +11,9 @@ public interface IHelmet extends IArmor {
     default EnchantmentType getEnchantmentType() {
         return EnchantmentType.ARMOR_HELMET;
     }
+
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.ARMOR_HELMET;
+    }
 }

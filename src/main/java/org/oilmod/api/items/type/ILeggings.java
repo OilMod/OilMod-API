@@ -8,4 +8,9 @@ public interface ILeggings extends IArmor {
     default EnchantmentType getEnchantmentType() {
         return EnchantmentType.ARMOR_LEGGINGS;
     }
+
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.ARMOR_LEGGINGS;
+    }
 }

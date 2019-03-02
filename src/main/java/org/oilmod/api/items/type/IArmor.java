@@ -13,4 +13,9 @@ public interface IArmor extends IUnique {
         return EnchantmentType.ARMOR;
     }
 
+
+    default ImplementationProvider getImplementationProvider() {
+        return ImplementationProvider.ARMOR_CUSTOM;
+    }
+
 }
