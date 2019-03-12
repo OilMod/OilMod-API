@@ -2,6 +2,7 @@ package org.oilmod.api.blocks;
 
 import org.oilmod.api.blocks.nms.NMSBlockType;
 import org.oilmod.api.rep.block.BlockRep;
+import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.util.IKeyed;
 import org.oilmod.api.util.OilKey;
 import org.oilmod.api.util.OilRegistry;
@@ -247,19 +248,19 @@ public abstract class BlockType implements IKeyed {
     public abstract boolean isAlwaysDestroyable();
 
     @Deprecated
-    public abstract boolean breakablePickaxe(BlockRep material);
+    public abstract boolean breakablePickaxe(BlockStateRep material);
 
     @Deprecated
-    public abstract boolean breakableAxe(BlockRep material);
+    public abstract boolean breakableAxe(BlockStateRep material);
 
     @Deprecated
-    public abstract boolean breakableShovel(BlockRep material);
+    public abstract boolean breakableShovel(BlockStateRep material);
 
     @Deprecated
-    public abstract boolean breakableShears(BlockRep material);
+    public abstract boolean breakableShears(BlockStateRep material);
 
     @Deprecated
-    public abstract boolean breakableBlade(BlockRep material);
+    public abstract boolean breakableBlade(BlockStateRep material);
 
     public abstract PistonReaction getPistonReaction();
 
@@ -350,27 +351,27 @@ public abstract class BlockType implements IKeyed {
         }
 
         @Override
-        public boolean breakableAxe(BlockRep material) {
+        public boolean breakableAxe(BlockStateRep material) {
             return breakableAxe;
         }
 
         @Override
-        public boolean breakableBlade(BlockRep material) {
+        public boolean breakableBlade(BlockStateRep material) {
             return breakableBlade;
         }
 
         @Override
-        public boolean breakablePickaxe(BlockRep material) {
+        public boolean breakablePickaxe(BlockStateRep material) {
             return breakablePickaxe;
         }
 
         @Override
-        public boolean breakableShears(BlockRep material) {
+        public boolean breakableShears(BlockStateRep material) {
             return breakableShears;
         }
 
         @Override
-        public boolean breakableShovel(BlockRep material) {
+        public boolean breakableShovel(BlockStateRep material) {
             return breakableShovel;
         }
     }

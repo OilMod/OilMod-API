@@ -1,10 +1,10 @@
 package org.oilmod.api.items.type;
 
-import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.ItemInteractionResult;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.block.BlockFaceRep;
+import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.enchant.EnchantmentRep;
 import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.rep.entity.EntityLivingRep;
@@ -17,7 +17,7 @@ public interface IItemGeneric {
 
     default boolean onEntityHit(OilItemStack stack, EntityLivingRep target, EntityLivingRep attacker) {return true;}
 
-    default boolean onBlockDestroyed(OilItemStack stack, IBlockState blockState, LocationBlockRep pos, EntityLivingRep entityLiving) {return true;}
+    default boolean onBlockDestroyed(OilItemStack stack, BlockStateRep blockState, LocationBlockRep pos, EntityLivingRep entityLiving) {return true;}
 
 
     default InteractionResult onItemUseOnBlock(OilItemStack stack, EntityHumanRep human, LocationBlockRep loc, boolean offhand, BlockFaceRep blockFace, float hitX, float hitY, float hitZ) {return InteractionResult.NONE;}

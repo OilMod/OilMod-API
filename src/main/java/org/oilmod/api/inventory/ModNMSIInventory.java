@@ -9,7 +9,7 @@ import org.oilmod.api.util.Tickable;
  * Created by sirati97 on 12.02.2016.
  */
 public interface ModNMSIInventory<T extends ModInventoryObjectBase> extends CompoundSerializable, Cloneable, Tickable {
-    InventoryRep getBukkitInventory();
+    InventoryRep getInventoryRep();
     Object getNMSInventory();
     Object getOilModInventory();
     void setOilApiMirror(T arg);

@@ -1,9 +1,9 @@
 package org.oilmod.api.items.type;
 
 import org.oilmod.api.blocks.BlockType;
-import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.OilItemStack;
+import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.entity.EntityLivingRep;
 import org.oilmod.api.rep.world.LocationBlockRep;
 
@@ -11,11 +11,11 @@ import org.oilmod.api.rep.world.LocationBlockRep;
 public interface IToolBlockBreaking extends ITool {
     TBBType getTbbType();
 
-    default boolean canHarvestBlock(IBlockState blockState, BlockType blockType) {
-        return getTbbType().canHarvestBlock(this, blockState, blockType);
+    default boolean canHarvestBlock(OilItemStack itemStack, BlockStateRep blockState, BlockType blockType) {
+        return getTbbType().canHarvestBlock(this, itemStack, blockState, blockType);
     }
 
-    default float getDestroySpeed(OilItemStack itemStack, IBlockState blockState, BlockType blockType) {
+    default float getDestroySpeed(OilItemStack itemStack, BlockStateRep blockState, BlockType blockType) {
         return getTbbType().getDestroySpeed(this, itemStack, blockState, blockType);
     }
 
@@ -28,7 +28,7 @@ public interface IToolBlockBreaking extends ITool {
     }
 
     @Override
-    default boolean onBlockDestroyed(OilItemStack stack, IBlockState blockState, LocationBlockRep pos, EntityLivingRep entityLiving) {
+    default boolean onBlockDestroyed(OilItemStack stack, BlockStateRep blockState, LocationBlockRep pos, EntityLivingRep entityLiving) {
         return getTbbType().onBlockDestroyed(this, stack, blockState, pos, entityLiving);
     }
 

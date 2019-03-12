@@ -2,9 +2,9 @@ package org.oilmod.api.items.type;
 
 import gnu.trove.set.hash.THashSet;
 import org.oilmod.api.blocks.BlockType;
-import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.block.BlockFaceRep;
+import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.rep.entity.EntityLivingRep;
 import org.oilmod.api.rep.world.LocationBlockRep;
@@ -97,10 +97,10 @@ public abstract class TBBType {
     }
 
     //abstract methods
-    protected abstract boolean canHarvestBlock(IToolBlockBreaking item, IBlockState blockState, BlockType blockType);
-    protected abstract float getDestroySpeed(IToolBlockBreaking item, OilItemStack stack, IBlockState blockState, BlockType blockType);
+    protected abstract boolean canHarvestBlock(IToolBlockBreaking item, OilItemStack stack, BlockStateRep blockState, BlockType blockType);
+    protected abstract float getDestroySpeed(IToolBlockBreaking item, OilItemStack stack, BlockStateRep blockState, BlockType blockType);
     protected abstract boolean onEntityHit(IToolBlockBreaking  item, OilItemStack stack, EntityLivingRep target, EntityLivingRep attacker);
-    protected abstract boolean onBlockDestroyed(IToolBlockBreaking item, OilItemStack stack, IBlockState blockState, LocationBlockRep location, EntityLivingRep entityLiving);
-    protected abstract InteractionResult onItemUseOnBlock(IToolBlockBreaking item, OilItemStack stack, EntityHumanRep humanEntity, LocationBlockRep pos, boolean offhand, BlockFaceRep facing, float hitX, float hitY, float hitZ);
+    protected abstract boolean onBlockDestroyed(IToolBlockBreaking item, OilItemStack stack, BlockStateRep blockState, LocationBlockRep location, EntityLivingRep entityLiving);
+    protected abstract InteractionResult onItemUseOnBlock(IToolBlockBreaking item, OilItemStack stack, EntityLivingRep humanEntity, LocationBlockRep pos, boolean offhand, BlockFaceRep facing, float hitX, float hitY, float hitZ);
     protected abstract ImplementationProvider getImplementationProvider();
 }

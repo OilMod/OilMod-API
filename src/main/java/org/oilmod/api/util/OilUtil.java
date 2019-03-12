@@ -2,8 +2,8 @@ package org.oilmod.api.util;
 
 import jdk.nashorn.internal.ir.Block;
 import org.oilmod.api.OilMod;
-import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.entity.NMSEntity;
+import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.rep.entity.EntityLivingRep;
 import org.oilmod.api.rep.entity.EntityRep;
@@ -48,8 +48,8 @@ public class OilUtil {
         protected abstract ItemStackRep[] getDropsFortune(Block block, int level);
         protected abstract ItemStackRep getRandomValidVariation(ItemRep mat, Random rnd);
         protected abstract boolean canBreak(EntityHumanRep player, Block block);
-        protected abstract boolean canPlace(EntityHumanRep thePlayer, Block placedBlock, IBlockState replacedBlockState, Block placedAgainst, ItemStackRep itemInHand);
-        protected abstract boolean canMultiPlace(EntityHumanRep player, List<IBlockState> states, Block clicked, ItemStackRep itemInHand);
+        protected abstract boolean canPlace(EntityHumanRep thePlayer, Block placedBlock, BlockStateRep replacedBlockState, Block placedAgainst, ItemStackRep itemInHand);
+        protected abstract boolean canMultiPlace(EntityHumanRep player, List<BlockStateRep> states, Block clicked, ItemStackRep itemInHand);
         protected abstract  <T extends EntityRep> List<T> getNearbyEntities(LocationRep loc1, LocationRep loc2, Class<T> clazz);
         protected abstract void setLastDamager(EntityLivingRep entity, EntityLivingRep source);
         protected abstract boolean damageEntity(EntityLivingRep entity, double amount, EntityLivingRep source);
@@ -81,12 +81,12 @@ public class OilUtil {
         return UtilImpl.getInstance().canBreak(player, block);
     }
 
-    public static boolean canPlace(EntityHumanRep player, Block placedBlock, IBlockState replacedBlockState, Block placedAgainst, ItemStackRep itemInHand) {
+    public static boolean canPlace(EntityHumanRep player, Block placedBlock, BlockStateRep replacedBlockState, Block placedAgainst, ItemStackRep itemInHand) {
         return UtilImpl.getInstance().canPlace(player, placedBlock, replacedBlockState, placedAgainst, itemInHand);
     }
 
 
-    public static boolean canMultiPlace(EntityHumanRep player, List<IBlockState> states, Block clicked, ItemStackRep itemInHand) {
+    public static boolean canMultiPlace(EntityHumanRep player, List<BlockStateRep> states, Block clicked, ItemStackRep itemInHand) {
         return UtilImpl.getInstance().canMultiPlace(player, states, clicked, itemInHand);
     }
 

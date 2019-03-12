@@ -1,6 +1,5 @@
 package org.oilmod.api.items.type;
 
-import org.oilmod.api.blocks.IBlockState;
 import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.entity.EntityLivingRep;
