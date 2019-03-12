@@ -20,7 +20,7 @@ public abstract class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
     }
 
     public InventoryRep getBukkitInventory() {
-        return getSerializableDataHandler().getData().getBukkitInventory();
+        return getSerializableDataHandler().getData().getInventoryRep();
     }
 
     public Object getNMSInventory() {

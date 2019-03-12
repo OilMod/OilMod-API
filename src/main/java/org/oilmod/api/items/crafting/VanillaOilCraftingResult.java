@@ -32,7 +32,7 @@ public class VanillaOilCraftingResult implements OilCraftingResult {
      */
     @Override
     public ItemStackRep preCraftResult(ItemStackRep[] matrix, boolean shaped, int width, int height) {
-        return result.clone();
+        return result.copy();
     }
 
     /**
