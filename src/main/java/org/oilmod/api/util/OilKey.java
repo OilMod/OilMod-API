@@ -2,10 +2,11 @@ package org.oilmod.api.util;
 
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
+import org.oilmod.api.rep.IKey;
 
 import static org.oilmod.api.util.Util.checkName;
 
-public class OilKey {
+public class OilKey implements IKey {
     private OilMod mod;
     private String keyString;
     private NMSKey nmsKey;
@@ -34,6 +35,11 @@ public class OilKey {
 
     public NMSKey getNmsKey() {
         return nmsKey;
+    }
+
+    @Override
+    public String getNamespace() {
+        return getMod().getInternalName();
     }
 
     public String getKeyString() {

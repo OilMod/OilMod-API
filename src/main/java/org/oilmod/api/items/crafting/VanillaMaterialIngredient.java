@@ -1,5 +1,6 @@
 package org.oilmod.api.items.crafting;
 
+import org.oilmod.api.rep.item.BlockItemRep;
 import org.oilmod.api.rep.item.ItemRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.OilUtil;
@@ -23,6 +24,6 @@ public class VanillaMaterialIngredient extends VanillaIngredientBase {
 
     @Override
     public ItemStackRep getRandomExample(Random rnd, DataHolder dataHolder) {
-        return OilUtil.getRandomValidVariation(material, rnd);
+        return OilUtil.getRandomValidVariation((BlockItemRep) material, rnd); //todo use new state system
     }
 }
