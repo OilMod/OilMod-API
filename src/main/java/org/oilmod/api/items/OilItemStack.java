@@ -72,7 +72,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep {
      * @return returns the item as a Bukkit ItemStack
      */
     public ItemStackRep asBukkitItemStack() {
-        return getNmsItemStack().asBukkitItemStack();
+        return getNmsItemStack().asItemStackRep();
     }
 
     /**
@@ -124,7 +124,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep {
      * @return returns the enchantment level of the enchantment in question.
      */
     public int getEnchantmentLevel(EnchantmentRep enchantment) {
-        return getNmsItemStack().asBukkitItemStack().getItemStackState().getEnchantmentLevel(enchantment);
+        return getNmsItemStack().asItemStackRep().getItemStackState().getEnchantmentLevel(enchantment);
     }
 
     /**

@@ -46,13 +46,13 @@ public class OilUtil {
             return instance;
         }
 
-        protected abstract ItemStackRep[] getDrops(WorldRep w, BlockRep block, BlockStateRep state);
-        protected abstract ItemStackRep[] getDropsSilktouch(WorldRep w, BlockRep block, BlockStateRep state);
-        protected abstract ItemStackRep[] getDropsFortune(WorldRep w, BlockRep block, BlockStateRep state, int level);
-        protected abstract ItemStackRep getRandomValidVariation(BlockItemRep mat, Random rnd);
-        protected abstract boolean canBreak(EntityHumanRep player, BlockRep block, BlockStateRep state);
-        protected abstract boolean canPlace(EntityHumanRep thePlayer, Block placedBlock, BlockStateRep replacedBlockState, LocationBlockRep placedAgainst, ItemStackRep itemInHand);
-        protected abstract boolean canMultiPlace(EntityHumanRep player, List<BlockStateRep> states, LocationBlockRep clicked, ItemStackRep itemInHand);
+        protected abstract ItemStackRep[] getDrops(WorldRep w, BlockStateRep state);
+        protected abstract ItemStackRep[] getDropsSilktouch(WorldRep w, BlockStateRep state);
+        protected abstract ItemStackRep[] getDropsFortune(WorldRep w, BlockStateRep state, int level);
+        protected abstract ItemStackRep getRandomValidVariation(ItemRep mat, Random rnd);
+        protected abstract boolean canBreak(EntityHumanRep player, LocationBlockRep blockLoc, BlockStateRep blockState);
+        protected abstract boolean canPlace(EntityHumanRep thePlayer, LocationBlockRep blockLoc, BlockStateRep replacedBlockState, LocationBlockRep placedAgainst, ItemStackRep itemInHand);
+        protected abstract boolean canMultiPlace(EntityHumanRep player, List<BlockStateRep> replacedStates, LocationBlockRep clicked, ItemStackRep itemInHand);
         protected abstract  <T extends EntityRep> List<T> getNearbyEntities(LocationRep loc1, LocationRep loc2, Class<T> clazz);
         protected abstract void setLastDamager(EntityLivingRep entity, EntityLivingRep source);
         protected abstract boolean damageEntity(EntityLivingRep entity, double amount, EntityLivingRep source);
@@ -64,33 +64,33 @@ public class OilUtil {
         protected abstract ITicker createTicker(OilMod mod, WorldRep mainWorld, int rate, int simulationSpeed);
     }
 
-    public static ItemStackRep[] getDrops(WorldRep w, BlockRep block, BlockStateRep state){
-        return UtilImpl.getInstance().getDrops(w, block, state);
+    public static ItemStackRep[] getDrops(WorldRep w, BlockStateRep state){
+        return UtilImpl.getInstance().getDrops(w, state);
     }
 
-    public static ItemStackRep[] getDropsSilktouch(WorldRep w, BlockRep block, BlockStateRep state){
-        return UtilImpl.getInstance().getDropsSilktouch(w, block, state);
+    public static ItemStackRep[] getDropsSilktouch(WorldRep w, BlockStateRep state){
+        return UtilImpl.getInstance().getDropsSilktouch(w, state);
     }
 
-    public static ItemStackRep[] getDropsFortune(WorldRep w, BlockRep block, BlockStateRep state, int level){
-        return UtilImpl.getInstance().getDropsFortune(w, block, state, level);
+    public static ItemStackRep[] getDropsFortune(WorldRep w, BlockStateRep state, int level){
+        return UtilImpl.getInstance().getDropsFortune(w, state, level);
     }
 
     public static ItemStackRep getRandomValidVariation(BlockItemRep mat, Random rnd) {
         return UtilImpl.getInstance().getRandomValidVariation(mat, rnd);
     }
 
-    public static boolean canBreak(EntityHumanRep player, BlockRep block, BlockStateRep state) {
-        return UtilImpl.getInstance().canBreak(player, block, state);
+    public static boolean canBreak(EntityHumanRep player, LocationBlockRep blockLoc, BlockStateRep blockState) {
+        return UtilImpl.getInstance().canBreak(player, blockLoc, blockState);
     }
 
-    public static boolean canPlace(EntityHumanRep player, Block placedBlock, BlockStateRep replacedBlockState, LocationBlockRep placedAgainst, ItemStackRep itemInHand) {
-        return UtilImpl.getInstance().canPlace(player, placedBlock, replacedBlockState, placedAgainst, itemInHand);
+    public static boolean canPlace(EntityHumanRep player, LocationBlockRep blockLoc, BlockStateRep replacedBlockState, LocationBlockRep placedAgainst, ItemStackRep itemInHand) {
+        return UtilImpl.getInstance().canPlace(player, blockLoc, replacedBlockState, placedAgainst, itemInHand);
     }
 
 
-    public static boolean canMultiPlace(EntityHumanRep player, List<BlockStateRep> states, LocationBlockRep clicked, ItemStackRep itemInHand) {
-        return UtilImpl.getInstance().canMultiPlace(player, states, clicked, itemInHand);
+    public static boolean canMultiPlace(EntityHumanRep player, List<BlockStateRep> replacedStates, LocationBlockRep clicked, ItemStackRep itemInHand) {
+        return UtilImpl.getInstance().canMultiPlace(player, replacedStates, clicked, itemInHand);
     }
 
 

@@ -6,7 +6,7 @@ import org.oilmod.api.rep.itemstack.ItemStackRep;
  * Internal
  */
 public interface NMSItemStack {
-    ItemStackRep asBukkitItemStack();
+    ItemStackRep asItemStackRep();
     OilItemStack getOilItemStack();
     int getDataNMS();
     void setDataNMS(int data);
