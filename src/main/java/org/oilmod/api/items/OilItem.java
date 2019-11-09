@@ -5,6 +5,7 @@ import org.oilmod.api.items.type.IItemGeneric;
 import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.rep.item.ItemRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
+import org.oilmod.api.rep.providers.ItemProvider;
 import org.oilmod.api.util.OilKey;
 
 import java.util.List;
@@ -28,11 +29,13 @@ public abstract class OilItem implements IItemGeneric {
      * @param vanillaItem The Vanilla Material that is shown to the client
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, ItemRep vanillaItem, String displayName) {
-        this.vanillaItem = vanillaItem;
+    public OilItem(OilKey key, ItemProvider vanillaItem, String displayName) {
+        this.vanillaItem = vanillaItem.getProvidedItem();
         this.key = key;
         this.displayName = displayName;
     }
+
+
 
 
 

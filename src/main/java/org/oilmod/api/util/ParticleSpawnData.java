@@ -60,7 +60,7 @@ public class ParticleSpawnData {
     }
 
     public VectorRep getOffsetAsVector() {
-        return LocFactoryImpl.INSTANCE.createVector(offsetX, offsetY, offsetZ);
+        return LocFactoryImpl.getInstance().createVector(offsetX, offsetY, offsetZ);
     }
 
     public ParticleSpawnData setData(int data) {
