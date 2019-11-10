@@ -1,5 +1,6 @@
 package org.oilmod.api.items.type;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.ItemInteractionResult;
 import org.oilmod.api.items.OilItemStack;
@@ -15,24 +16,41 @@ import org.oilmod.api.util.InteractionResult;
 
 public interface IItemGeneric {
 
-    default boolean onEntityHit(OilItemStack stack, EntityLivingRep target, EntityLivingRep attacker) {return true;}
+    default boolean onEntityHit(OilItemStack stack, EntityLivingRep target, EntityLivingRep attacker) {
+        if (this instanceof ISword) throw new NotImplementedException("call ISword.super.onEntityHit etc instead");
+        if (this instanceof IToolBlockBreaking) throw new NotImplementedException("call IToolBlockBreaking.super.onEntityHit etc instead");
+        if (this instanceof IMeleeWeapon) throw new NotImplementedException("call IMeleeWeapon.super.onEntityHit etc instead");
+        return true;
+    }
 
-    default boolean onBlockDestroyed(OilItemStack stack, BlockStateRep blockState, LocationBlockRep pos, EntityLivingRep entityLiving) {return true;}
+    default boolean onBlockDestroyed(OilItemStack stack, BlockStateRep blockState, LocationBlockRep pos, EntityLivingRep entityLiving) {
+        if (this instanceof ISword) throw new NotImplementedException("call ISword.super.onBlockDestroyed etc instead");
+        if (this instanceof IToolBlockBreaking) throw new NotImplementedException("call IToolBlockBreaking.super.onBlockDestroyed etc instead");
+        if (this instanceof IMeleeWeapon) throw new NotImplementedException("call IMeleeWeapon.super.onBlockDestroyed etc instead");
+        return true;
+    }
 
 
-    default InteractionResult onItemUseOnBlock(OilItemStack stack, EntityHumanRep human, LocationBlockRep loc, boolean offhand, BlockFaceRep blockFace, float hitX, float hitY, float hitZ) {return InteractionResult.NONE;}
+    default InteractionResult onItemUseOnBlock(OilItemStack stack, EntityHumanRep human, LocationBlockRep loc, boolean offhand, BlockFaceRep blockFace, float hitX, float hitY, float hitZ) {
+        if (this instanceof IShovel) throw new NotImplementedException("call IShovel.super.onItemUseOnBlock etc instead");
+        return InteractionResult.NONE;
+    }
     default InteractionResult onItemLeftClickOnBlock(OilItemStack stack, EntityHumanRep human, LocationBlockRep loc, boolean offhand, BlockFaceRep blockFace, float hitX, float hitY, float hitZ) {return InteractionResult.NONE;}
 
     default ItemInteractionResult onItemRightClick(OilItemStack stack, WorldRep world, EntityHumanRep human, boolean offhand) {return new ItemInteractionResult(InteractionResult.NONE, stack.asBukkitItemStack());}
     default ItemInteractionResult onItemLeftClick(OilItemStack stack, WorldRep world, EntityHumanRep human, boolean offhand) {return new ItemInteractionResult(InteractionResult.NONE, stack.asBukkitItemStack());}
 
-    default boolean handleItemDamage(OilItemStack stack, int damage, EntityLivingRep entity) {return false;}
+    default boolean handleItemDamage(OilItemStack stack, int damage, EntityLivingRep entity) {
+        if (this instanceof IDurable) throw new NotImplementedException("call IDurable.super.handleItemDamage etc instead");
+        return false;
+    }
 
     default void damageItem(OilItemStack stack, int damage, EntityLivingRep entity) {
-        return;
+        if (this instanceof IDurable) throw new NotImplementedException("call IDurable.super.damageItem etc instead");
     }
 
     default int getItemDamage(OilItemStack stack) {
+        if (this instanceof IDurable) throw new NotImplementedException("call IDurable.super.getItemDamage etc instead");
         return 0;
     }
 
@@ -106,6 +124,7 @@ public interface IItemGeneric {
     default boolean canEnchantSpecial(EnchantmentRep enchantment, boolean anvil) {return false;}
 
     default ImplementationProvider getImplementationProvider() {
+        if (this instanceof IItemSpecialised) throw new NotImplementedException("do not call IItemGeneric.getImplementationProvider from specialised subclass, either provide ImplementationProvider yourself or call specialising interface");
         return ImplementationProvider.CUSTOM;
     }
 }

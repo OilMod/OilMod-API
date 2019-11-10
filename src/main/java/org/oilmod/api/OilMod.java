@@ -2,6 +2,7 @@ package org.oilmod.api;
 
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.Validate;
+import org.oilmod.api.items.ItemRegistry;
 import org.oilmod.api.unification.material.IUniMaterial;
 import org.oilmod.api.unification.material.MaterialHelper;
 import org.oilmod.api.unification.material.UniMaterial;
@@ -20,6 +21,9 @@ public class OilMod {
 
     private final String internalName;
     private final String displayName;
+    private ItemRegistry itemRegistry;
+    private boolean initialised = false;
+    private boolean initialising = false;
 
 
     /**
@@ -40,6 +44,27 @@ public class OilMod {
         this.internalName = internalName;
         this.displayName = displayName;
         ModHelper.getInstance().register(this);
+
+    }
+
+    private void init() {
+        if (initialised) throw new IllegalStateException("Cannot initalise mod twice");
+        initialising = true;
+        //now register dependencies
+        itemRegistry= ModHelper.getInstance().createItemRegistry(this);
+
+
+        //###
+        initialising = false;
+        initialised = true;
+    }
+
+    public boolean isInitialised() {
+        return initialised;
+    }
+
+    public boolean isInitialising() {
+        return initialising;
     }
 
     public String getDisplayName() {
@@ -64,6 +89,9 @@ public class OilMod {
         return OilKey.create(this, keyString);
     }
 
+    public void onRegisterItems(ItemRegistry itemRegistry){}
+    public void onRegisterBlocks(){}
+    public void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {
         return registeredSetRead;
@@ -102,6 +130,23 @@ public class OilMod {
         }
         protected void unregister(OilMod mod) {
             registeredMap.remove(mod.getInternalName());
+        }
+
+
+
+        protected ItemRegistry createItemRegistry(OilMod mod) {
+            return new ItemRegistry(mod);
+        }
+
+
+        protected static ItemRegistry getItemRegistry(OilMod mod) {
+            return mod.itemRegistry;
+        }
+        protected static void initialise(OilMod mod) {
+            mod.init();
+        }
+        protected static void invokeRegisterItems(OilMod mod) {
+            mod.onRegisterItems(getItemRegistry(mod));
         }
     }
 }
