@@ -3,6 +3,8 @@ package org.oilmod.api.items;
 import gnu.trove.set.hash.THashSet;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.items.nms.NMSEnchantmentType;
+import org.oilmod.api.rep.enchant.EnchantmentRep;
+import org.oilmod.api.rep.item.ItemStateRep;
 import org.oilmod.api.util.IKeyed;
 import org.oilmod.api.util.OilKey;
 import org.oilmod.api.util.OilRegistry;
@@ -24,6 +26,7 @@ public abstract class EnchantmentType implements IKeyed {
     public static final EnchantmentType WEAPON;
     public static final EnchantmentType DIGGER;
     public static final EnchantmentType FISHING_ROD;
+    public static final EnchantmentType TRIDENT;
     /** Special - usually not needed -  is durable*/
     public static final EnchantmentType BREAKABLE;
     public static final EnchantmentType BOW;
@@ -41,7 +44,16 @@ public abstract class EnchantmentType implements IKeyed {
 
     //Enum
     public enum EnchantmentTypeEnum {
-        ALL_VANILLA, ALL, ARMOR , ARMOR_BOOTS, ARMOR_LEGGINGS, ARMOR_CHEST , ARMOR_HELMET, WEAPON , DIGGER , FISHING_ROD , BREAKABLE , BOW , WEARABLE ,NONE, ENUM_MISSING, CUSTOM;
+        ALL_VANILLA(true), ALL(true), ARMOR , ARMOR_BOOTS, ARMOR_LEGGINGS, ARMOR_CHEST , ARMOR_HELMET, WEAPON , DIGGER , FISHING_ROD , TRIDENT , BREAKABLE , BOW , WEARABLE ,NONE(true), ENUM_MISSING(true), CUSTOM(true);
+
+        public final boolean special;
+
+        EnchantmentTypeEnum() {
+            this(false);
+        }
+        EnchantmentTypeEnum(boolean special) {
+            this.special = special;
+        }
     }
 
     //Backing implementation
@@ -70,8 +82,8 @@ public abstract class EnchantmentType implements IKeyed {
         }
         protected abstract void apiInit(); //prepare stuff
         protected abstract void apiPostInit(); //register missing and so on
-        protected abstract EnchantmentType getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum blockType);
-        protected abstract NMSEnchantmentType registerCustom(EnchantmentType blockType);
+        protected abstract EnchantmentType getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum enchantmentType);
+        protected abstract NMSEnchantmentType registerCustom(EnchantmentType enchantmentType);
         protected void unregister(OilKey key) {
             registry.unregister(key);
         }
@@ -91,6 +103,7 @@ public abstract class EnchantmentType implements IKeyed {
         WEAPON = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.WEAPON);
         DIGGER = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.DIGGER);
         FISHING_ROD = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.FISHING_ROD);
+        TRIDENT = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.TRIDENT);
         BREAKABLE = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.BREAKABLE);
         BOW = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.BOW);
         WEARABLE = h.getVanillaEnchantmentType(EnchantmentType.EnchantmentTypeEnum.WEARABLE);
@@ -161,11 +174,19 @@ public abstract class EnchantmentType implements IKeyed {
         return key;
     }
 
-    public boolean canEnchant(NMSItem item) {
+    public boolean canEnchant(ItemStateRep item) {
         for (EnchantmentType enchantmentType:subtypes) {
             if (enchantmentType.canEnchant(item)) return true;
         }
         return nmsEnchantmentType.canEnchantNMS(item);
+    }
+
+    public boolean containsEnchantment(EnchantmentRep ench) {
+
+        for (EnchantmentType enchantmentType:subtypes) {
+            if (enchantmentType.containsEnchantment(ench)) return true;
+        }
+        return nmsEnchantmentType.containsEnchantmentNMS(ench);
     }
 
     public Set<EnchantmentType> getSubtypes() {
@@ -177,8 +198,8 @@ public abstract class EnchantmentType implements IKeyed {
     }
 
     public void addSubtype(EnchantmentType enchantmentType) {
-        Validate.isTrue(!enchantmentType.containsSubtype(this), CIRCLE_DEPENDENCIES);
         Validate.notNull(enchantmentType);
+        Validate.isTrue(!enchantmentType.containsSubtype(this), CIRCLE_DEPENDENCIES);
         Validate.isTrue(enchantmentType != this, CIRCLE_DEPENDENCIES);
         subtypes.add(enchantmentType);
     }

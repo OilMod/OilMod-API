@@ -3,6 +3,7 @@ package org.oilmod.api.items.type;
 import gnu.trove.set.hash.THashSet;
 import org.oilmod.api.items.NMSItem;
 import org.oilmod.api.items.OilItem;
+import org.oilmod.api.rep.item.ItemRep;
 
 import java.util.Collections;
 import java.util.Set;
@@ -126,5 +127,5 @@ public abstract class ImplementationProvider {
     }
 
     //abstract methods
-    public abstract NMSItem implement(OilItem item);
+    public abstract ItemRep implement(OilItem item);
 }

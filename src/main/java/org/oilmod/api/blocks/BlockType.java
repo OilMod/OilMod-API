@@ -13,41 +13,44 @@ import java.util.Set;
 public abstract class BlockType implements IKeyed {
     //Static members
     public static final BlockType AIR;
-    public static final BlockType GRASS;
+    public static final BlockType STRUCTURE_VOID;
+    public static final BlockType PORTAL;
+    public static final BlockType CARPET;
+    public static final BlockType PLANTS;
+    public static final BlockType OCEAN_PLANT;
+    public static final BlockType VINE;
+    public static final BlockType SEA_GRASS;
+    public static final BlockType WATER;
+    public static final BlockType BUBBLE_COLUMN;
+    public static final BlockType LAVA;
+    public static final BlockType SNOW;
+    public static final BlockType FIRE;
+    public static final BlockType CIRCUITS;
+    public static final BlockType WEB;
+    public static final BlockType REDSTONE_LIGHT;
+    public static final BlockType CLAY;
     public static final BlockType GROUND;
+    public static final BlockType GRASS;
+    public static final BlockType PACKED_ICE;
+    public static final BlockType SAND;
+    public static final BlockType SPONGE;
     public static final BlockType WOOD;
+    public static final BlockType CLOTH;
+    public static final BlockType TNT;
+    public static final BlockType LEAVES;
+    public static final BlockType GLASS;
+    public static final BlockType ICE;
+    public static final BlockType CACTUS;
     public static final BlockType ROCK;
     public static final BlockType IRON;
-    public static final BlockType ANVIL;
-    public static final BlockType WATER;
-    public static final BlockType LAVA;
-    public static final BlockType LEAVES;
-    public static final BlockType PLANTS;
-    public static final BlockType VINE;
-    public static final BlockType SPONGE;
-    public static final BlockType CLOTH;
-    public static final BlockType FIRE;
-    public static final BlockType SAND;
-    public static final BlockType CIRCUITS;
-    public static final BlockType CARPET;
-    public static final BlockType GLASS;
-    public static final BlockType REDSTONE_LIGHT;
-    public static final BlockType TNT;
-    public static final BlockType CORAL;
-    public static final BlockType ICE;
-    public static final BlockType PACKED_ICE;
-    public static final BlockType SNOW;
     public static final BlockType CRAFTED_SNOW;
-    public static final BlockType CACTUS;
-    public static final BlockType CLAY;
+    public static final BlockType ANVIL;
+    public static final BlockType BARRIER;
+    public static final BlockType PISTON;
+    public static final BlockType CORAL;
     public static final BlockType GOURD;
     public static final BlockType DRAGON_EGG;
-    public static final BlockType PORTAL;
     public static final BlockType CAKE;
-    public static final BlockType WEB;
-    public static final BlockType PISTON;
-    public static final BlockType BARRIER;
-    public static final BlockType STRUCTURE_VOID; //TODO: find out what this is
 
     private final static EnumMap<BlockTypeEnum, BlockType> enumMap = new EnumMap<>(BlockTypeEnum.class);
 
@@ -57,41 +60,44 @@ public abstract class BlockType implements IKeyed {
     //Enum
     public enum BlockTypeEnum {
         AIR,
-        GRASS,
+        STRUCTURE_VOID,
+        PORTAL,
+        CARPET,
+        PLANTS,
+        OCEAN_PLANT,
+        VINE,
+        SEA_GRASS,
+        WATER,
+        BUBBLE_COLUMN,
+        LAVA,
+        SNOW,
+        FIRE,
+        CIRCUITS,
+        WEB,
+        REDSTONE_LIGHT,
+        CLAY,
         GROUND,
+        GRASS,
+        PACKED_ICE,
+        SAND,
+        SPONGE,
         WOOD,
+        CLOTH,
+        TNT,
+        LEAVES,
+        GLASS,
+        ICE,
+        CACTUS,
         ROCK,
         IRON,
-        ANVIL,
-        WATER,
-        LAVA,
-        LEAVES,
-        PLANTS,
-        VINE,
-        SPONGE,
-        CLOTH,
-        FIRE,
-        SAND,
-        CIRCUITS,
-        CARPET,
-        GLASS,
-        REDSTONE_LIGHT,
-        TNT,
-        CORAL,
-        ICE,
-        PACKED_ICE,
-        SNOW,
         CRAFTED_SNOW,
-        CACTUS,
-        CLAY,
+        ANVIL,
+        BARRIER,
+        PISTON,
+        CORAL,
         GOURD,
         DRAGON_EGG,
-        PORTAL,
         CAKE,
-        WEB,
-        PISTON,
-        BARRIER,
-        STRUCTURE_VOID,
         ENUM_MISSING,
         CUSTOM;
     }
@@ -134,41 +140,44 @@ public abstract class BlockType implements IKeyed {
         BlockTypeHelper h = BlockTypeHelper.getInstance();
         h.apiInit();
         AIR = h.getVanillaBlockType(BlockTypeEnum.AIR);
-        GRASS = h.getVanillaBlockType(BlockTypeEnum.GRASS);
+        STRUCTURE_VOID = h.getVanillaBlockType(BlockTypeEnum.STRUCTURE_VOID);
+        PORTAL = h.getVanillaBlockType(BlockTypeEnum.PORTAL);
+        CARPET = h.getVanillaBlockType(BlockTypeEnum.CARPET);
+        PLANTS = h.getVanillaBlockType(BlockTypeEnum.PLANTS);
+        OCEAN_PLANT = h.getVanillaBlockType(BlockTypeEnum.OCEAN_PLANT);
+        VINE = h.getVanillaBlockType(BlockTypeEnum.VINE);
+        SEA_GRASS = h.getVanillaBlockType(BlockTypeEnum.SEA_GRASS);
+        WATER = h.getVanillaBlockType(BlockTypeEnum.WATER);
+        BUBBLE_COLUMN = h.getVanillaBlockType(BlockTypeEnum.BUBBLE_COLUMN);
+        LAVA = h.getVanillaBlockType(BlockTypeEnum.LAVA);
+        SNOW = h.getVanillaBlockType(BlockTypeEnum.SNOW);
+        FIRE = h.getVanillaBlockType(BlockTypeEnum.FIRE);
+        CIRCUITS = h.getVanillaBlockType(BlockTypeEnum.CIRCUITS);
+        WEB = h.getVanillaBlockType(BlockTypeEnum.WEB);
+        REDSTONE_LIGHT = h.getVanillaBlockType(BlockTypeEnum.REDSTONE_LIGHT);
+        CLAY = h.getVanillaBlockType(BlockTypeEnum.CLAY);
         GROUND = h.getVanillaBlockType(BlockTypeEnum.GROUND);
+        GRASS = h.getVanillaBlockType(BlockTypeEnum.GRASS);
+        PACKED_ICE = h.getVanillaBlockType(BlockTypeEnum.PACKED_ICE);
+        SAND = h.getVanillaBlockType(BlockTypeEnum.SAND);
+        SPONGE = h.getVanillaBlockType(BlockTypeEnum.SPONGE);
         WOOD = h.getVanillaBlockType(BlockTypeEnum.WOOD);
+        CLOTH = h.getVanillaBlockType(BlockTypeEnum.CLOTH);
+        TNT = h.getVanillaBlockType(BlockTypeEnum.TNT);
+        LEAVES = h.getVanillaBlockType(BlockTypeEnum.LEAVES);
+        GLASS = h.getVanillaBlockType(BlockTypeEnum.GLASS);
+        ICE = h.getVanillaBlockType(BlockTypeEnum.ICE);
+        CACTUS = h.getVanillaBlockType(BlockTypeEnum.CACTUS);
         ROCK = h.getVanillaBlockType(BlockTypeEnum.ROCK);
         IRON = h.getVanillaBlockType(BlockTypeEnum.IRON);
-        ANVIL = h.getVanillaBlockType(BlockTypeEnum.ANVIL);
-        WATER = h.getVanillaBlockType(BlockTypeEnum.WATER);
-        LAVA = h.getVanillaBlockType(BlockTypeEnum.LAVA);
-        LEAVES = h.getVanillaBlockType(BlockTypeEnum.LEAVES);
-        PLANTS = h.getVanillaBlockType(BlockTypeEnum.PLANTS);
-        VINE = h.getVanillaBlockType(BlockTypeEnum.VINE);
-        SPONGE = h.getVanillaBlockType(BlockTypeEnum.SPONGE);
-        CLOTH = h.getVanillaBlockType(BlockTypeEnum.CLOTH);
-        FIRE = h.getVanillaBlockType(BlockTypeEnum.FIRE);
-        SAND = h.getVanillaBlockType(BlockTypeEnum.SAND);
-        CIRCUITS = h.getVanillaBlockType(BlockTypeEnum.CIRCUITS);
-        CARPET = h.getVanillaBlockType(BlockTypeEnum.CIRCUITS);
-        GLASS = h.getVanillaBlockType(BlockTypeEnum.GLASS);
-        REDSTONE_LIGHT = h.getVanillaBlockType(BlockTypeEnum.REDSTONE_LIGHT);
-        TNT = h.getVanillaBlockType(BlockTypeEnum.TNT);
-        CORAL = h.getVanillaBlockType(BlockTypeEnum.CORAL);
-        ICE = h.getVanillaBlockType(BlockTypeEnum.ICE);
-        SNOW = h.getVanillaBlockType(BlockTypeEnum.SNOW);
-        PACKED_ICE = h.getVanillaBlockType(BlockTypeEnum.PACKED_ICE);
         CRAFTED_SNOW = h.getVanillaBlockType(BlockTypeEnum.CRAFTED_SNOW);
-        CACTUS = h.getVanillaBlockType(BlockTypeEnum.CACTUS);
-        CLAY = h.getVanillaBlockType(BlockTypeEnum.CLAY);
+        ANVIL = h.getVanillaBlockType(BlockTypeEnum.ANVIL);
+        BARRIER = h.getVanillaBlockType(BlockTypeEnum.BARRIER);
+        PISTON = h.getVanillaBlockType(BlockTypeEnum.PISTON);
+        CORAL = h.getVanillaBlockType(BlockTypeEnum.CORAL);
         GOURD = h.getVanillaBlockType(BlockTypeEnum.GOURD);
         DRAGON_EGG = h.getVanillaBlockType(BlockTypeEnum.DRAGON_EGG);
-        PORTAL = h.getVanillaBlockType(BlockTypeEnum.PORTAL);
         CAKE = h.getVanillaBlockType(BlockTypeEnum.CAKE);
-        WEB = h.getVanillaBlockType(BlockTypeEnum.WEB);
-        PISTON = h.getVanillaBlockType(BlockTypeEnum.PISTON);
-        BARRIER = h.getVanillaBlockType(BlockTypeEnum.BARRIER);
-        STRUCTURE_VOID = h.getVanillaBlockType(BlockTypeEnum.STRUCTURE_VOID);
         h.apiPostInit();
     }
 
@@ -237,11 +246,11 @@ public abstract class BlockType implements IKeyed {
 
     public abstract boolean isBuildable();
 
-    public abstract boolean blocksLight();
+    public abstract boolean isOpaque();
 
     public abstract boolean isSolid();
 
-    public abstract boolean isBurnable();
+    public abstract boolean isFlammable();
 
     public abstract boolean isReplaceable();
 
@@ -311,7 +320,7 @@ public abstract class BlockType implements IKeyed {
         }
 
         @Override
-        public boolean blocksLight() {
+        public boolean isOpaque() {
             return blocksLight;
         }
 
@@ -321,7 +330,7 @@ public abstract class BlockType implements IKeyed {
         }
 
         @Override
-        public boolean isBurnable() {
+        public boolean isFlammable() {
             return burnable;
         }
 

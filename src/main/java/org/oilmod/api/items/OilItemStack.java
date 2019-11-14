@@ -8,6 +8,7 @@ import org.oilmod.api.rep.enchant.EnchantmentRep;
 import org.oilmod.api.rep.inventory.InventoryHolderRep;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
+import org.oilmod.api.rep.itemstack.state.Enchantments;
 
 import java.util.Collections;
 import java.util.Map;
@@ -124,7 +125,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep {
      * @return returns the enchantment level of the enchantment in question.
      */
     public int getEnchantmentLevel(EnchantmentRep enchantment) {
-        return getNmsItemStack().asItemStackRep().getItemStackState().getEnchantmentLevel(enchantment);
+        return Enchantments.getEnchantmentLevel(getNmsItemStack().asItemStackRep(), enchantment);
     }
 
     /**

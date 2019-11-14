@@ -29,8 +29,12 @@ public interface IDurable extends IVDAdapter {
 
     default boolean usesVanillaDamageHandling() {return true;}
 
+    default double getDurabilityForDisplay(OilItemStack stack) {
+        return stack.getData()/(double)getMaxDurability();
+    }
+
     default int getVanillaData(OilItemStack stack) {
         int v = ((OilItem)stack.getItem()).getVanillaItem(stack).getMaxDurability();
-        return stack.getData()*v/getMaxDurability();
+        return (int)(v*getDurabilityForDisplay(stack));
     }
 }
