@@ -19,40 +19,43 @@ public class OilMod {
     private final static Map<String, OilMod> registeredMap = new THashMap<>();
     private final static Collection<OilMod> registeredSetRead = Collections.unmodifiableCollection(registeredMap.values());
 
-    private final String internalName;
-    private final String displayName;
+    private String internalName;
+    private String displayName;
     private ItemRegistry itemRegistry;
     private boolean initialised = false;
     private boolean initialising = false;
+    private boolean constructed = false;
+    private ModContext context;
 
 
-    /**
-     * Creates new instance of OilMod
-     * @param internalName Short unique name. Restricted to lowercase alphanumerical characters and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
-     */
-    public OilMod(String internalName) {
-        this(internalName, internalName);
+    protected OilMod() {
+        Validate.isTrue(ModHelper.usingDelegatedCtor, "Cannot directly construct OilMod use OilMod.ModHelper.createInstance instead");
     }
 
-    /**
-     * Creates new instance of OilMod
-     * @param internalName Short unique name. Restricted to lowercase alphanumerical characters and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
-     * @param displayName This is used rarely and only where things are presented pretty.
-     */
-    public OilMod(String internalName, String displayName) {
+    void afterCtor(String internalName, String displayName, ModContext context) {
+        if (constructed) throw new IllegalStateException("Cannot call afterCtor twice");
         checkName(internalName);
         this.internalName = internalName;
         this.displayName = displayName;
+        this.context = context;
         ModHelper.getInstance().register(this);
+        itemRegistry= ModHelper.getInstance().createItemRegistry(this);
 
+        constructed = true;
+        onConstructed();
+    }
+
+    protected void onConstructed() {}
+
+    public boolean isConstructed() {
+        return constructed;
     }
 
     private void init() {
         if (initialised) throw new IllegalStateException("Cannot initalise mod twice");
         initialising = true;
-        //now register dependencies
-        itemRegistry= ModHelper.getInstance().createItemRegistry(this);
 
+        //now register dependencies
 
         //###
         initialising = false;
@@ -73,6 +76,10 @@ public class OilMod {
 
     public String getInternalName() {
         return internalName;
+    }
+
+    public ModContext getContext() {
+        return context;
     }
 
     @Override
@@ -103,6 +110,7 @@ public class OilMod {
 
     public static class ModHelper {
         private static ModHelper instance;
+        static boolean usingDelegatedCtor = false;
         private static final Object MUTEX = new Object();
         private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
@@ -124,6 +132,29 @@ public class OilMod {
             return instance;
         }
 
+        /**
+         * Creates new instance of OilMod
+         * @param clazz Class of Mod
+         * @param internalName Short unique name. Restricted to lowercase alphanumerical characters and underscores. Do not change it later, otherwise your mod becomes incompatible with older versions of you mod. This will be used to identify content of this mod and will be visible to admins and players with cheat perms
+         * @param displayName This is used rarely and only where things are presented pretty.
+         */
+        public static <T extends OilMod> T createInstance(Class<T> clazz, ModContext context, String internalName, String displayName) {
+            try {
+                usingDelegatedCtor = true;
+                T mod = clazz.newInstance();
+                mod.afterCtor(internalName, displayName, context);
+                return mod;
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new IllegalStateException("Cound not construct mod", e);
+            } finally {
+                usingDelegatedCtor = false;
+            }
+        }
+
+        public static ModContext getDefaultContext() {
+            return getInstance().createDefaultContext();
+        }
+
         protected void register(OilMod mod) {
             Validate.isTrue(!registeredMap.containsKey(mod.getInternalName()), "There is already a mod registered with the name " + mod.getInternalName());
             registeredMap.put(mod.getInternalName(), mod);
@@ -135,18 +166,26 @@ public class OilMod {
 
 
         protected ItemRegistry createItemRegistry(OilMod mod) {
-            return new ItemRegistry(mod);
+            return new ItemRegistry(mod){};
         }
 
+        protected ModContext createDefaultContext() {
+            return new ModContext() {};
+        }
 
         protected static ItemRegistry getItemRegistry(OilMod mod) {
             return mod.itemRegistry;
         }
+
         protected static void initialise(OilMod mod) {
             mod.init();
         }
         protected static void invokeRegisterItems(OilMod mod) {
             mod.onRegisterItems(getItemRegistry(mod));
         }
+    }
+
+    public interface ModContext {
+
     }
 }

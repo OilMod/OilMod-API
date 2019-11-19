@@ -6,7 +6,7 @@ import org.oilmod.api.unification.material.MaterialBuilder;
 
 public final class Standard {
 
-    public static OilMod mod = new OilMod("unimod", "OilMod Unification");
+    public static OilMod mod = OilMod.ModHelper.createInstance(OilMod.class, OilMod.ModHelper.getDefaultContext(),"unimod", "OilMod Unification");
 
     public static Category metal = new MaterialBuilder(mod).identifiers("metal").createCategory();
     public static Category metalPure = new MaterialBuilder(mod).identifiers("pure_metal").generalisation(metal).createCategory();

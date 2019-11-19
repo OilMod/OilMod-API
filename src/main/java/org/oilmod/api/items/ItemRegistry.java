@@ -14,8 +14,8 @@ public class ItemRegistry {
      * Creates new instance of ItemRegistry
      * @param mod associated mod with this item registry
      */
-    public ItemRegistry(OilMod mod) {
-        if (!mod.isInitialising()) throw new IllegalStateException("ItemRegistry can only be created during initialisation of mod. This should only be called by the implementation");
+    protected ItemRegistry(OilMod mod) {
+        if (mod.isConstructed()) throw new IllegalStateException("ItemRegistry can only be created during construction of mod. This should only be called by the implementation of ItemRegistryHelper");
         this.mod = mod;
         ItemRegistryHelper.getInstance().initRegister(this, (success, nmsObject) -> {
             registered = success;
