@@ -1,5 +1,6 @@
 package org.oilmod.api.inventory;
 
+import org.apache.commons.lang3.Validate;
 import org.oilmod.api.data.DataParent;
 import org.oilmod.api.data.ItemStackData;
 import org.oilmod.api.data.ObjectFactory;
@@ -31,6 +32,7 @@ public abstract class InventoryFactory {
     public static InventoryFactory getInstance() {
         return instance;
     }
+    //todo use builders to make this less of a mess
 
     //###Basic/ChestInventory###
     public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle) {
@@ -44,9 +46,27 @@ public abstract class InventoryFactory {
     public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter) {
         return createBasicInventory(nbtName, itemStack, size, inventoryTitle, filter, false);
     }
-
+    
     public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
-        ObjectFactory<ModNMSIInventory<ModInventoryObject>> factory = getBasicInventoryFactory(itemStack, size, inventoryTitle, filter);
+        Validate.isTrue(size%9==0, "Illegal size, must be multiple of 9");
+        return createBasicInventory(nbtName, itemStack, size/9, 9, inventoryTitle, filter, mainItemstackInventory);
+    }
+
+
+    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle) {
+        return createBasicInventory(nbtName, itemStack, rows, columns, inventoryTitle, false);
+    }
+
+    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle, boolean mainItemstackInventory) {
+        return createBasicInventory(nbtName, itemStack, rows, columns, inventoryTitle, null, mainItemstackInventory);
+    }
+
+    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle, ItemFilter filter) {
+        return createBasicInventory(nbtName, itemStack, rows, columns, inventoryTitle, filter, false);
+    }
+    
+    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
+        ObjectFactory<ModNMSIInventory<ModInventoryObject>> factory = getBasicInventoryFactory(itemStack, rows, columns, inventoryTitle, filter);
         InventoryData<ModInventoryObject> iData = new InventoryData<>(nbtName, itemStack, factory, false);
         ModInventoryObject result = new ModInventoryObject(iData);
         checkInventoryHolder(itemStack, result, mainItemstackInventory);
@@ -133,7 +153,7 @@ public abstract class InventoryFactory {
     }
 
     //###Factories###
-    protected abstract ObjectFactory<ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter);
+    protected abstract ObjectFactory<ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(OilItemStack itemStack, int rows, int columns, String inventoryTitle, ItemFilter filter);
     protected abstract ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter);
     protected abstract ObjectFactory<ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter);
 
