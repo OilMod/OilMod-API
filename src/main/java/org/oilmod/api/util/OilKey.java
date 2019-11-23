@@ -1,14 +1,14 @@
 package org.oilmod.api.util;
 
-import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
 import org.oilmod.api.rep.IKey;
 
 import static org.oilmod.api.util.Util.checkName;
 
-public class OilKey implements IKey {
+public class OilKey implements IKey, Cloneable {
     private OilMod mod;
     private String keyString;
+    private String context;
     private NMSKey nmsKey;
 
     private OilKey(OilMod mod, String keyString) {
@@ -46,9 +46,17 @@ public class OilKey implements IKey {
         return keyString;
     }
 
+    public String getContext() {
+        return context;
+    }
+
+    public boolean isContextual() {
+        return context!=null;
+    }
+
     @Override
     public String toString() {
-        return mod.toString() + ":" + keyString;
+        return isContextual() ? (context + ".") + mod.toString() + ":" + keyString : "";
     }
 
     @Override
@@ -59,5 +67,19 @@ public class OilKey implements IKey {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof OilKey && nmsKey.equals(((OilKey) obj).nmsKey);
+    }
+
+    public OilKey clone() {
+        try {
+            return (OilKey) super.clone();
+        } catch (CloneNotSupportedException e) {throw new IllegalArgumentException(e);}
+    }
+
+    public OilKey makeContextual(String context) {
+        if (context.equalsIgnoreCase(this.context))return this;
+        checkName(context);
+        OilKey result = this.clone();
+        result.context = context;
+        return result;
     }
 }

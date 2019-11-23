@@ -1,5 +1,6 @@
 package org.oilmod.api.items;
 
+import org.apache.commons.lang3.Validate;
 import org.oilmod.api.items.internal.ItemFactory;
 import org.oilmod.api.items.type.IItemGeneric;
 import org.oilmod.api.rep.entity.EntityHumanRep;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public abstract class OilItem implements IItemGeneric {
     private ItemRep vanillaItem;
-    private final OilKey key;
+    private OilKey key;
     private String displayName;
     private Object nmsItem;
     private OilItemStackFactory[] creativeItems;
@@ -25,26 +26,19 @@ public abstract class OilItem implements IItemGeneric {
 
 
     /**
-     * @param key Mod unique key that identifies the item
      * @param vanillaItem The Vanilla Material that is shown to the client
      * @param displayName displayed displayName of the item
      */
-    public OilItem(OilKey key, ItemProvider vanillaItem, String displayName) {
+    public OilItem(ItemProvider vanillaItem, String displayName) {
         this.vanillaItem = vanillaItem.getProvidedItem();
-        this.key = key;
         this.displayName = displayName;
     }
 
-
-
-
-
-
-
-
-
-
-
+    @Override
+    public void setOilKey(OilKey key) {
+        Validate.isTrue(this.key == null, "Cannot manually set key! This is done by the registry!");
+        this.key = key;
+    }
 
     //Normal getters
 
@@ -78,7 +72,7 @@ public abstract class OilItem implements IItemGeneric {
      *
      * @return returns the mod unique key of this item
      */
-    public OilKey getOilKey() {
+    public final OilKey getOilKey() {
         return key;
     }
 

@@ -1,8 +1,12 @@
 package org.oilmod.api;
 
 import gnu.trove.map.hash.THashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
+import org.oilmod.api.inventory.ItemFilterRegistry;
 import org.oilmod.api.items.ItemRegistry;
+import org.oilmod.api.registry.Registry;
 import org.oilmod.api.unification.material.IUniMaterial;
 import org.oilmod.api.unification.material.MaterialHelper;
 import org.oilmod.api.unification.material.UniMaterial;
@@ -12,16 +16,30 @@ import org.oilmod.api.util.Util;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
 
 import static org.oilmod.api.util.Util.checkName;
+import static org.oilmod.util.LamdbaCastUtils.cast;
 
 public class OilMod {
-    private final static Map<String, OilMod> registeredMap = new THashMap<>();
+    private final static Map<String, OilMod> registeredMap = new Object2ObjectOpenHashMap<>();
     private final static Collection<OilMod> registeredSetRead = Collections.unmodifiableCollection(registeredMap.values());
+    private final static Map<Class<? extends Registry>, BiConsumer<OilMod, ? extends Registry>> eventCallers = new Object2ObjectOpenHashMap<>();
+
+    private static <T extends Registry<?, T, ?, ?>> void addEventCaller(Class<T> clazz, BiConsumer<OilMod, T> caller){
+        eventCallers.put(clazz, caller);
+    }
+
+    static {
+        addEventCaller(ItemRegistry.class, OilMod::onRegisterItems);
+        addEventCaller(ItemFilterRegistry.class, OilMod::onRegisterItemFilter);
+    }
 
     private String internalName;
     private String displayName;
-    private ItemRegistry itemRegistry;
+    private Map<Class<? extends Registry>, Registry> registries = new Object2ObjectOpenHashMap<>();
+    private Set<Registry> uninvokedRegistries = new ObjectOpenHashSet<>();
     private boolean initialised = false;
     private boolean initialising = false;
     private boolean constructed = false;
@@ -39,8 +57,8 @@ public class OilMod {
         this.displayName = displayName;
         this.context = context;
         ModHelper.getInstance().register(this);
-        itemRegistry= ModHelper.getInstance().createItemRegistry(this);
-
+        Registry.setRegistries(this, registries);
+        uninvokedRegistries.addAll(registries.values());
         constructed = true;
         onConstructed();
     }
@@ -96,9 +114,10 @@ public class OilMod {
         return OilKey.create(this, keyString);
     }
 
-    public void onRegisterItems(ItemRegistry itemRegistry){}
-    public void onRegisterBlocks(){}
-    public void onRegisterCraftingRecipes(){}
+    protected void onRegisterItems(ItemRegistry registry){}
+    protected void onRegisterItemFilter(ItemFilterRegistry registry){}
+    protected void onRegisterBlocks(){}
+    protected void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {
         return registeredSetRead;
@@ -107,6 +126,9 @@ public class OilMod {
     public static OilMod getByName(String name) {
         return registeredMap.get(name);
     }
+
+
+
 
     public static class ModHelper {
         private static ModHelper instance;
@@ -155,6 +177,14 @@ public class OilMod {
             return getInstance().createDefaultContext();
         }
 
+        public static  <T extends Registry<?, T, ?, ?>>  BiConsumer<OilMod, T> getEventCaller(Class<T> clazz) {
+            Validate.notNull(clazz, "received null instead of class");
+            //noinspection unchecked
+            BiConsumer<OilMod, T> result = (BiConsumer<OilMod, T>) eventCallers.get(clazz);
+            Validate.notNull(result, "missing eventcaller for %s", clazz.getSimpleName());
+            return result;
+        }
+
         protected void register(OilMod mod) {
             Validate.isTrue(!registeredMap.containsKey(mod.getInternalName()), "There is already a mod registered with the name " + mod.getInternalName());
             registeredMap.put(mod.getInternalName(), mod);
@@ -166,22 +196,31 @@ public class OilMod {
 
 
         protected ItemRegistry createItemRegistry(OilMod mod) {
-            return new ItemRegistry(mod){};
+            return ItemRegistry.RegistryHelper.getInstance().create(mod);
         }
 
         protected ModContext createDefaultContext() {
             return new ModContext() {};
         }
 
-        protected static ItemRegistry getItemRegistry(OilMod mod) {
-            return mod.itemRegistry;
+        protected static <T extends Registry> T getRegistry(OilMod mod, Class<T> clazz) {
+            return cast(mod.registries.get(clazz));
         }
 
         protected static void initialise(OilMod mod) {
             mod.init();
         }
-        protected static void invokeRegisterItems(OilMod mod) {
-            mod.onRegisterItems(getItemRegistry(mod));
+        protected static <T extends Registry<?, T, ?, ?>> void invokeRegister(OilMod mod, Class<T> clazz) {
+            T registry = getRegistry(mod, clazz);
+            registry.getRegistryHelper().getEventCaller().accept(mod, registry);
+            mod.uninvokedRegistries.remove(registry);
+        }
+
+
+        protected static void invokeMissingRegister(OilMod mod) {
+            //noinspection unchecked
+            mod.uninvokedRegistries.forEach(registry -> registry.getRegistryHelper().getEventCaller().accept(mod, registry));
+            mod.uninvokedRegistries.clear();
         }
     }
 

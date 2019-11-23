@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.oilmod.api.items.EnchantmentType;
 import org.oilmod.api.items.ItemInteractionResult;
 import org.oilmod.api.items.OilItemStack;
+import org.oilmod.api.registry.IKeySettable;
 import org.oilmod.api.rep.block.BlockFaceRep;
 import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.enchant.EnchantmentRep;
@@ -14,7 +15,7 @@ import org.oilmod.api.rep.world.LocationBlockRep;
 import org.oilmod.api.rep.world.WorldRep;
 import org.oilmod.api.util.InteractionResult;
 
-public interface IItemGeneric {
+public interface IItemGeneric extends IKeySettable {
 
     default boolean onEntityHit(OilItemStack stack, EntityLivingRep target, EntityLivingRep attacker) {
         if (this instanceof ISword) throw new NotImplementedException("call ISword.super.onEntityHit etc instead");
