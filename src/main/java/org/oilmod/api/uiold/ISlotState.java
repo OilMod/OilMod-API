@@ -1,7 +1,8 @@
-package org.oilmod.api.ui;
+package org.oilmod.api.uiold;
 
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 
+@Deprecated
 public interface ISlotState {
     void setItemStack(ItemStackRep itemStack);
     ItemStackRep getItemStack();

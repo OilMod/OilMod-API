@@ -1,8 +1,9 @@
-package org.oilmod.api.ui;
+package org.oilmod.api.uiold;
 
 import org.oilmod.api.inventory.ItemFilter;
 import org.oilmod.api.rep.inventory.InventoryRep;
 
+@Deprecated
 public final class UI {
     private static UIManagerHelper uiManager;
 

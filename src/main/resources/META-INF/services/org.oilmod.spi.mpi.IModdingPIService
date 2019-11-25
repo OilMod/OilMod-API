@@ -1,2 +1,12 @@
-org.oilmod.api.items.ItemRegistry$RegistryMPI
+
+#Inventories
 org.oilmod.api.inventory.ItemFilterRegistry$RegistryMPI
+
+
+#Items
+org.oilmod.api.items.ItemRegistry$RegistryMPI
+
+
+#UI
+org.oilmod.api.UI.UIRegistry$RegistryMPI
+org.oilmod.api.UI.UIMPI

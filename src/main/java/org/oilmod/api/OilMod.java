@@ -4,6 +4,7 @@ import gnu.trove.map.hash.THashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
+import org.oilmod.api.UI.UIRegistry;
 import org.oilmod.api.inventory.ItemFilterRegistry;
 import org.oilmod.api.items.ItemRegistry;
 import org.oilmod.api.registry.Registry;
@@ -34,7 +35,9 @@ public class OilMod {
     static {
         addEventCaller(ItemRegistry.class, OilMod::onRegisterItems);
         addEventCaller(ItemFilterRegistry.class, OilMod::onRegisterItemFilter);
+        addEventCaller(UIRegistry.class, OilMod::onRegisterUI);
     }
+
 
     private String internalName;
     private String displayName;
@@ -114,8 +117,12 @@ public class OilMod {
         return OilKey.create(this, keyString);
     }
 
+
+    //todo use an event-bus for this. especially if we have the markup-language modding interface invisible, seamless even registering is useful
     protected void onRegisterItems(ItemRegistry registry){}
     protected void onRegisterItemFilter(ItemFilterRegistry registry){}
+    protected void onRegisterUI(UIRegistry registry) {}
+
     protected void onRegisterBlocks(){}
     protected void onRegisterCraftingRecipes(){}
 
