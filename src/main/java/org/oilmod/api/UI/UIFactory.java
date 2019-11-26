@@ -4,12 +4,13 @@ import org.apache.commons.lang3.Validate;
 import org.oilmod.api.data.DataParent;
 import org.oilmod.api.data.IData;
 import org.oilmod.api.registry.IKeySettable;
+import org.oilmod.api.rep.entity.EntityPlayerRep;
 import org.oilmod.api.util.OilKey;
 
 public abstract class UIFactory<TContext> implements IKeySettable {
     public abstract UI<TContext> create(TContext context);
     public abstract DataParent getDataParent(TContext context);
-    public abstract DataParent createDataParent();
+    public abstract DataParent createDataParent(EntityPlayerRep player);
     public abstract TContext getContext(DataParent data);
 
     private OilKey key;

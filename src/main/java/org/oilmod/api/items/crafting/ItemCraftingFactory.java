@@ -125,7 +125,7 @@ public final class ItemCraftingFactory {
             Class<?> clazz = (Class) ingredient;
             if (oilItemBaseClass.isAssignableFrom(clazz)) {
                 //noinspection unchecked
-                return new OilModItemClassIngredient((Class<? extends OilItem>) ingredient);
+                return new OilModItemClassIngredient((Class<? extends OilItem>) ingredient, true);
             } else if (oilItemStackClass.isAssignableFrom(clazz)) {
                 //noinspection unchecked,deprecation
                 return new OilModItemStackClassIngredient((Class<? extends OilItemStack>) ingredient);

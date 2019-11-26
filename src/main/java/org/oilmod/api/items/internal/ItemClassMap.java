@@ -28,5 +28,5 @@ public abstract class ItemClassMap {
         return instance;
     }
 
-    public abstract <T extends OilItem> T[] getOilItemsByClass(Class<T> clazz);
+    public abstract <T extends OilItem> T[] getOilItemsByClass(Class<T> clazz, boolean subtypes);
 }

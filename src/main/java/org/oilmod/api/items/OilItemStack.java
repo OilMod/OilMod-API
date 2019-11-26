@@ -1,6 +1,6 @@
 package org.oilmod.api.items;
 
-import gnu.trove.map.hash.THashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.oilmod.api.data.DataParent;
 import org.oilmod.api.data.IData;
 import org.oilmod.api.inventory.ModInventoryObjectBase;
@@ -9,6 +9,8 @@ import org.oilmod.api.rep.inventory.InventoryHolderRep;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.itemstack.state.Enchantments;
+import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
+import org.oilmod.api.rep.providers.ItemStackStateProvider;
 
 import java.util.Collections;
 import java.util.Map;
@@ -16,10 +18,10 @@ import java.util.Map;
 /**
  * This class is used the handle special itemstack bound behavior.
  */
-public class OilItemStack implements DataParent, InventoryHolderRep {
+public class OilItemStack implements DataParent, InventoryHolderRep, ItemStackStateProvider {
     private NMSItemStack nmsItemStack;
     private OilItem item;
-    private final Map<String,IData<?>> registeredIData = new THashMap<>();
+    private final Map<String,IData<?>> registeredIData = new Object2ObjectOpenHashMap<>();
     private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
     private ModInventoryObjectBase mainInventory;
     private boolean initiated = false;
@@ -31,6 +33,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep {
 
     /**
      * Internal - should not be called by user code. Is called AFTER nms representation is initialised.
+     * IData must be added before this method is called!
      */
     public void init() {
         if (initiated) {
@@ -82,6 +85,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep {
      */
     @Override
     public void registerIData(IData<?> iData) {
+        if (initiated)throw new IllegalStateException("Cannot register new IData after initialisation! IData would not be able to load data and always have standard value!");
         registeredIData.put(iData.getName(),iData);
     }
 
@@ -159,4 +163,8 @@ public class OilItemStack implements DataParent, InventoryHolderRep {
     }
 
 
+    @Override
+    public ItemStackStateRep getProvidedItemStackState() {
+        return asBukkitItemStack().getItemStackState();
+    }
 }

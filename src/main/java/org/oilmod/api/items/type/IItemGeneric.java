@@ -128,4 +128,9 @@ public interface IItemGeneric extends IKeySettable {
         if (this instanceof IItemSpecialised) throw new NotImplementedException("do not call IItemGeneric.getImplementationProvider from specialised subclass, either provide ImplementationProvider yourself or call specialising interface");
         return ImplementationProvider.CUSTOM;
     }
+
+    /**
+     * This is called before the OilItemStack is completely initialised. i.e. after the constructor, used to add for example data tags
+     */
+    default void initStack(OilItemStack stack){}
 }

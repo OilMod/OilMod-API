@@ -9,6 +9,7 @@ import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.providers.ItemProvider;
 import org.oilmod.api.util.OilKey;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -100,7 +101,7 @@ public abstract class OilItem implements IItemGeneric {
      * @return returns the standard description of your item
      */
     public List<String> getStandardDescription() {
-        return null;
+        return Collections.emptyList();
     }
 
 
@@ -202,7 +203,7 @@ public abstract class OilItem implements IItemGeneric {
      */
     protected OilItemStack createOilItemStackInstance(NMSItemStack nmsItemStack) {
         //noinspection unchecked
-        return new OilItemStack(nmsItemStack, this); //TODO why are two methods needed
+        return new OilItemStack(nmsItemStack, this); //this allows the user to change the class used for OilItemStacks
     }
 
 
@@ -237,7 +238,9 @@ public abstract class OilItem implements IItemGeneric {
      * @return instance of T
      */
     public final OilItemStack createOilStack(NMSItemStack nmsItemStack) {
-        return createOilItemStackInstance(nmsItemStack);
+        OilItemStack result = createOilItemStackInstance(nmsItemStack);
+        initStack(result);
+        return result;
     }
 
 
