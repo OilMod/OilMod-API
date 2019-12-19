@@ -1,6 +1,7 @@
 package org.oilmod.api.items.crafting;
 
 
+import org.oilmod.api.rep.itemstack.ItemStackFactory;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
@@ -11,7 +12,7 @@ public abstract class OilIngredientBase implements OilCraftingIngredient {
     @Override
     public ItemStackRep onCrafted(ItemStackRep oldItemStack, DataHolder dataHolder) {
         oldItemStack.setAmount(oldItemStack.getAmount()-1);
-        return oldItemStack.getAmount()>0?oldItemStack:null;
+        return oldItemStack.getAmount()>0?oldItemStack: ItemStackFactory.INSTANCE.empty();
     }
 
     @Override

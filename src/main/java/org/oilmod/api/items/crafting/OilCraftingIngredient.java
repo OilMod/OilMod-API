@@ -2,6 +2,7 @@ package org.oilmod.api.items.crafting;
 
 
 
+import org.oilmod.api.rep.crafting.ICraftingState;
 import org.oilmod.api.rep.crafting.IIngredient;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.checkstate.ICheckState;
@@ -27,7 +28,12 @@ public interface OilCraftingIngredient extends IIngredient {
         return null;
     }
 
+    //todo remove this mess below again, just for testing without having to implement ingredients yet
     default boolean check(ItemStackRep rep, ICheckState checkState) {
-        return match(rep, null); //todo remove this mess again, just for testing
+        return match(rep, null);
+    }
+
+    default ItemStackRep consume(ItemStackRep rep, int multiplier, ICheckState checkState) {
+        return onCrafted(rep, null); //no good way to support multiplier
     }
 }

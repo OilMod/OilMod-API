@@ -1,13 +1,10 @@
 package org.oilmod.api.UI;
 
+import org.oilmod.api.UI.slot.ISlotType;
 import org.oilmod.api.rep.entity.EntityPlayerRep;
 import org.oilmod.api.rep.inventory.InventoryRep;
-import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.spi.mpi.SingleMPI;
 import org.oilmod.spi.provider.ImplementationBase;
-
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class UIMPI extends SingleMPI<UIMPI, UIMPI.Helper<?>> {
     private static UIMPI instance;
@@ -21,20 +18,20 @@ public class UIMPI extends SingleMPI<UIMPI, UIMPI.Helper<?>> {
     /**
      * Automatically calls either Native or Custom depending on presented {@link InventoryRep}
      */
-    public static void handleNormal(IItemRef handle, InventoryRep inv) {
+    public static void handleNormal(IItemRef handle, InventoryRep inv, ISlotType type) {
         if (inv.isNative()) {
-            instance.getProvider().handleNative(handle, inv);
+            instance.getProvider().handleNative(handle, inv, type);
         } else {
-            instance.getProvider().handleCustom(handle, inv);
+            instance.getProvider().handleCustom(handle, inv, type);
         }
     }
 
-    public static void handleNative(IItemRef handle, InventoryRep inv) {
-        instance.getProvider().handleNative(handle, inv);
+    public static void handleNative(IItemRef handle, InventoryRep inv, ISlotType type) {
+        instance.getProvider().handleNative(handle, inv, type);
     }
 
-    public static void handleCustom(IItemRef handle, InventoryRep inv) {
-        instance.getProvider().handleCustom(handle, inv);
+    public static void handleCustom(IItemRef handle, InventoryRep inv, ISlotType type) {
+        instance.getProvider().handleCustom(handle, inv, type);
     }
 
     public static void handleCustom(IItemRef handle, InventoryRep inv, IItemInteractionHandler handler) {
@@ -59,6 +56,17 @@ public class UIMPI extends SingleMPI<UIMPI, UIMPI.Helper<?>> {
 		instance.getProvider().openUI(player, ui);
 	}
 
+
+    public static ISlotType getNormalSlotType() {
+		return instance.getProvider().getNormalSlotType();
+	}
+    public static ISlotType getTakeOnlySlotType() {
+		return instance.getProvider().getTakeOnlySlotType();
+	}
+    public static ISlotType getProcessingSlotType() {
+		return instance.getProvider().getProcessingSlotType();
+	}
+	
     /*public static IItemInteractionHandler getNativeHandler() {
 		return instance.getProvider().getNativeHandler();
 	}
@@ -74,13 +82,18 @@ public class UIMPI extends SingleMPI<UIMPI, UIMPI.Helper<?>> {
     public abstract static class Helper<Impl extends Helper<Impl>> extends ImplementationBase<UIMPI, Helper<?>, Impl> {
 
         protected abstract void openUI(EntityPlayerRep player, UI ui);
-        protected abstract void handleNative(IItemRef handle, InventoryRep inv);
-        protected abstract void handleCustom(IItemRef handle, InventoryRep inv);
+        protected abstract void handleNative(IItemRef handle, InventoryRep inv, ISlotType type);
+        protected abstract void handleCustom(IItemRef handle, InventoryRep inv, ISlotType type);
         protected abstract void handleCustom(IItemRef handle, InventoryRep inv, IItemInteractionHandler handler);
         protected abstract int getSizeSlots();
         protected abstract int getSizeBorder();
         protected abstract int getSizeText();
         protected abstract int getSizeItemRender();
+        protected abstract ISlotType getNormalSlotType();
+        protected abstract ISlotType getTakeOnlySlotType();
+        protected abstract ISlotType getProcessingSlotType();
+        
+        
         //protected abstract IItemInteractionHandler getNativeHandler();
         //protected abstract IItemInteractionHandler getCustomHandler();
 

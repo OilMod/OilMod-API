@@ -2,9 +2,15 @@ package org.oilmod.api.crafting.custom;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.oilmod.api.rep.crafting.*;
+import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
+import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.checkstate.ICheckState;
+import org.oilmod.api.util.checkstate.StateHolderFactory;
+import org.oilmod.api.util.checkstate.immutable.ImmutableIntState;
 
 public class ShapedMatcher implements IMatcher {
+    private static final StateHolderFactory<ImmutableIntState, ShapedMatcher> MATCHED_TRANSFORMATION =  (currentBackup, maxBackup, key) -> new ImmutableIntState();
+
     private final int width;
     private final int height;
     private final IIngredient[][][] ingredientsSet;
@@ -26,9 +32,15 @@ public class ShapedMatcher implements IMatcher {
 
     @Override
     public boolean check(IIngredientSupplier supplier, ICheckState checkState) {
+        int match = findMatchingTrans(supplier, checkState);
+        return match >= 0;
+    }
+
+    protected int findMatchingTrans(IIngredientSupplier supplier, ICheckState checkState) {
         checkState.requireMaxBackup(1);
         outer:
-        for (IIngredient[][] ingredients : ingredientsSet) {
+        for (int i = 0; i < ingredientsSet.length; i++) {
+            IIngredient[][] ingredients = ingredientsSet[i];
             int width = ingredients[0].length;
             int height = ingredients.length;
             if (supplier.getSuppliedHeight() != height || supplier.getSuppliedWidth() != width) continue;
@@ -42,14 +54,12 @@ public class ShapedMatcher implements IMatcher {
                     }
                 }
             }
-
+            checkState.getTag(this, MATCHED_TRANSFORMATION).set(i);
             checkState.confirmState();
-            return true;
-
+            return i;
         }
 
-
-        return false;
+        return -1;
     }
 
     @Override
@@ -70,6 +80,29 @@ public class ShapedMatcher implements IMatcher {
     @Override
     public int getInputSize() {
         return width*height;
+    }
+
+    @Override
+    public int process(IIngredientSupplier supplier, ICheckState checkState, ItemStackConsumerRep stackConsumer, int amount, boolean simulate) {
+        if (simulate)return 0;//todo: if we know how to simulate stop doing that
+        int trans = checkState.getTag(this, MATCHED_TRANSFORMATION).get();
+        IIngredient[][] ingredients = ingredientsSet[trans];
+        int width = ingredients[0].length;
+        int height = ingredients.length;
+
+        for (int top = 0; top < height; top++) {
+            for (int left = 0; left < width; left++) {
+                ItemStackRep supplied = supplier.getSupplied(left, top);
+                ItemStackRep result = ingredients[top][left].consume(supplied, amount, checkState);
+                //todo find good way to reduce amount if insufficient
+                //todo find way to update base inventory, that is not as hacky as this
+                supplied.setAmount(result.getAmount());
+                result.getItemStackState().applyTo(supplied, false, true);
+                //if (result.getAmount() < 0)
+            }
+        }
+
+        return 0;
     }
 
 }

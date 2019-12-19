@@ -35,7 +35,7 @@ public class UI<TContext> {
         if (element instanceof IItemElement)itemElements.add((IItemElement) element);
     }
 
-    public UIFactory getFactory() {
+    public UIFactory<TContext> getFactory() {
         return factory;
     }
 

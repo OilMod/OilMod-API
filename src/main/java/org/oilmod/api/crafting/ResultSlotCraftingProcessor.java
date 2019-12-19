@@ -14,18 +14,19 @@ public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
 
     @Override
     protected void onUpdateRecipe(RecipeLookupResult lr) {
-        for (IResultCategory category:lr.recipe.getResultCategories()) {
-            List<IResult> resultList = lr.recipe.getResultsCategory(category);
+        onProcessCraft(lr, (stack, testRun, max) -> true, 1);
+    }
+
+    @Override
+    protected void onInactivate() {
+        for (IResultCategory category:this.getManager().getResultCategories()) {
             InventoryRep resultInv = getResultInventory(category);
             resultInv.clear();
-            for (IResult result:resultList) {
-                ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);
-                stack = resultInv.store(stack);
-                if (!stack.isEmpty()) {
-                    throw new IllegalStateException("Result inventory too small!");
-                }
-            }
-
         }
+    }
+
+    @Override
+    protected void onActivate() {
+
     }
 }
