@@ -1,11 +1,17 @@
 package org.oilmod.api.inventory;
 
-import org.apache.commons.lang3.Validate;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.oilmod.api.crafting.ICraftingProcessor;
 import org.oilmod.api.data.DataParent;
 import org.oilmod.api.data.ItemStackData;
-import org.oilmod.api.data.ObjectFactory;
 import org.oilmod.api.items.OilItemStack;
+import org.oilmod.api.rep.inventory.InventoryRep;
+import org.oilmod.api.rep.itemstack.state.Inventory;
 import org.oilmod.api.util.ITicker;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by sirati97 on 15.01.2016.
@@ -32,113 +38,139 @@ public abstract class InventoryFactory {
     public static InventoryFactory getInstance() {
         return instance;
     }
-    //todo use builders to make this less of a mess
-
-    //###Basic/ChestInventory###
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle) {
-        return createBasicInventory(nbtName, itemStack, size, inventoryTitle, false);
-    }
-
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, boolean mainItemstackInventory) {
-        return createBasicInventory(nbtName, itemStack, size, inventoryTitle, null, mainItemstackInventory);
-    }
-
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter) {
-        return createBasicInventory(nbtName, itemStack, size, inventoryTitle, filter, false);
-    }
     
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int size, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
-        Validate.isTrue(size%9==0, "Illegal size, must be multiple of 9");
-        return createBasicInventory(nbtName, itemStack, size/9, 9, inventoryTitle, filter, mainItemstackInventory);
+    public static  <T extends ModInventoryObjectBase<T>> Builder<T> builder(String nbtName) {
+        return new Builder<>(nbtName);
     }
 
+    //tho only reason why this is generic is so that the create method can have output the right type without casting
+    public static class Builder<T extends ModInventoryObjectBase<T>>{
+        private final String nbtName;
+        private int rows = -1;
+        private int columns = -1;
+        private ItemFilter filter;
+        private boolean mainInventory;
+        private Function<OilItemStack, ModNMSIInventory<T>> factory;
+        private Function<InventoryData<T>, T> ctor;
+        private String standardTitle;
+        private ITicker ticker;
+        private List<Function<InventoryRep, ICraftingProcessor>> craftingProcessors;
 
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle) {
-        return createBasicInventory(nbtName, itemStack, rows, columns, inventoryTitle, false);
+
+        public Builder(String nbtName) {
+            this.nbtName = nbtName;
+        }
+
+        public Builder<T> size(int rows, int columns) {
+            this.columns = columns;
+            this.rows = rows;
+            return checkAccess();
+        }
+
+        public Builder<T> size(int size) {
+            this.columns = size;
+            this.rows = 0;
+            return checkAccess();
+        }
+
+
+        public Builder<T> chestSize(int rows) {
+            this.columns = 9;
+            this.rows = rows;
+            return checkAccess();
+        }
+
+        public Builder<T> filter(ItemFilter filter) {
+            this.filter = filter;
+            return checkAccess();
+        }
+
+        public Builder<T> mainInventory() {
+            this.mainInventory = true;
+            return checkAccess();
+        }
+
+        public Builder<T> standardTitle(String standardTitle) {
+            this.standardTitle = standardTitle;
+            return checkAccess();
+        }
+
+        public  Builder<T> ticker(ITicker ticker) {
+            this.ticker = ticker;
+            return checkAccess();
+        }
+
+
+        /*public Builder<T> processors(Function<InventoryRep, ICraftingProcessor>... processors) {
+            if (craftingProcessors == null) craftingProcessors = new ObjectArrayList<>(processors);
+            else craftingProcessors.addAll(Arrays.asList(processors));
+            return checkAccess();
+        }*/
+
+        public Builder<T> processors(Function<InventoryRep, ICraftingProcessor> processor) {
+            if (craftingProcessors == null) craftingProcessors = new ObjectArrayList<>();
+            craftingProcessors.add(processor);
+            return checkAccess();
+        }
+
+
+        private Builder<T> checkAccess() {
+            if (factory != null)throw new IllegalStateException("calling type setter makes builder immutable. e.g.: basic(), furnace(), crafting()");
+            return this;
+        }
+        
+        public Builder<ModInventoryObject> basic() {
+            if (rows == -1 || columns == -1)throw new IllegalArgumentException("size not set!");
+
+            Builder<ModInventoryObject> result  = (Builder<ModInventoryObject>) this; //abusing type erasure
+            result.factory = getInstance().getBasicInventoryFactory(rows, columns, standardTitle, filter, getCraftingProcessors());
+            result.ctor = ModInventoryObject::new;
+            return result;
+        }
+
+
+        public Builder<ModFurnaceInventoryObject> furnace() {
+            return furnaceSpecial(ModFurnaceInventoryObject::new);
+        }
+
+        public Builder<ModFurnaceInventoryObject> furnaceSpecial(Function<InventoryData<ModFurnaceInventoryObject>, ModFurnaceInventoryObject> specialFactory) {
+            if (ticker == null)throw new IllegalArgumentException("ticker not set!");
+
+            Builder<ModFurnaceInventoryObject> result  = (Builder<ModFurnaceInventoryObject>) this; //abusing type erasure
+            result.factory = getInstance().getFurnaceInventoryFactory(standardTitle, ticker, filter, getCraftingProcessors());
+            result.ctor = specialFactory;
+            return result;
+        }
+
+        public Builder<ModPortableCraftingInventoryObject> crafting() {
+            if (rows < 1 || columns < 1)throw new IllegalArgumentException("2d size not set!");
+
+            Builder<ModPortableCraftingInventoryObject> result  = (Builder<ModPortableCraftingInventoryObject>) this; //abusing type erasure
+            result.factory = getInstance().getPortableCraftingInventoryFactory(rows, columns, standardTitle, filter, getCraftingProcessors());
+            result.ctor = ModPortableCraftingInventoryObject::new;
+            return result;
+        }
+
+
+        public T create(OilItemStack itemStack) {
+            if (factory == null)throw new IllegalStateException("you need to call a type setter method. e.g.: basic(), furnace(), crafting()");
+
+            InventoryData<T> iData = new InventoryData<>(nbtName, itemStack, () -> factory.apply(itemStack), false);
+            T result = ctor.apply(iData);
+            getInstance().checkInventoryHolder(itemStack, result, mainInventory);
+            return result;
+        }
+        private final static ICraftingProcessor[] emptyArrayPro = new ICraftingProcessor[0];
+        private Function<InventoryRep, ICraftingProcessor[]> getCraftingProcessors() {
+            return craftingProcessors==null?(inv)->emptyArrayPro:(inv)->{
+                ICraftingProcessor[] result = new ICraftingProcessor[craftingProcessors.size()];
+                for (int i = 0; i < result.length; i++) {
+                    result[i] = craftingProcessors.get(i).apply(inv);
+                }
+                return result;
+            };
+        }
     }
-
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle, boolean mainItemstackInventory) {
-        return createBasicInventory(nbtName, itemStack, rows, columns, inventoryTitle, null, mainItemstackInventory);
-    }
-
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle, ItemFilter filter) {
-        return createBasicInventory(nbtName, itemStack, rows, columns, inventoryTitle, filter, false);
-    }
-    
-    public ModInventoryObject createBasicInventory(String nbtName, OilItemStack itemStack, int rows, int columns, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
-        ObjectFactory<ModNMSIInventory<ModInventoryObject>> factory = getBasicInventoryFactory(itemStack, rows, columns, inventoryTitle, filter);
-        InventoryData<ModInventoryObject> iData = new InventoryData<>(nbtName, itemStack, factory, false);
-        ModInventoryObject result = new ModInventoryObject(iData);
-        checkInventoryHolder(itemStack, result, mainItemstackInventory);
-        return result;
-    }
-
-    //###FurnaceInventory###
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker) {
-        return createFurnaceInventory(nbtName, itemStack, inventoryTitle, ticker, false);
-    }
-
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, boolean mainItemstackInventory) {
-        return createFurnaceInventory(nbtName, itemStack, inventoryTitle, ticker, null, mainItemstackInventory);
-    }
-
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter) {
-        return createFurnaceInventory(nbtName, itemStack, inventoryTitle, ticker, filter, false);
-    }
-
-    public ModFurnaceInventoryObject createFurnaceInventory(String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter, boolean mainItemstackInventory) {
-        return createSpecialFurnaceInventory(new InventoryObjectFactory<ModFurnaceInventoryObject>() {
-            @Override
-            public ModFurnaceInventoryObject create(InventoryData<ModFurnaceInventoryObject> iData) {
-                return new ModFurnaceInventoryObject(iData);
-            }
-        },nbtName,itemStack,inventoryTitle, ticker,filter,mainItemstackInventory);
-    }
-
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker) {
-        return createSpecialFurnaceInventory(inventoryObjectFactory,nbtName, itemStack, inventoryTitle, ticker, false);
-    }
-
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, boolean mainItemstackInventory) {
-        return createSpecialFurnaceInventory(inventoryObjectFactory,nbtName, itemStack, inventoryTitle, ticker, null, mainItemstackInventory);
-    }
-
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter) {
-        return createSpecialFurnaceInventory(inventoryObjectFactory,nbtName, itemStack, inventoryTitle, ticker, filter, false);
-    }
-
-    public ModFurnaceInventoryObject createSpecialFurnaceInventory(InventoryObjectFactory<ModFurnaceInventoryObject> inventoryObjectFactory, String nbtName, OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter, boolean mainItemstackInventory) {
-        ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> factory = getFurnaceInventoryFactory(itemStack, inventoryTitle, ticker, filter);
-        InventoryData<ModFurnaceInventoryObject> iData = new InventoryData<>(nbtName, itemStack, factory, false);
-        ModFurnaceInventoryObject result = inventoryObjectFactory.create(iData);
-        checkInventoryHolder(itemStack, result, mainItemstackInventory);
-        return result;
-    }
-
-
-    //###PortableCraftingInventory###
-
-    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle) {
-        return createPortableCraftingInventory(nbtName, itemStack, width, height, inventoryTitle, false);
-    }
-
-    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle, boolean mainItemstackInventory) {
-        return createPortableCraftingInventory(nbtName, itemStack, width, height, inventoryTitle, null, mainItemstackInventory);
-    }
-
-    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter) {
-        return createPortableCraftingInventory(nbtName, itemStack, width, height, inventoryTitle, filter, false);
-    }
-
-    public ModPortableCraftingInventoryObject createPortableCraftingInventory(String nbtName, OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter, boolean mainItemstackInventory) {
-        ObjectFactory<ModNMSIInventory<ModPortableCraftingInventoryObject>> factory = getPortableCraftingInventoryFactory(itemStack, width, height, inventoryTitle, filter);
-        InventoryData<ModPortableCraftingInventoryObject> iData = new InventoryData<>(nbtName, itemStack, factory, false);
-        ModPortableCraftingInventoryObject result = new ModPortableCraftingInventoryObject(iData);
-        checkInventoryHolder(itemStack, result, mainItemstackInventory);
-        return result;
-    }
-
-
 
     //ModPortableCraftingInventoryObject
 
@@ -146,15 +178,15 @@ public abstract class InventoryFactory {
     public abstract ItemStackData createItemStackData(String name, DataParent dataParent);
 
     //###Other stuff###
-    protected void checkInventoryHolder(OilItemStack itemStack, ModInventoryObjectBase inventory, boolean mainItemstackInventory) {
+    protected <T extends ModInventoryObjectBase<T>> void checkInventoryHolder(OilItemStack itemStack, T inventory, boolean mainItemstackInventory) {
         if (mainItemstackInventory || itemStack.getInventory() == null) {
             itemStack.setMainInventory(inventory);
         }
     }
 
     //###Factories###
-    protected abstract ObjectFactory<ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(OilItemStack itemStack, int rows, int columns, String inventoryTitle, ItemFilter filter);
-    protected abstract ObjectFactory<ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(OilItemStack itemStack, String inventoryTitle, ITicker ticker, ItemFilter filter);
-    protected abstract ObjectFactory<ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(OilItemStack itemStack, int width, int height, String inventoryTitle, ItemFilter filter);
+    protected abstract Function<OilItemStack, ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(int rows, int columns, String inventoryTitle, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory);
+    protected abstract Function<OilItemStack, ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(String inventoryTitle, ITicker ticker, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory);
+    protected abstract Function<OilItemStack, ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(int width, int height, String inventoryTitle, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory);
 
 }

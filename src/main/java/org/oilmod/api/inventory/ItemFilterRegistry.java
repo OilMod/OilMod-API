@@ -10,7 +10,7 @@ public class ItemFilterRegistry extends Registry<ItemFilter, ItemFilterRegistry,
     /**
      * Creates new instance of Registry
      *
-     * @param mod            associated mod with this item registry
+     * @param mod            associated mod with this item filter registry
      * @param registryHelper
      */
     protected ItemFilterRegistry(OilMod mod, RegistryHelper<?> registryHelper) {
@@ -23,7 +23,6 @@ public class ItemFilterRegistry extends Registry<ItemFilter, ItemFilterRegistry,
     }
 
     public static final class RegistryMPI extends RegistryMPIBase<ItemFilter, ItemFilterRegistry, RegistryMPI, RegistryHelper<?>> {
-
     }
     public static abstract class RegistryHelper<Impl extends RegistryHelper<Impl>> extends RegistryHelperBase<ItemFilter, ItemFilterRegistry, RegistryMPI, RegistryHelper<?>, Impl> {
         @Override

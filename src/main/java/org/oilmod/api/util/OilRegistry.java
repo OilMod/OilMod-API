@@ -8,6 +8,7 @@ import org.apache.commons.lang3.Validate;
 import java.util.Collections;
 import java.util.Set;
 
+@Deprecated
 public class OilRegistry<T extends IKeyed> {
     private final TMap<OilKey, T> map = new THashMap<>();
     private final Set<T> registered = new THashSet<>();

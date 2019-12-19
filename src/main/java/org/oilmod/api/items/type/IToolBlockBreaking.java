@@ -7,7 +7,6 @@ import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.entity.EntityLivingRep;
 import org.oilmod.api.rep.world.LocationBlockRep;
 
-@SuppressWarnings("unchecked")
 public interface IToolBlockBreaking extends ITool {
     TBBType getTbbType();
 
@@ -32,6 +31,8 @@ public interface IToolBlockBreaking extends ITool {
         return getTbbType().onBlockDestroyed(this, stack, blockState, pos, entityLiving);
     }
 
+
+    default int getToolStrength(OilItemStack stack, TBBType tooltype) {return 1;}
 
     @Override
     int getItemEnchantability();

@@ -15,6 +15,13 @@ public abstract class RegistryMPIBase<Type, TReg extends Registry<Type, TReg, MP
         registryClass = classes[1];
     }
 
+    /*@Override
+    public boolean hasDefaultProvider() {
+        return true;
+    }
+
+    @Override
+    public abstract Provider createDefaultProvider();*/ //todo consider adding default impl for registries
 
     public Class<Type> getRegistryTypeClass() {
         return registryTypeClass;

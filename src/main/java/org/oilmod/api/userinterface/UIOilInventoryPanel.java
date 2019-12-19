@@ -9,7 +9,7 @@ public class UIOilInventoryPanel extends UIFormlessPanel {
     private final IInteractableUIElement element;
 
     public UIOilInventoryPanel(ModInventoryObjectBase inventory) {
-        super(inventory.getBukkitInventory().getTotalSize());
+        super(inventory.getBukkitInventory().getSize());
         this.element = inventory.createUIElement();
     }
 
