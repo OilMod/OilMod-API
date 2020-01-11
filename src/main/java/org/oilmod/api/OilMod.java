@@ -1,6 +1,5 @@
 package org.oilmod.api;
 
-import gnu.trove.map.hash.THashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;

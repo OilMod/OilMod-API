@@ -4,7 +4,9 @@ package org.oilmod.api.items.crafting;
 
 import org.oilmod.api.rep.crafting.ICraftingState;
 import org.oilmod.api.rep.crafting.IIngredient;
+import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
+import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
 import org.oilmod.api.util.checkstate.ICheckState;
 
 import java.util.List;
@@ -33,7 +35,12 @@ public interface OilCraftingIngredient extends IIngredient {
         return match(rep, null);
     }
 
-    default ItemStackRep consume(ItemStackRep rep, int multiplier, ICheckState checkState) {
-        return onCrafted(rep, null); //no good way to support multiplier
+    default int consume(ItemStackRep rep, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
+        ItemStackStateRep state = rep.getItemStackState();
+        for (int i = 0; i < multiplier; i++) {
+            rep =  onCrafted(rep, null);
+            if (!rep.isSimilar(state) || rep.getAmount() == 0)return ++i;
+        }
+        return multiplier;//no good way to support multiplier
     }
 }

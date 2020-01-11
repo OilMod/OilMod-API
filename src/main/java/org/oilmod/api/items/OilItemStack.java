@@ -23,7 +23,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep, ItemStackSt
     private OilItem item;
     private final Map<String,IData<?>> registeredIData = new Object2ObjectOpenHashMap<>();
     private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
-    private ModInventoryObjectBase mainInventory;
+    private ModInventoryObjectBase<?> mainInventory;
     private boolean initiated = false;
 
     public OilItemStack(NMSItemStack nmsItemStack, OilItem item) {
@@ -111,7 +111,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep, ItemStackSt
      * Sets the main inventory - You normally do not need to call this manually
      * @param mainInventory the new main inventory
      */
-    public void setMainInventory(ModInventoryObjectBase mainInventory) {
+    public void setMainInventory(ModInventoryObjectBase<?> mainInventory) {
         this.mainInventory = mainInventory;
     }
 
@@ -119,7 +119,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep, ItemStackSt
      *
      * @return returns the main inventory as a oil inventory
      */
-    public ModInventoryObjectBase getMainInventory() {
+    public ModInventoryObjectBase<?> getMainInventory() {
         return mainInventory;
     }
 

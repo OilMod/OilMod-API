@@ -1,7 +1,11 @@
 package org.oilmod.api.inventory;
 
+import org.oilmod.api.crafting.ICraftingProcessor;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.userinterface.IInteractableUIElement;
+
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Created by sirati97 on 12.02.2016.
@@ -33,6 +37,10 @@ public abstract class ModInventoryObjectBase<T extends ModInventoryObjectBase> {
 
     public IInteractableUIElement createUIElement() {
         return getSerializableDataHandler().getData().createUIElement();
+    }
+
+    public Collection<ICraftingProcessor> getProcessors() {
+        return getSerializableDataHandler().getData().getProcessors();
     }
 
     public void setTitle(String title) {getSerializableDataHandler().getData().setTitle(title);}

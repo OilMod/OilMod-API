@@ -18,7 +18,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     private final Map<IIngredientCategory, InventoryRep> supplierMap;
     private final Map<IResultCategory, InventoryRep> resultMap;
     private final ICraftingManager manager;
-    private IRecipeRep last;
+    private RecipeLookupResult last;
     private boolean active;
 
     public CraftingProcessorBase(Map<IIngredientCategory, InventoryRep> supplierMap, Map<IResultCategory, InventoryRep> resultMap, ICraftingManager manager) {
@@ -97,7 +97,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     public RecipeLookupResult updateRecipe(boolean previewOnly) {
         ICraftingState craftingState = createCraftingState();
 
-        RecipeLookupResult result =  last==null?manager.find(craftingState):manager.find(craftingState, last);
+        RecipeLookupResult result =  last==null?manager.find(craftingState):manager.find(craftingState, last.recipe);
         if (result == null) {
             if (active) {
                 active = false;
@@ -106,8 +106,8 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
             return null;
         }
 
-        if (active && Objects.equals(last, result.recipe))return result;
-        last = result.recipe;
+        if (active && Objects.equals(last.recipe, result.recipe))return result;
+        last = result;
         if (!active) {
             active = true;
             onActivate();
@@ -122,15 +122,28 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
 
 
-    public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max) {
+    public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max, boolean simulateOutput, boolean simulateInput) {
         int amount = checkOutput(lr, consumerRep, max);
         if (amount == 0)return 0;
         amount = doInput(lr, consumerRep, amount, true);
         if (amount == 0)return 0;
-        addOutput(lr, consumerRep, amount);
-        doInput(lr, consumerRep, amount, false);
+
+        if (!simulateOutput) {
+            addOutput(lr, consumerRep, amount);
+        }
+        if (!simulateInput) {
+            doInput(lr, consumerRep, amount, false);
+        }
 
         return amount;
+    }
+
+    @Override
+    public int tryCrafting(int amount, ItemStackConsumerRep consumerRep, boolean simulate) {
+        if (!active)return 0;
+        RecipeLookupResult lr = getLast();
+        return onProcessCraft(lr, consumerRep, amount, simulate, simulate);
+        //this can be improved theoretically as when shift crafting all slots free target slots should be usable as well. currently we will be constrained by the output slots stack limit
     }
 
     protected int checkOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max) {
@@ -143,10 +156,12 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
             for (IResult result:resultList) {
                 ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);
                 int resultAmount = stack.getAmount();
+
                 int unstoreable = storeState.store(stack, crafted);
-                crafted -= (unstoreable + resultAmount - 1) / resultAmount; //reduce crafted by amount of failed
+                crafted -= (unstoreable + resultAmount - 1) / resultAmount; //reduce crafted by amount of failed (This is an up rounding int div)
             }
         }
+        //this will fail if two categories share the same inventory space
         return  crafted;
     }
 
@@ -157,17 +172,24 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
 
 
+        lr.checkState.backupState(); //we do not want to keep any of the changes done in here, so save this one
 
         for (IIngredientCategory category:lr.recipe.getIngredientCategories()) {
             IMatcher matcher = lr.recipe.getMatcher(category);
             IIngredientSupplier supplier = lr.craftingState.getIngredients(category);
 
-            matcher.process(supplier, lr.checkState, consumerRep, crafted, simulate);
+            crafted = matcher.process(supplier, lr.checkState, consumerRep, crafted, simulate);
 
         }
+        lr.checkState.revertState(); //and go back to it
+
         return  crafted;
     }
 
+    @Override
+    public void onSlotTake() {
+
+    }
 
     protected void addOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int amount) {
 
@@ -177,15 +199,18 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
             for (IResult result:resultList) {
                 ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);
-                stack.setAmount(stack.getAmount()* amount);
+                stack.setAmount(stack.getAmount()* amount); //simulated in checkOutput
                 stack = resultInv.store(stack);
                 if (!stack.isEmpty()) {
-                    throw new IllegalStateException("Result inventory too small even though previous test indicated that stack would fit!");
+                    consumerRep.consume(stack, 1, false);
+                    //throw new IllegalStateException("Result inventory too small even though previous test indicated that stack would fit!");
                 }
             }
         }
         //System.out.printf("onProcessCraft was called with max=%d resulting in %d crafts\n", max, crafted);
     }
 
-
+    public RecipeLookupResult getLast() {
+        return last;
+    }
 }

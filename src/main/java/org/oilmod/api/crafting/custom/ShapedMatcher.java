@@ -84,7 +84,6 @@ public class ShapedMatcher implements IMatcher {
 
     @Override
     public int process(IIngredientSupplier supplier, ICheckState checkState, ItemStackConsumerRep stackConsumer, int amount, boolean simulate) {
-        if (simulate)return 0;//todo: if we know how to simulate stop doing that
         int trans = checkState.getTag(this, MATCHED_TRANSFORMATION).get();
         IIngredient[][] ingredients = ingredientsSet[trans];
         int width = ingredients[0].length;
@@ -93,16 +92,17 @@ public class ShapedMatcher implements IMatcher {
         for (int top = 0; top < height; top++) {
             for (int left = 0; left < width; left++) {
                 ItemStackRep supplied = supplier.getSupplied(left, top);
-                ItemStackRep result = ingredients[top][left].consume(supplied, amount, checkState);
+                if (simulate)supplied = supplied.copy(); //get a copy to operate on!
+                amount = ingredients[top][left].consume(supplied, stackConsumer, amount, supplier.getSupSlotMaxStack(left, top), checkState, simulate);
                 //todo find good way to reduce amount if insufficient
                 //todo find way to update base inventory, that is not as hacky as this
-                supplied.setAmount(result.getAmount());
-                result.getItemStackState().applyTo(supplied, false, true);
+                //supplied.setAmount(result.getAmount());
+                //result.getItemStackState().applyTo(supplied, false, true);
                 //if (result.getAmount() < 0)
             }
         }
 
-        return 0;
+        return amount;
     }
 
 }

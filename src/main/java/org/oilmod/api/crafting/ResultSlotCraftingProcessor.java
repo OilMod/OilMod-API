@@ -14,7 +14,18 @@ public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
 
     @Override
     protected void onUpdateRecipe(RecipeLookupResult lr) {
-        onProcessCraft(lr, (stack, testRun, max) -> true, 1);
+       onProcessCraft(lr, (stack, testRun, max) -> true, 1, false, true);
+    }
+
+    @Override
+    public void onSlotTake() {
+        super.onSlotTake();
+        onProcessCraft(getLast(), (stack, testRun, max) -> true, 1, false, false);
+    }
+
+    @Override
+    public boolean isCraftOnTake() {
+        return true;
     }
 
     @Override
