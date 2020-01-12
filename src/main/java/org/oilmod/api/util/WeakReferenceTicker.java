@@ -1,6 +1,6 @@
 package org.oilmod.api.util;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.lang.ref.WeakReference;
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
  */
 @Deprecated
 public class WeakReferenceTicker implements Runnable{
-    private Set<WeakReference<Tickable>> tickables= new THashSet<>();
+    private Set<WeakReference<Tickable>> tickables= new ObjectOpenHashSet<>();
     private int delay;
     private int times;
     private long lastTick = 0;
@@ -23,7 +23,7 @@ public class WeakReferenceTicker implements Runnable{
 
     public synchronized void tick(final int times) {
         lastTick = System.currentTimeMillis();
-        final Set<WeakReference<Tickable>> tickables_toDelete= new THashSet<>();
+        final Set<WeakReference<Tickable>> tickables_toDelete= new ObjectOpenHashSet<>();
         for (WeakReference<Tickable> tickableWeakReference:tickables) {
             if (tickableWeakReference.get()==null) {
                 tickables_toDelete.add(tickableWeakReference);

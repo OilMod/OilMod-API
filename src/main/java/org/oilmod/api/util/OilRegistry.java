@@ -1,17 +1,17 @@
 package org.oilmod.api.util;
 
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 @Deprecated
 public class OilRegistry<T extends IKeyed> {
-    private final TMap<OilKey, T> map = new THashMap<>();
-    private final Set<T> registered = new THashSet<>();
+    private final Map<OilKey, T> map = new Object2ObjectOpenHashMap<>();
+    private final Set<T> registered = new ObjectOpenHashSet<>();
     private final Set<T> registeredReadOnly = Collections.unmodifiableSet(registered);
 
     public void register(T obj) {

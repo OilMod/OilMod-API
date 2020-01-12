@@ -1,6 +1,6 @@
 package org.oilmod.api.items.type;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.items.NMSItem;
 import org.oilmod.api.items.OilItem;
 import org.oilmod.api.rep.item.ItemRep;
@@ -28,7 +28,8 @@ public abstract class ImplementationProvider {
     public static final ImplementationProvider ARMOR_CUSTOM;
     public static final ImplementationProvider CUSTOM;
 
-    private final static Set<ImplementationProvider> registeredSet = new THashSet<>();
+    //todo use OilRegistry
+    private final static Set<ImplementationProvider> registeredSet = new ObjectOpenHashSet<>();
     private final static Set<ImplementationProvider> registeredSetRead = Collections.unmodifiableSet(registeredSet);
 
     //Enum

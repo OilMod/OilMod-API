@@ -1,6 +1,6 @@
 package org.oilmod.api.items;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.items.nms.NMSEnchantmentType;
 import org.oilmod.api.rep.enchant.EnchantmentRep;
@@ -138,7 +138,7 @@ public abstract class EnchantmentType implements IKeyed {
 
     protected EnchantmentType(NMSEnchantmentType nmsEnchantmentType, OilKey key, EnchantmentType.EnchantmentTypeEnum blockTypeEnum, EnchantmentType... subtypes) {
 
-        this.subtypes = new THashSet<>(Arrays.asList(subtypes));
+        this.subtypes = new ObjectOpenHashSet<>(Arrays.asList(subtypes));
         this.subtypesReadOnly = Collections.unmodifiableSet(this.subtypes);
         validateSubtypes();
         this.nmsEnchantmentType = nmsEnchantmentType;
@@ -152,7 +152,7 @@ public abstract class EnchantmentType implements IKeyed {
 
     private EnchantmentType(OilKey key, EnchantmentType... subtypes) {
 
-        this.subtypes = new THashSet<>(Arrays.asList(subtypes));
+        this.subtypes = new ObjectOpenHashSet<>(Arrays.asList(subtypes));
         this.subtypesReadOnly = Collections.unmodifiableSet(this.subtypes);
         validateSubtypes();
         this.key = key;

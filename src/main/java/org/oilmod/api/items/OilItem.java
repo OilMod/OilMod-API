@@ -3,6 +3,7 @@ package org.oilmod.api.items;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.items.internal.ItemFactory;
 import org.oilmod.api.items.type.IItemGeneric;
+import org.oilmod.api.registry.KeySettableBase;
 import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.rep.item.ItemRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
@@ -15,9 +16,8 @@ import java.util.List;
 /**
  * This class is used to add new items to the game
  */
-public abstract class OilItem implements IItemGeneric {
-    private ItemRep vanillaItem;
-    private OilKey key;
+public abstract class OilItem extends KeySettableBase implements IItemGeneric {
+    private ItemProvider vanillaItem;
     private String displayName;
     private Object nmsItem;
     private OilItemStackFactory[] creativeItems;
@@ -31,14 +31,8 @@ public abstract class OilItem implements IItemGeneric {
      * @param displayName displayed displayName of the item
      */
     public OilItem(ItemProvider vanillaItem, String displayName) {
-        this.vanillaItem = vanillaItem.getProvidedItem();
+        this.vanillaItem = vanillaItem;
         this.displayName = displayName;
-    }
-
-    @Override
-    public void setOilKey(OilKey key) {
-        Validate.isTrue(this.key == null, "Cannot manually set key! This is done by the registry!");
-        this.key = key;
     }
 
     //Normal getters
@@ -47,8 +41,8 @@ public abstract class OilItem implements IItemGeneric {
      *
      * @return returns that material used to display this item on vanilla clients
      */
-    public ItemRep getVanillaItem(OilItemStack itemStack) {
-        return vanillaItem;
+    public ItemProvider getVanillaItem(OilItemStack itemStack) {
+        return vanillaItem; //todo utilise resolvers to find alternatives if not available
     }
 
     /**
@@ -67,16 +61,6 @@ public abstract class OilItem implements IItemGeneric {
     public String getDisplayName() {
         return displayName;
     }
-
-
-    /**
-     *
-     * @return returns the mod unique key of this item
-     */
-    public final OilKey getOilKey() {
-        return key;
-    }
-
 
 
 

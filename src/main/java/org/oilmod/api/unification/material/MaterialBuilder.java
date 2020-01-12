@@ -1,6 +1,6 @@
 package org.oilmod.api.unification.material;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
 
@@ -13,8 +13,8 @@ public class MaterialBuilder {
     private static final String[] String_EMPTY_ARRAY = new String[0];
     private final MaterialHelper.HelperImpl helper = MaterialHelper.HelperImpl.getInstance();
     private final OilMod requester;
-    private Set<UniMaterial> specialisations = new THashSet<>();
-    private Set<UniMaterial> generalisations = new THashSet<>();
+    private Set<UniMaterial> specialisations = new ObjectOpenHashSet<>();
+    private Set<UniMaterial> generalisations = new ObjectOpenHashSet<>();
     private Set<String> identifiers = new HashSet<>();
     private List<UniMaterial> constituents = new ArrayList<>();
 

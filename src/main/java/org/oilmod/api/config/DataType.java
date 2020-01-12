@@ -1,6 +1,7 @@
 package org.oilmod.api.config;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 /**
  * Created by sirati97 on 10.02.2016.
@@ -25,7 +26,7 @@ public enum DataType {
     private final int nbtId;
     private final Class<?> javaClass;
     private final Object standardValue;
-    private static TIntObjectHashMap<DataType> nbtMap;
+    private static Int2ObjectMap<DataType> nbtMap;
 
     DataType(int nbtId, Class<?> javaClass, Object standardValue) {
         this.nbtId = nbtId;
@@ -40,7 +41,7 @@ public enum DataType {
 
     private static void register( DataType type) {
         if (nbtMap == null) {
-            nbtMap = new TIntObjectHashMap<>(14);
+            nbtMap = new Int2ObjectOpenHashMap<>(14);
         }
         nbtMap.put(type.getNbtId(), type);
     }

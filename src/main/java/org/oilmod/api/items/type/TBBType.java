@@ -1,6 +1,6 @@
 package org.oilmod.api.items.type;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.block.BlockFaceRep;
@@ -21,7 +21,7 @@ public abstract class TBBType {
     public static final TBBType SHEARS;
     public static final TBBType SWORD;
 
-    private final static Set<TBBType> registeredSet = new THashSet<>();
+    private final static Set<TBBType> registeredSet = new ObjectOpenHashSet<>();
     private final static Set<TBBType> registeredSetRead = Collections.unmodifiableSet(registeredSet);
 
     //Enum

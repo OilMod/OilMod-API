@@ -14,6 +14,8 @@ import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.world.LocationBlockRep;
 import org.oilmod.api.rep.world.LocationRep;
 import org.oilmod.api.rep.world.WorldRep;
+import org.oilmod.spi.mpi.SingleMPI;
+import org.oilmod.spi.provider.ImplementationBase;
 
 import java.util.List;
 import java.util.Random;
@@ -22,28 +24,18 @@ import java.util.Random;
  * Created by sirati97 on 12.03.2016.
  */
 public class OilUtil {
+    public static class UtilMPI extends SingleMPI<UtilMPI, UtilImpl<?>> {}
 
-    public static abstract class UtilImpl {
-        private static UtilImpl instance;
-        private static final Object MUTEX = new Object();
-        private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
+    public static abstract class UtilImpl<Impl extends UtilImpl<Impl>> extends ImplementationBase<UtilMPI, UtilImpl<?>, Impl> {
+        private static UtilImpl<?> instance;
 
-        public static void setInstance(UtilImpl instance) {
-            if (UtilImpl.instance == null) {
-                synchronized (MUTEX) {
-                    if (UtilImpl.instance == null) {
-                        UtilImpl.instance = instance;
-                    } else {
-                        throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
-                    }
-                }
-            } else {
-                throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
-            }
+        public static UtilImpl<?> getInstance() {
+            return instance;
         }
 
-        public static UtilImpl getInstance() {
-            return instance;
+        @Override
+        public void onReady() {
+            instance = this;
         }
 
         protected abstract ItemStackRep[] getDrops(WorldRep w, BlockStateRep state);

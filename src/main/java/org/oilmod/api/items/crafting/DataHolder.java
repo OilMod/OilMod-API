@@ -1,16 +1,16 @@
 package org.oilmod.api.items.crafting;
 
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.oilmod.api.util.Factory;
 
 import javax.swing.plaf.ListUI;
+import java.util.Map;
 
 /**
  * Created by sirati97 on 24.03.2016.
  */
 public class DataHolder {
-    private TMap<Object, Object> data = new THashMap<>();
+    private Map<Object, Object> data = new Object2ObjectOpenHashMap<>();
     private boolean inUse = false;
 
     public <T> T get(Object holder, Factory<T> factory) {

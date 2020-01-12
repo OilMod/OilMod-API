@@ -1,6 +1,6 @@
 package org.oilmod.api.util;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
 
 import java.util.Collection;
@@ -40,7 +40,7 @@ public class Util {
     }
 
     public static <T1, T2 extends T1> boolean hasCommon(Iterable<? extends T1> set1, Iterable<? extends T2> set2) {
-        Set<T1> helperSet = new THashSet<>();
+        Set<T1> helperSet = new ObjectOpenHashSet<>();
         set1.forEach(helperSet::add);
         for (T2 other:set2) {
             if (helperSet.contains(other))return true;

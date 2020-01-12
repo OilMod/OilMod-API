@@ -1,17 +1,18 @@
 package org.oilmod.api.unification;
 
-import gnu.trove.map.TMap;
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.unification.material.UniMaterial;
 
+import java.util.Map;
 import java.util.Set;
 
 public abstract class ExpressableBase<Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>> implements IExpressable<Expression, Builder> {
-    private final TMap<UniMaterial, Expression> expressionMap = new THashMap<>();
-    private TMap<UniMaterial, Builder> builderMap = new THashMap<>();
-    public final Set<ISelector> selectors = new THashSet<>();
-    public final Set<ISelector> antiselectors = new THashSet<>();
+    private final Map<UniMaterial, Expression> expressionMap = new Object2ObjectOpenHashMap<>();
+    private Map<UniMaterial, Builder> builderMap = new Object2ObjectOpenHashMap<>();
+    public final Set<ISelector> selectors = new ObjectOpenHashSet<>();
+    public final Set<ISelector> antiselectors = new ObjectOpenHashSet<>();
 
 
     @Override

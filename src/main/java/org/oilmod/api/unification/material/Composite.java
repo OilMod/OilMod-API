@@ -1,6 +1,6 @@
 package org.oilmod.api.unification.material;
 
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.OilMod;
 
 import java.util.ArrayList;

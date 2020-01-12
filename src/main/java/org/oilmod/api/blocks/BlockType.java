@@ -1,7 +1,10 @@
 package org.oilmod.api.blocks;
 
+import org.oilmod.api.OilMod;
 import org.oilmod.api.blocks.nms.NMSBlockType;
-import org.oilmod.api.rep.block.BlockRep;
+import org.oilmod.api.registry.RegistryHelperBase;
+import org.oilmod.api.registry.RegistryMPIBase;
+import org.oilmod.api.registry.enumpop.*;
 import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.util.IKeyed;
 import org.oilmod.api.util.OilKey;
@@ -10,55 +13,93 @@ import org.oilmod.api.util.OilRegistry;
 import java.util.EnumMap;
 import java.util.Set;
 
-public abstract class BlockType implements IKeyed {
+public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, BlockType.BlockTypeEnum, BlockType.Registry, BlockType.MPI, BlockType.Helper<?>> {
+    private static final LazyResolver<BlockType, BlockTypeEnum> res = new LazyResolver<>(BlockTypeEnum.class, ()->Helper.getInstance()::getVanillaBlockType);
     //Static members
-    public static final BlockType AIR;
-    public static final BlockType STRUCTURE_VOID;
-    public static final BlockType PORTAL;
-    public static final BlockType CARPET;
-    public static final BlockType PLANTS;
-    public static final BlockType OCEAN_PLANT;
-    public static final BlockType VINE;
-    public static final BlockType SEA_GRASS;
-    public static final BlockType WATER;
-    public static final BlockType BUBBLE_COLUMN;
-    public static final BlockType LAVA;
-    public static final BlockType SNOW;
-    public static final BlockType FIRE;
-    public static final BlockType CIRCUITS;
-    public static final BlockType WEB;
-    public static final BlockType REDSTONE_LIGHT;
-    public static final BlockType CLAY;
-    public static final BlockType GROUND;
-    public static final BlockType GRASS;
-    public static final BlockType PACKED_ICE;
-    public static final BlockType SAND;
-    public static final BlockType SPONGE;
-    public static final BlockType WOOD;
-    public static final BlockType CLOTH;
-    public static final BlockType TNT;
-    public static final BlockType LEAVES;
-    public static final BlockType GLASS;
-    public static final BlockType ICE;
-    public static final BlockType CACTUS;
-    public static final BlockType ROCK;
-    public static final BlockType IRON;
-    public static final BlockType CRAFTED_SNOW;
-    public static final BlockType ANVIL;
-    public static final BlockType BARRIER;
-    public static final BlockType PISTON;
-    public static final BlockType CORAL;
-    public static final BlockType GOURD;
-    public static final BlockType DRAGON_EGG;
-    public static final BlockType CAKE;
+    public static final LazyRef<BlockType, BlockTypeEnum> AIR = new LazyRef<>(res, BlockTypeEnum.AIR);
+    public static final LazyRef<BlockType, BlockTypeEnum> STRUCTURE_VOID = new LazyRef<>(res, BlockTypeEnum.STRUCTURE_VOID);
+    public static final LazyRef<BlockType, BlockTypeEnum> PORTAL = new LazyRef<>(res, BlockTypeEnum.PORTAL);
+    public static final LazyRef<BlockType, BlockTypeEnum> CARPET = new LazyRef<>(res, BlockTypeEnum.CARPET);
+    public static final LazyRef<BlockType, BlockTypeEnum> PLANTS = new LazyRef<>(res, BlockTypeEnum.PLANTS);
+    public static final LazyRef<BlockType, BlockTypeEnum> OCEAN_PLANT = new LazyRef<>(res, BlockTypeEnum.OCEAN_PLANT);
+    public static final LazyRef<BlockType, BlockTypeEnum> VINE = new LazyRef<>(res, BlockTypeEnum.VINE);
+    public static final LazyRef<BlockType, BlockTypeEnum> SEA_GRASS = new LazyRef<>(res, BlockTypeEnum.SEA_GRASS);
+    public static final LazyRef<BlockType, BlockTypeEnum> WATER = new LazyRef<>(res, BlockTypeEnum.WATER);
+    public static final LazyRef<BlockType, BlockTypeEnum> BUBBLE_COLUMN = new LazyRef<>(res, BlockTypeEnum.BUBBLE_COLUMN);
+    public static final LazyRef<BlockType, BlockTypeEnum> LAVA = new LazyRef<>(res, BlockTypeEnum.LAVA);
+    public static final LazyRef<BlockType, BlockTypeEnum> SNOW = new LazyRef<>(res, BlockTypeEnum.SNOW);
+    public static final LazyRef<BlockType, BlockTypeEnum> FIRE = new LazyRef<>(res, BlockTypeEnum.FIRE);
+    public static final LazyRef<BlockType, BlockTypeEnum> CIRCUITS = new LazyRef<>(res, BlockTypeEnum.CIRCUITS);
+    public static final LazyRef<BlockType, BlockTypeEnum> WEB = new LazyRef<>(res, BlockTypeEnum.WEB);
+    public static final LazyRef<BlockType, BlockTypeEnum> REDSTONE_LIGHT = new LazyRef<>(res, BlockTypeEnum.REDSTONE_LIGHT);
+    public static final LazyRef<BlockType, BlockTypeEnum> CLAY = new LazyRef<>(res, BlockTypeEnum.CLAY);
+    public static final LazyRef<BlockType, BlockTypeEnum> GROUND = new LazyRef<>(res, BlockTypeEnum.GROUND);
+    public static final LazyRef<BlockType, BlockTypeEnum> GRASS = new LazyRef<>(res, BlockTypeEnum.GRASS);
+    public static final LazyRef<BlockType, BlockTypeEnum> PACKED_ICE = new LazyRef<>(res, BlockTypeEnum.PACKED_ICE);
+    public static final LazyRef<BlockType, BlockTypeEnum> SAND = new LazyRef<>(res, BlockTypeEnum.SAND);
+    public static final LazyRef<BlockType, BlockTypeEnum> SPONGE = new LazyRef<>(res, BlockTypeEnum.SPONGE);
+    public static final LazyRef<BlockType, BlockTypeEnum> WOOD = new LazyRef<>(res, BlockTypeEnum.WOOD);
+    public static final LazyRef<BlockType, BlockTypeEnum> CLOTH = new LazyRef<>(res, BlockTypeEnum.CLOTH);
+    public static final LazyRef<BlockType, BlockTypeEnum> TNT = new LazyRef<>(res, BlockTypeEnum.TNT);
+    public static final LazyRef<BlockType, BlockTypeEnum> LEAVES = new LazyRef<>(res, BlockTypeEnum.LEAVES);
+    public static final LazyRef<BlockType, BlockTypeEnum> GLASS = new LazyRef<>(res, BlockTypeEnum.GLASS);
+    public static final LazyRef<BlockType, BlockTypeEnum> ICE = new LazyRef<>(res, BlockTypeEnum.ICE);
+    public static final LazyRef<BlockType, BlockTypeEnum> CACTUS = new LazyRef<>(res, BlockTypeEnum.CACTUS);
+    public static final LazyRef<BlockType, BlockTypeEnum> ROCK = new LazyRef<>(res, BlockTypeEnum.ROCK);
+    public static final LazyRef<BlockType, BlockTypeEnum> IRON = new LazyRef<>(res, BlockTypeEnum.IRON);
+    public static final LazyRef<BlockType, BlockTypeEnum> CRAFTED_SNOW = new LazyRef<>(res, BlockTypeEnum.CRAFTED_SNOW);
+    public static final LazyRef<BlockType, BlockTypeEnum> ANVIL = new LazyRef<>(res, BlockTypeEnum.ANVIL);
+    public static final LazyRef<BlockType, BlockTypeEnum> BARRIER = new LazyRef<>(res, BlockTypeEnum.BARRIER);
+    public static final LazyRef<BlockType, BlockTypeEnum> PISTON = new LazyRef<>(res, BlockTypeEnum.PISTON);
+    public static final LazyRef<BlockType, BlockTypeEnum> CORAL = new LazyRef<>(res, BlockTypeEnum.CORAL);
+    public static final LazyRef<BlockType, BlockTypeEnum> GOURD = new LazyRef<>(res, BlockTypeEnum.GOURD);
+    public static final LazyRef<BlockType, BlockTypeEnum> DRAGON_EGG = new LazyRef<>(res, BlockTypeEnum.DRAGON_EGG);
+    public static final LazyRef<BlockType, BlockTypeEnum> CAKE = new LazyRef<>(res, BlockTypeEnum.CAKE);
 
-    private final static EnumMap<BlockTypeEnum, BlockType> enumMap = new EnumMap<>(BlockTypeEnum.class);
+    /**Registry - for mod-side registering*/
+    public static class Registry extends EnumPopRegistry<BlockType, BlockTypeEnum, Registry, MPI, Helper<?>> {
+        protected Registry(OilMod mod, Helper<?> registryHelper) {
+            super(mod, registryHelper, "oilblocktype");
+        }
+    }
 
 
-    private final static OilRegistry<BlockType> registry = new OilRegistry<>();
+    /**Backing implementation*/
+    public static abstract class Helper<Impl extends Helper<Impl>> extends EnumPopRegistryHelperBase<BlockType, BlockTypeEnum, Registry, MPI, Helper<?>, Impl> {
+        private static Helper<?> instance;
 
-    //Enum
-    public enum BlockTypeEnum {
+        public Helper() {
+            super();
+        }
+
+        @Override
+        protected void setSingleton() {
+            instance = this;
+        }
+
+        public static Helper<?> getInstance() {
+            return instance;
+        }
+
+        @Override
+        public Registry create(OilMod mod) {
+            return new Registry(mod, this);
+        }
+
+        @Override
+        protected LazyResolver<BlockType, BlockTypeEnum> getLazyResolver() {
+            return res;
+        }
+
+        protected abstract BlockType getVanillaBlockType(BlockTypeEnum blockType);
+        protected abstract NMSBlockType registerCustom(BlockType blockType);
+    }
+
+    /**MPI - for api meta programming*/
+    public static final class MPI extends RegistryMPIBase<BlockType, Registry, MPI, Helper<?>> {}
+    
+    //Enum*/
+    public enum BlockTypeEnum implements IEnumPopEnum<BlockType, BlockTypeEnum, Registry, MPI, Helper<?>> {
         AIR,
         STRUCTURE_VOID,
         PORTAL,
@@ -100,100 +141,21 @@ public abstract class BlockType implements IKeyed {
         CAKE,
         ENUM_MISSING,
         CUSTOM;
-    }
-    
-    //Backing implementation
-    public static abstract class BlockTypeHelper {
-        private static BlockTypeHelper instance;
-        private static final Object MUTEX = new Object();
-        private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
 
-        public static void setInstance(BlockTypeHelper instance) {
-            if (BlockTypeHelper.instance == null) {
-                synchronized (MUTEX) {
-                    if (BlockTypeHelper.instance == null) {
-                        BlockTypeHelper.instance = instance;
-                        BlockType.init();
-                    } else {
-                        throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
-                    }
-                }
-            } else {
-                throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
-            }
+        @Override
+        public BlockTypeEnum missing() {
+            return ENUM_MISSING;
         }
 
-        public static BlockTypeHelper getInstance() {
-            return instance;
+        @Override
+        public BlockTypeEnum custom() {
+            return CUSTOM;
         }
-        protected abstract void apiInit(); //prepare stuff
-        protected abstract void apiPostInit(); //register missing and so on
-        protected abstract BlockType getVanillaBlockType(BlockTypeEnum blockType);
-        protected abstract NMSBlockType registerCustom(BlockType blockType);
-        protected void unregister(OilKey key) {
-            registry.unregister(key);
+
+        @Override
+        public Helper<?> getProvider() {
+            return Helper.getInstance();
         }
-    }
-    
-    //static methods
-    static {
-        BlockTypeHelper h = BlockTypeHelper.getInstance();
-        h.apiInit();
-        AIR = h.getVanillaBlockType(BlockTypeEnum.AIR);
-        STRUCTURE_VOID = h.getVanillaBlockType(BlockTypeEnum.STRUCTURE_VOID);
-        PORTAL = h.getVanillaBlockType(BlockTypeEnum.PORTAL);
-        CARPET = h.getVanillaBlockType(BlockTypeEnum.CARPET);
-        PLANTS = h.getVanillaBlockType(BlockTypeEnum.PLANTS);
-        OCEAN_PLANT = h.getVanillaBlockType(BlockTypeEnum.OCEAN_PLANT);
-        VINE = h.getVanillaBlockType(BlockTypeEnum.VINE);
-        SEA_GRASS = h.getVanillaBlockType(BlockTypeEnum.SEA_GRASS);
-        WATER = h.getVanillaBlockType(BlockTypeEnum.WATER);
-        BUBBLE_COLUMN = h.getVanillaBlockType(BlockTypeEnum.BUBBLE_COLUMN);
-        LAVA = h.getVanillaBlockType(BlockTypeEnum.LAVA);
-        SNOW = h.getVanillaBlockType(BlockTypeEnum.SNOW);
-        FIRE = h.getVanillaBlockType(BlockTypeEnum.FIRE);
-        CIRCUITS = h.getVanillaBlockType(BlockTypeEnum.CIRCUITS);
-        WEB = h.getVanillaBlockType(BlockTypeEnum.WEB);
-        REDSTONE_LIGHT = h.getVanillaBlockType(BlockTypeEnum.REDSTONE_LIGHT);
-        CLAY = h.getVanillaBlockType(BlockTypeEnum.CLAY);
-        GROUND = h.getVanillaBlockType(BlockTypeEnum.GROUND);
-        GRASS = h.getVanillaBlockType(BlockTypeEnum.GRASS);
-        PACKED_ICE = h.getVanillaBlockType(BlockTypeEnum.PACKED_ICE);
-        SAND = h.getVanillaBlockType(BlockTypeEnum.SAND);
-        SPONGE = h.getVanillaBlockType(BlockTypeEnum.SPONGE);
-        WOOD = h.getVanillaBlockType(BlockTypeEnum.WOOD);
-        CLOTH = h.getVanillaBlockType(BlockTypeEnum.CLOTH);
-        TNT = h.getVanillaBlockType(BlockTypeEnum.TNT);
-        LEAVES = h.getVanillaBlockType(BlockTypeEnum.LEAVES);
-        GLASS = h.getVanillaBlockType(BlockTypeEnum.GLASS);
-        ICE = h.getVanillaBlockType(BlockTypeEnum.ICE);
-        CACTUS = h.getVanillaBlockType(BlockTypeEnum.CACTUS);
-        ROCK = h.getVanillaBlockType(BlockTypeEnum.ROCK);
-        IRON = h.getVanillaBlockType(BlockTypeEnum.IRON);
-        CRAFTED_SNOW = h.getVanillaBlockType(BlockTypeEnum.CRAFTED_SNOW);
-        ANVIL = h.getVanillaBlockType(BlockTypeEnum.ANVIL);
-        BARRIER = h.getVanillaBlockType(BlockTypeEnum.BARRIER);
-        PISTON = h.getVanillaBlockType(BlockTypeEnum.PISTON);
-        CORAL = h.getVanillaBlockType(BlockTypeEnum.CORAL);
-        GOURD = h.getVanillaBlockType(BlockTypeEnum.GOURD);
-        DRAGON_EGG = h.getVanillaBlockType(BlockTypeEnum.DRAGON_EGG);
-        CAKE = h.getVanillaBlockType(BlockTypeEnum.CAKE);
-        h.apiPostInit();
-    }
-
-    private static void init() {}
-
-    public static BlockType getStandard(BlockTypeEnum type) {
-        return enumMap.get(type);
-    }
-
-
-    public static BlockType getByKey(OilKey key) {
-        return registry.get(key);
-    }
-
-    public static Set<BlockType> getAll() {
-        return registry.getRegistered();
     }
 
     /**
@@ -216,21 +178,17 @@ public abstract class BlockType implements IKeyed {
         this.nmsBlockType = nmsBlockType;
         this.key = key;
         this.blockTypeEnum = blockTypeEnum;
-        if (blockTypeEnum != BlockTypeEnum.CUSTOM && blockTypeEnum != BlockTypeEnum.ENUM_MISSING) {
-            enumMap.put(blockTypeEnum, this);
-        }
-        registry.register(this);
     }
 
     private BlockType(OilKey key) {
         this.key = key;
         this.blockTypeEnum = BlockTypeEnum.CUSTOM;
-        this.nmsBlockType = BlockTypeHelper.getInstance().registerCustom(this);
-        registry.register(this);
+        this.nmsBlockType = Helper.getInstance().registerCustom(this);
     }
     
     //methods
-    public BlockTypeEnum getBlockTypeEnum() {
+    @Override
+    public BlockTypeEnum getTypeEnum() {
         return blockTypeEnum;
     }
 

@@ -7,24 +7,34 @@ import java.util.Map;
 
 import static org.oilmod.util.LamdbaCastUtils.cast;
 
-public abstract class Registry<Type, TReg extends Registry<Type, TReg, MPI, Provider>, MPI extends RegistryMPIBase<Type, TReg, MPI, Provider>, Provider extends RegistryHelperBase<Type, TReg, MPI, Provider, ? extends Provider>> {
+/**
+ * Registry instance exists per mod, the global helper is RegistryHelperBase
+ * @param <Type>
+ * @param <TReg>
+ * @param <MPI>
+ * @param <Provider>
+ */
+public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, MPI, Provider>, MPI extends RegistryMPIBase<Type, TReg, MPI, Provider>, Provider extends RegistryHelperBase<Type, TReg, MPI, Provider, ? extends Provider>> {
     private final OilMod mod;
     private boolean registered;
     private Object nmsObject;
     private final Provider registryHelper;
+    private final String registryContext;
 
     /**
      * Creates new instance of Registry
      * @param mod associated mod with this item registry
      * @param registryHelper provider for this
+     * @param registryContext
      */
-    protected Registry(OilMod mod, Provider registryHelper) {
+    protected RegistryBase(OilMod mod, Provider registryHelper, String registryContext) {
         this.mod = mod;
         this.registryHelper = registryHelper;
+        this.registryContext = registryContext;
         canCtor();
         getRegistryHelper().initRegister(cast(this), (success, nmsObject) -> {
             registered = success;
-            Registry.this.nmsObject = nmsObject;
+            RegistryBase.this.nmsObject = nmsObject;
         });
     }
 
@@ -72,10 +82,12 @@ public abstract class Registry<Type, TReg extends Registry<Type, TReg, MPI, Prov
         return nmsObject;
     }
 
-    public abstract String getRegistryContext();
+    public final String getRegistryContext() {
+        return registryContext;
+    }
 
 
-    public static void setRegistries(OilMod mod, Map<Class<? extends Registry>, Registry> map) {
+    public static void setRegistries(OilMod mod, Map<Class<? extends RegistryBase<?,?,?,?>>, RegistryBase<?,?,?,?>> map) {
         RegistryHelperBase.registries.forEach((c, rb) -> map.put(c, rb.create(mod)));
     }
 }

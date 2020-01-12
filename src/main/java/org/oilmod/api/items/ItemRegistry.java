@@ -1,14 +1,14 @@
 package org.oilmod.api.items;
 
 import org.oilmod.api.OilMod;
-import org.oilmod.api.registry.Registry;
+import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.registry.RegistryMPIBase;
 
 /**
  * Created by sirati97 on 16.01.2016.
  */
-public class ItemRegistry extends Registry<OilItem, ItemRegistry, ItemRegistry.RegistryMPI, ItemRegistry.RegistryHelper<?>> {
+public class ItemRegistry extends RegistryBase<OilItem, ItemRegistry, ItemRegistry.MPI, ItemRegistry.Helper<?>> {
 
     /**
      * Creates new instance of Registry
@@ -16,21 +16,16 @@ public class ItemRegistry extends Registry<OilItem, ItemRegistry, ItemRegistry.R
      * @param mod            associated mod with this item registry
      * @param registryHelper
      */
-    protected ItemRegistry(OilMod mod, RegistryHelper<?> registryHelper) {
-        super(mod, registryHelper);
+    protected ItemRegistry(OilMod mod, Helper<?> registryHelper) {
+        super(mod, registryHelper, "oilitem");
     }
 
-
-    @Override
-    public String getRegistryContext() {
-        return "oilitem";
-    }
 
     /**
      * Internal - should not be called by user code
      */
-    public static abstract class RegistryHelper<Impl extends RegistryHelper<Impl>> extends RegistryHelperBase<OilItem, ItemRegistry, RegistryMPI, RegistryHelper<?>, Impl> {
-        private static RegistryHelper instance;
+    public static abstract class Helper<Impl extends Helper<Impl>> extends RegistryHelperBase<OilItem, ItemRegistry, MPI, Helper<?>, Impl> {
+        private static Helper instance;
 
         @Override
         public void onReady() {
@@ -38,7 +33,7 @@ public class ItemRegistry extends Registry<OilItem, ItemRegistry, ItemRegistry.R
             instance = this;
         }
 
-        public static RegistryHelper getInstance() {
+        public static Helper getInstance() {
             return instance;
         }
 
@@ -54,7 +49,7 @@ public class ItemRegistry extends Registry<OilItem, ItemRegistry, ItemRegistry.R
     }
 
 
-    public static final class RegistryMPI extends RegistryMPIBase<OilItem, ItemRegistry, RegistryMPI, RegistryHelper<?>> {
+    public static final class MPI extends RegistryMPIBase<OilItem, ItemRegistry, MPI, Helper<?>> {
 
     }
 }

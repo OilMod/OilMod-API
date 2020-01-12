@@ -1,11 +1,11 @@
 package org.oilmod.api.inventory;
 
 import org.oilmod.api.OilMod;
-import org.oilmod.api.registry.Registry;
+import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.registry.RegistryMPIBase;
 
-public class ItemFilterRegistry extends Registry<ItemFilter, ItemFilterRegistry, ItemFilterRegistry.RegistryMPI, ItemFilterRegistry.RegistryHelper<?>> {
+public class ItemFilterRegistry extends RegistryBase<ItemFilter, ItemFilterRegistry, ItemFilterRegistry.RegistryMPI, ItemFilterRegistry.RegistryHelper<?>> {
 
     /**
      * Creates new instance of Registry
@@ -14,12 +14,7 @@ public class ItemFilterRegistry extends Registry<ItemFilter, ItemFilterRegistry,
      * @param registryHelper
      */
     protected ItemFilterRegistry(OilMod mod, RegistryHelper<?> registryHelper) {
-        super(mod, registryHelper);
-    }
-
-    @Override
-    public String getRegistryContext() {
-        return "itemfilter";
+        super(mod, registryHelper, "itemfilter");
     }
 
     public static final class RegistryMPI extends RegistryMPIBase<ItemFilter, ItemFilterRegistry, RegistryMPI, RegistryHelper<?>> {
