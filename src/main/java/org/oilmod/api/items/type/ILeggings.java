@@ -10,7 +10,7 @@ public interface ILeggings extends IArmor {
     }
 
 
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.ARMOR_LEGGINGS;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.ARMOR_LEGGINGS.getValue();
     }
 }

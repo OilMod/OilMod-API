@@ -6,8 +6,10 @@ import org.apache.commons.lang3.Validate;
 import org.oilmod.api.UI.UIRegistry;
 import org.oilmod.api.blocks.BlockRegistry;
 import org.oilmod.api.blocks.BlockType;
+import org.oilmod.api.blocks.type.BlockImplementationProvider;
 import org.oilmod.api.inventory.ItemFilterRegistry;
 import org.oilmod.api.items.ItemRegistry;
+import org.oilmod.api.items.type.ItemImplementationProvider;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.util.OilKey;
@@ -37,9 +39,11 @@ public class OilMod {
     static {
         addEventCaller(ItemRegistry.class, OilMod::onRegisterItems);
         addEventCaller(ItemFilterRegistry.class, OilMod::onRegisterItemFilter);
+        addEventCaller(ItemImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
         addEventCaller(UIRegistry.class, OilMod::onRegisterUI);
         addEventCaller(BlockRegistry.class, OilMod::onRegisterBlocks);
         addEventCaller(BlockType.Registry.class, OilMod::onRegisterBlockTypes);
+        addEventCaller(BlockImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
     }
 
 
@@ -129,6 +133,8 @@ public class OilMod {
 
     protected void onRegisterBlocks(BlockRegistry registry){}
     protected void onRegisterBlockTypes(BlockType.Registry registry){}
+    protected void onRegisterImplementationProvider(ItemImplementationProvider.Registry registry){}
+    protected void onRegisterImplementationProvider(BlockImplementationProvider.Registry registry){}
     protected void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {

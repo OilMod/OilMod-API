@@ -1,5 +1,6 @@
 package org.oilmod.api.blocks;
 
+//todo make this an extendable registry
 public enum PistonReaction {
     NORMAL,
     DESTROY,

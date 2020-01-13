@@ -13,7 +13,7 @@ public interface IChestplate extends IArmor {
     }
 
 
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.ARMOR_CHESTPLATE;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.ARMOR_CHESTPLATE.getValue();
     }
 }

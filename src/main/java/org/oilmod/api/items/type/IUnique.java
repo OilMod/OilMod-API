@@ -6,7 +6,7 @@ public interface IUnique extends IItemGeneric, IItemSpecialised {
     }
 
     @Override
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.CUSTOM;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.CUSTOM.getValue();
     }
 }

@@ -14,8 +14,8 @@ public interface IArmor extends IUnique {
     }
 
 
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.ARMOR_CUSTOM;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.ARMOR_CUSTOM.getValue();
     }
 
 }

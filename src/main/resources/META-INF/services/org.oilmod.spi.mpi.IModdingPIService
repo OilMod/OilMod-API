@@ -5,11 +5,13 @@ org.oilmod.api.inventory.ItemFilterRegistry$RegistryMPI
 
 #Items
 org.oilmod.api.items.ItemRegistry$MPI
+org.oilmod.api.items.type.ItemImplementationProvider$MPI
 
 
 #Blocks
 org.oilmod.api.blocks.BlockRegistry$RegistryMPI
 org.oilmod.api.blocks.BlockType$MPI
+org.oilmod.api.blocks.type.BlockImplementationProvider$MPI
 
 #UI
 org.oilmod.api.UI.UIRegistry$RegistryMPI

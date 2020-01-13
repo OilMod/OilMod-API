@@ -10,7 +10,7 @@ public interface IItemSpecialised extends IItemGeneric {
 
 
     @Override
-    default ImplementationProvider getImplementationProvider() {
+    default ItemImplementationProvider getImplementationProvider() {
         throw new NotImplementedException("Do not implement anywhere but in specialisation interfaces. Extending interfaces need to provide specialised implementation provider");
     }
 }

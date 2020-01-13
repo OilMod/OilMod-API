@@ -98,7 +98,7 @@ public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, Block
     /**MPI - for api meta programming*/
     public static final class MPI extends RegistryMPIBase<BlockType, Registry, MPI, Helper<?>> {}
     
-    //Enum*/
+    /**Enum - for list of things needed to be provided*/
     public enum BlockTypeEnum implements IEnumPopEnum<BlockType, BlockTypeEnum, Registry, MPI, Helper<?>> {
         AIR,
         STRUCTURE_VOID,

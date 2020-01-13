@@ -41,7 +41,7 @@ public interface ISword extends IMeleeWeapon, IToolBlockBreaking {
         return EnchantmentType.WEAPON;
     }
 
-    default ImplementationProvider getImplementationProvider() {
+    default ItemImplementationProvider getImplementationProvider() {
         return getTbbType().getImplementationProvider();
     }
 }

@@ -43,7 +43,7 @@ public interface IToolBlockBreaking extends ITool {
     }
 
 
-    default ImplementationProvider getImplementationProvider() {
+    default ItemImplementationProvider getImplementationProvider() {
         return getTbbType().getImplementationProvider();
     }
 }

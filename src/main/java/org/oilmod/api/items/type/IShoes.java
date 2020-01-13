@@ -15,7 +15,7 @@ public interface IShoes extends IArmor {
 
 
 
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.ARMOR_SHOES;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.ARMOR_SHOES.getValue();
     }
 }

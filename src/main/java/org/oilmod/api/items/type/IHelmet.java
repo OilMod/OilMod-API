@@ -13,7 +13,7 @@ public interface IHelmet extends IArmor {
     }
 
 
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.ARMOR_HELMET;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.ARMOR_HELMET.getValue();
     }
 }

@@ -23,7 +23,7 @@ public interface IMeleeWeapon extends IWeapon {
     EnchantmentType getEnchantmentType();
 
 
-    default ImplementationProvider getImplementationProvider() {
-        return ImplementationProvider.MELEE_WEAPON_CUSTOM;
+    default ItemImplementationProvider getImplementationProvider() {
+        return  ItemImplementationProvider.MELEE_WEAPON_CUSTOM.getValue();
     }
 }

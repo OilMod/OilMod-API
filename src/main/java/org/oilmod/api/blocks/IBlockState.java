@@ -4,6 +4,7 @@ package org.oilmod.api.blocks;
 import org.oilmod.api.rep.block.BlockRep;
 import org.oilmod.api.rep.world.LocationBlockRep;
 
+@Deprecated
 public interface IBlockState {
     BlockType getBlockType();
     BlockRep getBlock();

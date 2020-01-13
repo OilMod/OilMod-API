@@ -124,9 +124,9 @@ public interface IItemGeneric extends IKeySettable {
      */ //TODO: replace boolean with enum like class
     default boolean canEnchantSpecial(EnchantmentRep enchantment, boolean anvil) {return false;}
 
-    default ImplementationProvider getImplementationProvider() {
+    default ItemImplementationProvider getImplementationProvider() {
         if (this instanceof IItemSpecialised) throw new NotImplementedException("do not call IItemGeneric.getImplementationProvider from specialised subclass, either provide ImplementationProvider yourself or call specialising interface");
-        return ImplementationProvider.CUSTOM;
+        return  ItemImplementationProvider.CUSTOM.getValue();
     }
 
     /**
