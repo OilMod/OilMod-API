@@ -30,7 +30,7 @@ public class Util {
     }
 
     public static void checkName(String str) {
-        Validate.isTrue(alphanumericalPattern.matcher(str).find(), "Only lowercase alphanumerical characters and underscores are allowed");
+        Validate.isTrue(alphanumericalPattern.matcher(str).find(), "Only lowercase alphanumerical characters and underscores are allowed, but got '" + str + "'");
     }
 
     public static void checkName(String... strs) {
@@ -47,4 +47,5 @@ public class Util {
         }
         return false;
     }
+
 }

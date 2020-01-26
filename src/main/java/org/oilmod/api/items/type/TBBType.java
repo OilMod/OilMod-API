@@ -1,99 +1,109 @@
 package org.oilmod.api.items.type;
 
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import org.oilmod.api.OilMod;
 import org.oilmod.api.blocks.BlockType;
 import org.oilmod.api.items.OilItemStack;
+import org.oilmod.api.registry.KeySettableBase;
+import org.oilmod.api.registry.RegistryMPIBase;
+import org.oilmod.api.registry.enumpop.*;
 import org.oilmod.api.rep.block.BlockFaceRep;
 import org.oilmod.api.rep.block.BlockStateRep;
 import org.oilmod.api.rep.entity.EntityLivingRep;
 import org.oilmod.api.rep.world.LocationBlockRep;
 import org.oilmod.api.util.InteractionResult;
 
-import java.util.Collections;
-import java.util.Set;
 
-public abstract class TBBType {
+public abstract class TBBType extends EnumPopTypeBase<TBBType, TBBType.TBBEnum, TBBType.Registry, TBBType.MPI, TBBType.Helper<?>> {
+    private static final LazyResolver<TBBType, TBBEnum> res = new LazyResolver<>(TBBEnum.class, ()-> TBBType.Helper.getInstance()::getProvider);
+    //regex to help convert to new enum reg
+    // (public static final )(\w*) (\w*);
+    // $1LazyRef<$2, TBBEnum> $3 = new LazyRef<>(res, TBBEnum\.$3);
+
     //Static members
-    public static final TBBType PICKAXE; //removing final here gives more flexibility but requires to also change vanilla behaviour TODO: think about it
-    public static final TBBType AXE;
-    public static final TBBType SHOVEL;
-    public static final TBBType SHEARS;
-    public static final TBBType SWORD;
+    public static final LazyRef<TBBType, TBBEnum> PICKAXE = new LazyRef<>(res, TBBEnum.PICKAXE);
+    public static final LazyRef<TBBType, TBBEnum> AXE = new LazyRef<>(res, TBBEnum.AXE);
+    public static final LazyRef<TBBType, TBBEnum> SHOVEL = new LazyRef<>(res, TBBEnum.SHOVEL);
+    public static final LazyRef<TBBType, TBBEnum> SHEARS = new LazyRef<>(res, TBBEnum.SHEARS);
+    public static final LazyRef<TBBType, TBBEnum> SWORD = new LazyRef<>(res, TBBEnum.SWORD);
+    public static final LazyRef<TBBType, TBBEnum> NONE = new LazyRef<>(res, TBBEnum.NONE);
 
-    private final static Set<TBBType> registeredSet = new ObjectOpenHashSet<>();
-    private final static Set<TBBType> registeredSetRead = Collections.unmodifiableSet(registeredSet);
+    /**Registry - for mod-side registering*/
+    public static class Registry extends EnumPopRegistry<TBBType, TBBEnum, Registry, MPI, Helper<?>> {
+        protected Registry(OilMod mod, Helper<?> registryHelper) {
+            super(mod, registryHelper, "tool_block_breaking_provider");
+        }
+    }
 
-    //Enum
-    public enum TBBEnum {
+
+    /**Backing implementation*/
+    public static abstract class Helper<Impl extends Helper<Impl>> extends EnumPopRegistryHelperBase<TBBType, TBBEnum, Registry, MPI, Helper<?>, Impl> {
+        private static Helper<?> instance;
+
+        public Helper() {
+            super();
+        }
+
+        @Override
+        protected void setSingleton() {
+            instance = this;
+        }
+
+        public static Helper<?> getInstance() {
+            return instance;
+        }
+
+        @Override
+        public Registry create(OilMod mod) {
+            return new Registry(mod, this);
+        }
+
+        @Override
+        protected LazyResolver<TBBType, TBBEnum> getLazyResolver() {
+            return res;
+        }
+
+        protected abstract TBBType getProvider(TBBEnum itemType);
+    }
+
+    /**MPI - for api meta programming*/
+    public static final class MPI extends RegistryMPIBase<TBBType, Registry, MPI, Helper<?>> {}
+
+    /**Enum - for list of things needed to be provided*/
+    public enum TBBEnum implements IEnumPopEnum<TBBType, TBBEnum, Registry, MPI, Helper<?>> {
         PICKAXE,
         AXE,
         SHOVEL,
         SHEARS,
         SWORD,
-        CUSTOM
-    }
-
-    //Backing implementation
-    public static abstract class TBBHelper {
-        private static TBBHelper instance;
-        private static final Object MUTEX = new Object();
-        private static final String CANNOT_INITIALISE_SINGLETON_TWICE = "Cannot initialise singleton twice!";
-
-        public static void setInstance(TBBHelper instance) {
-            if (TBBHelper.instance == null) {
-                synchronized (MUTEX) {
-                    if (TBBHelper.instance == null) {
-                        TBBHelper.instance = instance;
-                    } else {
-                        throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
-                    }
-                }
-            } else {
-                throw new IllegalStateException(CANNOT_INITIALISE_SINGLETON_TWICE);
-            }
+        NONE,
+        ENUM_MISSING,
+        CUSTOM;
+        @Override
+        public TBBEnum missing() {
+            return ENUM_MISSING;
         }
 
-        public static TBBHelper getInstance() {
-            return instance;
+        @Override
+        public TBBEnum custom() {
+            return CUSTOM;
         }
-        protected abstract void apiInit(); //prepare stuff
-        protected abstract void apiPostInit(); //dunno for this one
-        protected abstract TBBType getVanilla(TBBEnum itemType);
-        protected void unregister(TBBType itemType) {
-            registeredSet.remove(itemType);
+
+        @Override
+        public TBBType.Helper<?> getProvider() {
+            return TBBType.Helper.getInstance();
         }
     }
 
-    //static methods
-    static {
-        TBBHelper h = TBBHelper.getInstance();
-        h.apiInit();
-        PICKAXE = h.getVanilla(TBBEnum.PICKAXE);
-        AXE = h.getVanilla(TBBEnum.AXE);
-        SHOVEL = h.getVanilla(TBBEnum.SHOVEL);
-        SHEARS = h.getVanilla(TBBEnum.SHEARS);
-        SWORD = h.getVanilla(TBBEnum.SWORD);
-        h.apiPostInit();
-    }
-
-    public static Set<TBBType> getAll() {
-        return registeredSetRead;
-    }
 
 
     //fields
-    private final TBBEnum tbbEnum;
 
     //constructor
     protected TBBType(TBBEnum tbbEnum) {
-        this.tbbEnum = tbbEnum;
-        registeredSet.add(this);
+        super(tbbEnum);
     }
 
     //methods
-    public TBBEnum getTbbEnum() {
-        return tbbEnum;
-    }
 
     //abstract methods
     protected abstract boolean canHarvestBlock(IToolBlockBreaking item, OilItemStack stack, BlockStateRep blockState, BlockType blockType);

@@ -8,7 +8,7 @@ import org.oilmod.api.rep.world.LocationBlockRep;
 
 public interface ISword extends IMeleeWeapon, IToolBlockBreaking {
     @Override
-    default TBBType getTbbType() {return TBBType.SWORD;}
+    default TBBType getTbbType() {return TBBType.SWORD.getValue();}
 
 
     @Override

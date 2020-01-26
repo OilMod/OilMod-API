@@ -88,9 +88,14 @@ public abstract class RegistryHelperBase<
     }
 
 
-    public final  <T extends Type> void register(OilKey key, TReg registry, T entry) {
+    /**Only for internal use! Can registry.register instead!*/
+    protected final  <T extends Type> void _preregister(OilKey key, TReg registry, T entry) {
         Validate.isTrue(!registered.contains(entry), "Cannot register object twice");
         Validate.isTrue(!mapEntry.containsKey(key), "Cannot register same key twice. Key: " + key.toString());
+    }
+    /**Only for internal use! Can registry.register instead!*/
+    protected final  <T extends Type> void _register(OilKey key, TReg registry, T entry) {
+        _preregister(key, registry, entry);
         mapEntry.put(key, entry);
         mapRegistry.put(key, registry);
         registered.add(entry);
@@ -100,9 +105,6 @@ public abstract class RegistryHelperBase<
     protected <T extends Type> void onRegister(OilKey key, TReg registry, T entry) {
 
     }
-
-
-
 
 
     protected void initRegister(TReg register, InitRegisterCallback callback) {

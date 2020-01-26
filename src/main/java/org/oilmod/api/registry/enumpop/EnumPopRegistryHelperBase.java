@@ -2,7 +2,6 @@ package org.oilmod.api.registry.enumpop;
 
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
-import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.registry.RegistryMPIBase;
 import org.oilmod.api.util.OilKey;
@@ -41,12 +40,18 @@ public abstract class EnumPopRegistryHelperBase<
     }
 
     @Override
-    protected final  <T extends Type> void onRegister(OilKey key, TReg registry, T entry) {
+    protected final  <T extends Type> void onRegister(OilKey key, TReg registry, T entry) { //todo remove final after we did all the refactoring (final so we do not accidentally override the method and then have a hard time debugging)
         super.onRegister(key, registry, entry);
         if (!entry.getTypeEnum().isSpecial()) enumMap.put(entry.getTypeEnum(), entry);
+        onRegister2(key, registry, entry); //todo remove (rename to onRegister)
     }
 
-    @Override
+
+    protected <T extends Type> void onRegister2(OilKey key, TReg registry, T entry) {
+
+    }
+
+        @Override
     protected final void onUnregister(OilKey key, TReg registry, Type entry) {
         super.onUnregister(key, registry, entry);
         if (!entry.getTypeEnum().isSpecial()) enumMap.remove(entry.getTypeEnum());
@@ -55,6 +60,12 @@ public abstract class EnumPopRegistryHelperBase<
     public Type get(PopEnum key) {
         if (key.isSpecial())throw new IllegalArgumentException("Cannot get entry for non unique key: " + key.toString());
         return enumMap.get(key);
+    }
+
+
+
+    protected void autoRegister(TReg registry, Type entry) {
+        registry.register(entry.getTypeEnum().toString().toLowerCase(), entry);
     }
 
     protected TReg getGameRegistry() {

@@ -1,6 +1,7 @@
 package org.oilmod.api.items.type;
 
 import org.oilmod.api.OilMod;
+import org.oilmod.api.blocks.type.BlockImplementationProvider;
 import org.oilmod.api.items.OilItem;
 import org.oilmod.api.registry.KeySettableBase;
 import org.oilmod.api.registry.RegistryMPIBase;
@@ -8,7 +9,7 @@ import org.oilmod.api.registry.enumpop.*;
 import org.oilmod.api.rep.item.ItemRep;
 import org.oilmod.api.util.IKeyed;
 
-public abstract class ItemImplementationProvider extends KeySettableBase implements IEnumPopType<ItemImplementationProvider, ItemImplementationProvider.TypeEnum, ItemImplementationProvider.Registry, ItemImplementationProvider.MPI, ItemImplementationProvider.Helper<?>> {
+public abstract class ItemImplementationProvider extends EnumPopTypeBase<ItemImplementationProvider, ItemImplementationProvider.TypeEnum, ItemImplementationProvider.Registry, ItemImplementationProvider.MPI, ItemImplementationProvider.Helper<?>> {
     private static final LazyResolver<ItemImplementationProvider, TypeEnum> res = new LazyResolver<>(TypeEnum.class, ()-> ItemImplementationProvider.Helper.getInstance()::getProvider);
     //regex to help convert to new enum reg
     // (public static final )(\w*) (\w*);
@@ -36,7 +37,7 @@ public abstract class ItemImplementationProvider extends KeySettableBase impleme
     /**Registry - for mod-side registering*/
     public static class Registry extends EnumPopRegistry<ItemImplementationProvider, TypeEnum, Registry, MPI, Helper<?>> {
         protected Registry(OilMod mod, Helper<?> registryHelper) {
-            super(mod, registryHelper, "oilblockimplementation provider");
+            super(mod, registryHelper, "oilitem_implementation_provider");
         }
     }
 
@@ -116,18 +117,13 @@ public abstract class ItemImplementationProvider extends KeySettableBase impleme
     }
 
     //fields
-    private final TypeEnum typeEnum;
 
     //constructor
     protected ItemImplementationProvider(TypeEnum typeEnum) {
-        this.typeEnum = typeEnum;
+        super(typeEnum);
     }
 
     //methods
-    @Override
-    public TypeEnum getTypeEnum() {
-        return typeEnum;
-    }
 
     //abstract methods
     public abstract ItemRep implement(OilItem item);

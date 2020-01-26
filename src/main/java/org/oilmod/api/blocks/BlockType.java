@@ -2,6 +2,7 @@ package org.oilmod.api.blocks;
 
 import org.oilmod.api.OilMod;
 import org.oilmod.api.blocks.nms.NMSBlockType;
+import org.oilmod.api.registry.IKeySettable;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.registry.RegistryMPIBase;
 import org.oilmod.api.registry.enumpop.*;
@@ -13,7 +14,7 @@ import org.oilmod.api.util.OilRegistry;
 import java.util.EnumMap;
 import java.util.Set;
 
-public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, BlockType.BlockTypeEnum, BlockType.Registry, BlockType.MPI, BlockType.Helper<?>> {
+public abstract class BlockType extends EnumPopTypeBase<BlockType, BlockType.BlockTypeEnum, BlockType.Registry, BlockType.MPI, BlockType.Helper<?>> {
     private static final LazyResolver<BlockType, BlockTypeEnum> res = new LazyResolver<>(BlockTypeEnum.class, ()->Helper.getInstance()::getVanillaBlockType);
     //Static members
     public static final LazyRef<BlockType, BlockTypeEnum> AIR = new LazyRef<>(res, BlockTypeEnum.AIR);
@@ -160,44 +161,31 @@ public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, Block
 
     /**
      *
-     * @param key
-     * @return Returns an new BlockType. Be aware that this blocktype will not be supported by any vanilla code
+     * @return Returns an new BlockType. Be aware that this blocktype will not be supported by any vanilla code //(todo: oh is it? why do we have it then)
      */
-    public static CustomBlockTypeBuilder createBlock(OilKey key) {
-        return new CustomBlockTypeBuilder(key);
+    public static CustomBlockTypeBuilder createBlock() {
+        return new CustomBlockTypeBuilder();
     }
     
     //fields
     private final NMSBlockType nmsBlockType;
-    private final OilKey key;
-    private final BlockTypeEnum blockTypeEnum;
-    
+
     //constructor
 
-    protected BlockType(NMSBlockType nmsBlockType, OilKey key, BlockTypeEnum blockTypeEnum) {
+    protected BlockType(NMSBlockType nmsBlockType, BlockTypeEnum blockTypeEnum) {
+        super(blockTypeEnum);
         this.nmsBlockType = nmsBlockType;
-        this.key = key;
-        this.blockTypeEnum = blockTypeEnum;
     }
 
-    private BlockType(OilKey key) {
-        this.key = key;
-        this.blockTypeEnum = BlockTypeEnum.CUSTOM;
+    private BlockType() {
+        super(BlockTypeEnum.CUSTOM);
         this.nmsBlockType = Helper.getInstance().registerCustom(this);
     }
     
     //methods
-    @Override
-    public BlockTypeEnum getTypeEnum() {
-        return blockTypeEnum;
-    }
 
     public NMSBlockType getNmsBlockType() {
         return nmsBlockType;
-    }
-
-    public OilKey getOilKey() {
-        return key;
     }
 
     public abstract boolean isLiquid();
@@ -250,8 +238,7 @@ public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, Block
         private final PistonReaction pistonReaction;
         private final MapColor color;
 
-        public CustomBlockType(OilKey key, MapColor color, boolean liquid, boolean buildable, boolean blocksLight, boolean solid, boolean burnable, boolean replaceable, boolean alwaysDestroyable, boolean breakablePickaxe, boolean breakableAxe, boolean breakableShovel, boolean breakableShears, boolean breakableBlade, PistonReaction pistonReaction) {
-            super(key);
+        public CustomBlockType(MapColor color, boolean liquid, boolean buildable, boolean blocksLight, boolean solid, boolean burnable, boolean replaceable, boolean alwaysDestroyable, boolean breakablePickaxe, boolean breakableAxe, boolean breakableShovel, boolean breakableShears, boolean breakableBlade, PistonReaction pistonReaction) {
             this.color = color;
             this.liquid = liquid;
             this.buildable = buildable;
@@ -269,7 +256,7 @@ public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, Block
         }
 
         public CustomBlockType(CustomBlockTypeBuilder builder) {
-            this(builder.key, builder.color, builder.liquid, builder.buildable, builder.blocksLight, builder.solid, builder.burnable, builder.replaceable, builder.alwaysDestroyable, builder.breakablePickaxe, builder.breakableAxe, builder.breakableShovel, builder.breakableShears, builder.breakableBlade, builder.pistonReaction);
+            this(builder.color, builder.liquid, builder.buildable, builder.blocksLight, builder.solid, builder.burnable, builder.replaceable, builder.alwaysDestroyable, builder.breakablePickaxe, builder.breakableAxe, builder.breakableShovel, builder.breakableShears, builder.breakableBlade, builder.pistonReaction);
         }
 
         @Override
@@ -345,7 +332,6 @@ public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, Block
 
     //Custom BlockType Builder
     public static class CustomBlockTypeBuilder {
-        private OilKey key;
         private MapColor color; //TODO: assign standard later when MapColor actually exists
         private boolean liquid;
         private boolean buildable;
@@ -360,10 +346,6 @@ public abstract class BlockType implements IKeyed, IEnumPopType<BlockType, Block
         private boolean breakableShovel;
         private boolean breakableShears;
         private boolean breakableBlade;
-
-        public CustomBlockTypeBuilder(OilKey key) {
-            this.key = key;
-        }
 
         public CustomBlockTypeBuilder setLiquid() {
             this.liquid = true;

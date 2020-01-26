@@ -7,7 +7,7 @@ public abstract class KeySettableBase implements IKeySettable {
     private OilKey key;
 
     @Override
-    public void setOilKey(OilKey key) {
+    public final void setOilKey(OilKey key) {
         Validate.isTrue(this.key == null, "Cannot manually set key! This is done by the registry!");
         this.key = key;
     }

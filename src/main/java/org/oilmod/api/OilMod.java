@@ -10,6 +10,7 @@ import org.oilmod.api.blocks.type.BlockImplementationProvider;
 import org.oilmod.api.inventory.ItemFilterRegistry;
 import org.oilmod.api.items.ItemRegistry;
 import org.oilmod.api.items.type.ItemImplementationProvider;
+import org.oilmod.api.items.type.TBBType;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.util.OilKey;
@@ -44,6 +45,7 @@ public class OilMod {
         addEventCaller(BlockRegistry.class, OilMod::onRegisterBlocks);
         addEventCaller(BlockType.Registry.class, OilMod::onRegisterBlockTypes);
         addEventCaller(BlockImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
+        addEventCaller(TBBType.Registry.class, OilMod::onRegisterTBBType);
     }
 
 
@@ -135,6 +137,7 @@ public class OilMod {
     protected void onRegisterBlockTypes(BlockType.Registry registry){}
     protected void onRegisterImplementationProvider(ItemImplementationProvider.Registry registry){}
     protected void onRegisterImplementationProvider(BlockImplementationProvider.Registry registry){}
+    protected void onRegisterTBBType(TBBType.Registry registry){}
     protected void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {
@@ -154,8 +157,19 @@ public class OilMod {
 
 
     public static class MPI extends SingleMPI<MPI, ModHelper<?>>{
+        @Override
+        public boolean hasDefaultProvider() {
+            return true;
+        }
 
+        @Override
+        public ModHelper<?> createDefaultProvider() {
+            return new DefaultModHelper();
+        }
+
+        private static class DefaultModHelper extends ModHelper<DefaultModHelper>{} //needed for generics resolution
     }
+
     public static class ModHelper<Impl extends ModHelper<?>> extends ImplementationBase<MPI, ModHelper<?>, Impl> {
         private static ModHelper<?> instance;
         static boolean usingDelegatedCtor = false;

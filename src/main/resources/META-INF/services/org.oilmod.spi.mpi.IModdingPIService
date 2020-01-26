@@ -6,6 +6,7 @@ org.oilmod.api.inventory.ItemFilterRegistry$RegistryMPI
 #Items
 org.oilmod.api.items.ItemRegistry$MPI
 org.oilmod.api.items.type.ItemImplementationProvider$MPI
+org.oilmod.api.items.type.TBBType$MPI
 
 
 #Blocks

@@ -5,6 +5,8 @@ import org.oilmod.api.util.OilKey;
 
 import java.util.Map;
 
+import static org.oilmod.api.util.Util.checkName;
+import static org.oilmod.util.Strings.simpleName;
 import static org.oilmod.util.LamdbaCastUtils.cast;
 
 /**
@@ -31,6 +33,7 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
         this.mod = mod;
         this.registryHelper = registryHelper;
         this.registryContext = registryContext;
+        checkName(registryContext);
         canCtor();
         getRegistryHelper().initRegister(cast(this), (success, nmsObject) -> {
             registered = success;
@@ -39,7 +42,7 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
     }
 
     protected void canCtor(){
-        if (getMod().isConstructed()) throw new IllegalStateException(String.format("%s can only be created during construction of mod. This should only be called by the implementation of create(OilMod mod) in %s (currently %s)", getClass().getSimpleName(), registryHelper.getProviderClass().getSimpleName(), registryHelper.getImplementationClass().getSimpleName()));
+        if (getMod().isConstructed()) throw new IllegalStateException(String.format("%s can only be created during construction of mod. This should only be called by the implementation of create(OilMod mod) in %s (currently %s)", simpleName(getClass()), simpleName(registryHelper.getProviderClass()), simpleName(registryHelper.getImplementationClass())));
     }
 
     /**
@@ -55,13 +58,14 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
      */
     public <T extends Type> void register(OilKey key, T entry) {
         if (!registered) {
-            throw new IllegalStateException(String.format("%s was not successfully initialized", getClass().getSimpleName()));
+            throw new IllegalStateException(String.format("%s was not successfully initialized", simpleName(getClass())));
         }
+        getRegistryHelper()._preregister(key, cast(this), entry);
         key = key.makeContextual(getRegistryContext());
         if (entry instanceof IKeySettable) {
             ((IKeySettable) entry).setOilKey(key);
         }
-        getRegistryHelper().register(key, cast(this), entry);
+        getRegistryHelper()._register(key, cast(this), entry);
     }
     /**
      * Registers an $(Type) for your mod

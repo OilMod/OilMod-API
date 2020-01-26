@@ -15,6 +15,8 @@ import org.oilmod.api.rep.providers.ItemStackStateProvider;
 import java.util.Collections;
 import java.util.Map;
 
+import static org.oilmod.util.Strings.simpleName;
+
 /**
  * This class is used the handle special itemstack bound behavior.
  */
@@ -37,7 +39,7 @@ public class OilItemStack implements DataParent, InventoryHolderRep, ItemStackSt
      */
     public void init() {
         if (initiated) {
-            throw new IllegalStateException(getClass().getSimpleName() + " is has already been initiated");
+            throw new IllegalStateException(simpleName(getClass()) + " is has already been initiated");
         }
         initiated = true;
     }

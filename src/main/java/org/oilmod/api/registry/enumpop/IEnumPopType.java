@@ -10,5 +10,7 @@ public interface IEnumPopType<
         Provider extends EnumPopRegistryHelperBase<Type, PopEnum, TReg, MPI, Provider, ? extends Provider>> {
 
     PopEnum getTypeEnum();
+    Object getNMS();
+    void setNMS(Object nms);
 
 }

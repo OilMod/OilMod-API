@@ -8,7 +8,7 @@ import org.oilmod.api.util.InteractionResult;
 
 public interface IShovel extends IToolBlockBreaking {
     @Override
-    default TBBType getTbbType() {return TBBType.SHOVEL;}
+    default TBBType getTbbType() {return TBBType.SHOVEL.getValue();}
 
     @Override
     default InteractionResult onItemUseOnBlock(OilItemStack stack, EntityHumanRep human, LocationBlockRep pos, boolean offhand, BlockFaceRep facing, float hitX, float hitY, float hitZ) {

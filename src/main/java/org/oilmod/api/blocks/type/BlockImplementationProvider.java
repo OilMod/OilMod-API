@@ -9,7 +9,7 @@ import org.oilmod.api.registry.enumpop.*;
 import org.oilmod.api.rep.block.BlockRep;
 import org.oilmod.api.util.IKeyed;
 
-public abstract class BlockImplementationProvider extends KeySettableBase implements IEnumPopType<BlockImplementationProvider, BlockImplementationProvider.TypeEnum, BlockImplementationProvider.Registry, BlockImplementationProvider.MPI, BlockImplementationProvider.Helper<?>> {
+public abstract class BlockImplementationProvider extends EnumPopTypeBase<BlockImplementationProvider, BlockImplementationProvider.TypeEnum, BlockImplementationProvider.Registry, BlockImplementationProvider.MPI, BlockImplementationProvider.Helper<?>> {
     private static final LazyResolver<BlockImplementationProvider, TypeEnum> res = new LazyResolver<>(TypeEnum.class, ()-> BlockImplementationProvider.Helper.getInstance()::getProvider);
     //regex to help convert to new enum reg
     // (public static final )(\w*) (\w*);
@@ -22,7 +22,7 @@ public abstract class BlockImplementationProvider extends KeySettableBase implem
     /**Registry - for mod-side registering*/
     public static class Registry extends EnumPopRegistry<BlockImplementationProvider, TypeEnum, Registry, MPI, Helper<?>> {
         protected Registry(OilMod mod, Helper<?> registryHelper) {
-            super(mod, registryHelper, "oilblockimplementation provider");
+            super(mod, registryHelper, "oilblock_implementation_provider");
         }
     }
 
@@ -87,18 +87,13 @@ public abstract class BlockImplementationProvider extends KeySettableBase implem
     }
 
     //fields
-    private final TypeEnum typeEnum;
 
     //constructor
     protected BlockImplementationProvider(TypeEnum typeEnum) {
-        this.typeEnum = typeEnum;
+        super(typeEnum);
     }
 
     //methods
-    @Override
-    public TypeEnum getTypeEnum() {
-        return typeEnum;
-    }
 
     //abstract methods
     public abstract BlockRep implement(OilBlock block);
