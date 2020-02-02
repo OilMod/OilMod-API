@@ -7,8 +7,9 @@ import org.oilmod.api.items.OilItem;
 import org.oilmod.api.items.type.TBBType;
 import org.oilmod.api.registry.IKeySettable;
 import org.oilmod.api.rep.item.ItemRep;
+import org.oilmod.api.stateable.IStateable;
 
-public interface IBlockGeneric extends IKeySettable {
+public interface IBlockGeneric extends IKeySettable, IStateable {
     default PistonReaction getPistonReaction() {
         return PistonReaction.NORMAL;
     }

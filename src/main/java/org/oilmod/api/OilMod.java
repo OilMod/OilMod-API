@@ -13,6 +13,7 @@ import org.oilmod.api.items.type.ItemImplementationProvider;
 import org.oilmod.api.items.type.TBBType;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
+import org.oilmod.api.stateable.complex.ComplexStateTypeRegistry;
 import org.oilmod.api.util.OilKey;
 import org.oilmod.api.util.OilUtil;
 import org.oilmod.spi.dependencies.DependencyPipe;
@@ -46,6 +47,7 @@ public class OilMod {
         addEventCaller(BlockType.Registry.class, OilMod::onRegisterBlockTypes);
         addEventCaller(BlockImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
         addEventCaller(TBBType.Registry.class, OilMod::onRegisterTBBType);
+        addEventCaller(ComplexStateTypeRegistry.class, OilMod::onRegisterComplexStateType);
     }
 
 
@@ -138,7 +140,8 @@ public class OilMod {
     protected void onRegisterImplementationProvider(ItemImplementationProvider.Registry registry){}
     protected void onRegisterImplementationProvider(BlockImplementationProvider.Registry registry){}
     protected void onRegisterTBBType(TBBType.Registry registry){}
-    protected void onRegisterCraftingRecipes(){}
+    protected void onRegisterComplexStateType(ComplexStateTypeRegistry registry){}
+    //protected void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {
         return registeredSetRead;

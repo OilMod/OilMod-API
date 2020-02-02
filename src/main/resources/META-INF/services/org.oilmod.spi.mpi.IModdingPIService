@@ -22,3 +22,7 @@ org.oilmod.api.UI.UIMPI
 #Mods
 org.oilmod.api.OilMod$MPI
 org.oilmod.api.util.OilUtil$UtilMPI
+
+
+#State
+org.oilmod.api.stateable.complex.ComplexStateTypeRegistry$RegistryMPI

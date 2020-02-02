@@ -1,8 +1,6 @@
 package org.oilmod.api.items;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.oilmod.api.data.IDataParent;
-import org.oilmod.api.data.IData;
+import org.oilmod.api.data.DataParentImpl;
 import org.oilmod.api.inventory.ModInventoryObjectBase;
 import org.oilmod.api.rep.enchant.EnchantmentRep;
 import org.oilmod.api.rep.inventory.InventoryHolderRep;
@@ -11,39 +9,21 @@ import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.itemstack.state.Enchantments;
 import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
 import org.oilmod.api.rep.providers.ItemStackStateProvider;
-
-import java.util.Collections;
-import java.util.Map;
-
-import static org.oilmod.util.Strings.simpleName;
+import org.oilmod.api.stateable.complex.ICStateable;
+import org.oilmod.api.stateable.complex.IComplexState;
 
 /**
  * This class is used the handle special itemstack bound behavior.
  */
-public class OilItemStack implements IDataParent, InventoryHolderRep, ItemStackStateProvider {
+public class OilItemStack extends DataParentImpl implements IComplexState, InventoryHolderRep, ItemStackStateProvider {
     private NMSItemStack nmsItemStack;
     private OilItem item;
-    private final Map<String,IData<?>> registeredIData = new Object2ObjectOpenHashMap<>();
-    private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
     private ModInventoryObjectBase<?> mainInventory;
-    private boolean initiated = false;
 
     public OilItemStack(NMSItemStack nmsItemStack, OilItem item) {
         this.nmsItemStack = nmsItemStack;
         this.item = item;
     }
-
-    /**
-     * Internal - should not be called by user code. Is called AFTER nms representation is initialised.
-     * IData must be added before this method is called!
-     */
-    public void init() {
-        if (initiated) {
-            throw new IllegalStateException(simpleName(getClass()) + " is has already been initiated");
-        }
-        initiated = true;
-    }
-
 
 
     public int getData() {
@@ -79,25 +59,6 @@ public class OilItemStack implements IDataParent, InventoryHolderRep, ItemStackS
      */
     public ItemStackRep asBukkitItemStack() {
         return getNmsItemStack().asItemStackRep();
-    }
-
-    /**
-     * Attaches an iData to the ItemStack. It value will be saved to nbt. You normally do not need to call this manually
-     * @param iData the datatag that should be added
-     */
-    @Override
-    public void registerIData(IData<?> iData) {
-        if (initiated)throw new IllegalStateException("Cannot register new IData after initialisation! IData would not be able to load data and always have standard value!");
-        registeredIData.put(iData.getName(),iData);
-    }
-
-    /**
-     *
-     * @return returns all attached iData mapped with there NBT-key
-     */
-    @Override
-    public Map<String, IData<?>> getRegisteredIData() {
-        return readonly_registeredIData;
     }
 
     /**
@@ -146,7 +107,7 @@ public class OilItemStack implements IDataParent, InventoryHolderRep, ItemStackS
      * Called after the item was cloned
      * @param original old/original itemstack
      */
-    public void onCloned(OilItemStack original) {}
+    public void onCloned(DataParentImpl original) {}
 
     /**
      * The new name of the item if it was renamed by the player
