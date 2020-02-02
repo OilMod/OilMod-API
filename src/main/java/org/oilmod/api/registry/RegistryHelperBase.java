@@ -88,7 +88,9 @@ public abstract class RegistryHelperBase<
     }
 
 
-    /**Only for internal use! Can registry.register instead!*/
+    /**Only for internal use! Can registry.register instead!
+     *
+     * This should be overridden to detect conflicts early*/
     protected final  <T extends Type> void _preregister(OilKey key, TReg registry, T entry) {
         Validate.isTrue(!registered.contains(entry), "Cannot register object twice");
         Validate.isTrue(!mapEntry.containsKey(key), "Cannot register same key twice. Key: " + key.toString());
