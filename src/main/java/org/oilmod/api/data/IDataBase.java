@@ -5,9 +5,9 @@ package org.oilmod.api.data;
  */
 public abstract class IDataBase<T> implements IData<T> {
     private String name;
-    private DataParent dataParent;
+    private IDataParent dataParent;
 
-    public IDataBase(String name, DataParent dataParent) {
+    public IDataBase(String name, IDataParent dataParent) {
         this.name = name;
         this.dataParent = dataParent;
         dataParent.registerIData(this);
@@ -17,7 +17,7 @@ public abstract class IDataBase<T> implements IData<T> {
         return name;
     }
 
-    public DataParent getParent() {
+    public IDataParent getParent() {
         return dataParent;
     }
 

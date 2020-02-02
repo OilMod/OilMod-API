@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public abstract class CompoundData<T> extends IDataBase<T> implements ICompoundData<T>  {
     private T data;
 
-    public CompoundData(String name, DataParent dataParent) {
+    public CompoundData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

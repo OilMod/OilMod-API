@@ -1,4 +1,4 @@
 package org.oilmod.api.blocks.states;
 
-public class IState {
+public interface IState {
 }

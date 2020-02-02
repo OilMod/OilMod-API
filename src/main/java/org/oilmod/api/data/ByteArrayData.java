@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class ByteArrayData extends IClonableDataBase<byte[]> {
     private byte[] data;
 
-    public ByteArrayData(String name, DataParent dataParent) {
+    public ByteArrayData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class BooleanData extends IPrimaryDataBase<Boolean> {
     private boolean data;
 
-    public BooleanData(String name, DataParent dataParent) {
+    public BooleanData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

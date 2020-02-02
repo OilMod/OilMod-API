@@ -5,7 +5,7 @@ package org.oilmod.api.data;
  */
 public abstract class IPrimaryDataBase<T> extends IDataBase<T> {
 
-    public IPrimaryDataBase(String name, DataParent dataParent) {
+    public IPrimaryDataBase(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

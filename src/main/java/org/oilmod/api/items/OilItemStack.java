@@ -1,7 +1,7 @@
 package org.oilmod.api.items;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.oilmod.api.data.DataParent;
+import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.data.IData;
 import org.oilmod.api.inventory.ModInventoryObjectBase;
 import org.oilmod.api.rep.enchant.EnchantmentRep;
@@ -20,7 +20,7 @@ import static org.oilmod.util.Strings.simpleName;
 /**
  * This class is used the handle special itemstack bound behavior.
  */
-public class OilItemStack implements DataParent, InventoryHolderRep, ItemStackStateProvider {
+public class OilItemStack implements IDataParent, InventoryHolderRep, ItemStackStateProvider {
     private NMSItemStack nmsItemStack;
     private OilItem item;
     private final Map<String,IData<?>> registeredIData = new Object2ObjectOpenHashMap<>();

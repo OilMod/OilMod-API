@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class LongData extends IPrimaryDataBase<Long> {
     private long data;
 
-    public LongData(String name, DataParent dataParent) {
+    public LongData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class ShortData extends IPrimaryDataBase<Short> {
     private short data;
 
-    public ShortData(String name, DataParent dataParent) {
+    public ShortData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

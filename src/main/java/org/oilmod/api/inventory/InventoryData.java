@@ -1,7 +1,7 @@
 package org.oilmod.api.inventory;
 
 import org.oilmod.api.data.CompoundSerializableData;
-import org.oilmod.api.data.DataParent;
+import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.data.ObjectFactory;
 
 /**
@@ -10,7 +10,7 @@ import org.oilmod.api.data.ObjectFactory;
 public class InventoryData<T extends ModInventoryObjectBase> extends CompoundSerializableData<ModNMSIInventory<T>> {
     private T oilApiInv;
 
-    public InventoryData(String name, DataParent dataParent, ObjectFactory<ModNMSIInventory<T>> factory, boolean recreateOnLoad) {
+    public InventoryData(String name, IDataParent dataParent, ObjectFactory<ModNMSIInventory<T>> factory, boolean recreateOnLoad) {
         super(name, dataParent, factory, recreateOnLoad);
     }
 

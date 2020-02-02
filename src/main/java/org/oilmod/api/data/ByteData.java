@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class ByteData extends IPrimaryDataBase<Byte> {
     private byte data;
 
-    public ByteData(String name, DataParent dataParent) {
+    public ByteData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

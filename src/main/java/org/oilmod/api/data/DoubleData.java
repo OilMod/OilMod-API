@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class DoubleData extends IPrimaryDataBase<Double> {
     private double data;
 
-    public DoubleData(String name, DataParent dataParent) {
+    public DoubleData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

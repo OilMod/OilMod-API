@@ -2,14 +2,12 @@ package org.oilmod.api.inventory;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.oilmod.api.crafting.ICraftingProcessor;
-import org.oilmod.api.data.DataParent;
+import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.data.ItemStackData;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.inventory.InventoryRep;
-import org.oilmod.api.rep.itemstack.state.Inventory;
 import org.oilmod.api.util.ITicker;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -175,7 +173,7 @@ public abstract class InventoryFactory {
     //ModPortableCraftingInventoryObject
 
     //###ItemStackData###
-    public abstract ItemStackData createItemStackData(String name, DataParent dataParent);
+    public abstract ItemStackData createItemStackData(String name, IDataParent dataParent);
 
     //###Other stuff###
     protected <T extends ModInventoryObjectBase<T>> void checkInventoryHolder(OilItemStack itemStack, T inventory, boolean mainItemstackInventory) {

@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class IntegerArrayData extends IClonableDataBase<int[]> {
     private int[] data;
 
-    public IntegerArrayData(String name, DataParent dataParent) {
+    public IntegerArrayData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 

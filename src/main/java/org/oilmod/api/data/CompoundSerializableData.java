@@ -11,7 +11,7 @@ public class CompoundSerializableData<T extends CompoundSerializable> extends Co
     private final boolean recreateOnLoad;
     private boolean initialized = false;
 
-    public CompoundSerializableData(String name, DataParent dataParent, ObjectFactory<T> factory, boolean recreateOnLoad) {
+    public CompoundSerializableData(String name, IDataParent dataParent, ObjectFactory<T> factory, boolean recreateOnLoad) {
         super(name, dataParent);
         this.factory = factory;
         this.recreateOnLoad = recreateOnLoad;

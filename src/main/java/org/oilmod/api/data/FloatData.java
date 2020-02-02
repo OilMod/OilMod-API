@@ -8,7 +8,7 @@ import org.oilmod.api.config.Compound;
 public class FloatData extends IPrimaryDataBase<Float> {
     private float data;
 
-    public FloatData(String name, DataParent dataParent) {
+    public FloatData(String name, IDataParent dataParent) {
         super(name, dataParent);
     }
 
