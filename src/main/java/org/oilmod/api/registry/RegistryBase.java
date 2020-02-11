@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static org.oilmod.api.util.Util.checkName;
 import static org.oilmod.util.Strings.simpleName;
@@ -80,11 +81,12 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
     /**
      * Registers an $(Type) for your mod
      */
-    public <T extends Type> void register(OilKey key, T entry) {
+    public <T extends Type> DeferredObject<T> register(OilKey key, Supplier<T> entrySupplier) {
         //Check registry
         if (!registered) {
             throw new IllegalStateException(String.format("%s was not successfully initialized", simpleName(getClass())));
         }
+        T entry = entrySupplier.get(); //todo make those lazy and subscribe DeferredObject
 
         //Check entry and avoid duplicates
         Validate.isTrue(!registeredSet.contains(entry), "Cannot register object twice");
@@ -107,6 +109,8 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
         } else {
             getRegistryHelper()._register(key, cast(this), entry);
         }
+
+        return new DeferredObject<>(key, this);
     }
 
     public void registerDeferred() {
@@ -136,8 +140,8 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
     /**
      * Registers an $(Type) for your mod
      */
-    public <T extends Type> void register(String name, T entry) {
-        register(getMod().createKey(name), entry);
+    public <T extends Type>  DeferredObject<T> register(String name, Supplier<T> entrySupplier) {
+        return register(getMod().createKey(name), entrySupplier);
     }
 
     public final Provider getRegistryHelper() {

@@ -7,7 +7,7 @@ import org.oilmod.api.data.ObjectFactory;
 /**
  * Created by sirati97 on 13.02.2016.
  */
-public class InventoryData<T extends ModInventoryObjectBase> extends CompoundSerializableData<ModNMSIInventory<T>> {
+public class InventoryData<T extends ModInventoryObjectBase<T>> extends CompoundSerializableData<ModNMSIInventory<T>> {
     private T oilApiInv;
 
     public InventoryData(String name, IDataParent dataParent, ObjectFactory<ModNMSIInventory<T>> factory, boolean recreateOnLoad) {

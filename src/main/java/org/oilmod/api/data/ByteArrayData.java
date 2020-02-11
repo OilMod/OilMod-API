@@ -26,6 +26,7 @@ public class ByteArrayData extends IClonableDataBase<byte[]> {
 
     public void setData(byte[] data) {
         this.data = data;
+        getParent().markUpdated();
     }
 
     @Override

@@ -74,6 +74,7 @@ public class OilMod {
         ModHelper.getInstance().register(this);
         RegistryBase.setRegistries(this, registries);
         uninvokedRegistries.addAll(registries.values());
+        Validate.isTrue(!uninvokedRegistries.contains(null), "huh got null pointer registry?!");
         constructed = true;
         onConstructed();
     }
@@ -151,13 +152,15 @@ public class OilMod {
         return registeredMap.get(name);
     }
 
-    protected boolean isImplementation() {
+    public boolean isImplementation() {
         return false;
     }
-    protected boolean isGame() {
+    public boolean isGame() {
         return false;
     }
-
+    public final boolean isMod() {
+        return !isImplementation() && !isGame();
+    }
 
     public static class MPI extends SingleMPI<MPI, ModHelper<?>>{
         @Override

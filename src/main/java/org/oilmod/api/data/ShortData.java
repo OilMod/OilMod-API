@@ -26,5 +26,6 @@ public class ShortData extends IPrimaryDataBase<Short> {
 
     public void setData(Short data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

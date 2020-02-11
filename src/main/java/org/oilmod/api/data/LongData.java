@@ -26,5 +26,6 @@ public class LongData extends IPrimaryDataBase<Long> {
 
     public void setData(Long data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

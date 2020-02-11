@@ -26,5 +26,6 @@ public class DoubleData extends IPrimaryDataBase<Double> {
 
     public void setData(Double data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

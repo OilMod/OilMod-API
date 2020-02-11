@@ -17,6 +17,7 @@ import java.util.function.BiConsumer;
 
 import static org.oilmod.util.ReflectionUtils.resolveGenericSuperClass;
 import static org.oilmod.util.ReflectionUtils.resolveGenericSuperInterface;
+import static org.oilmod.util.Strings.simpleName;
 
 /**
  * Internal - should not be called by user code
@@ -55,6 +56,7 @@ public abstract class RegistryHelperBase<
     public void onReady() {
         eventCaller = OilMod.ModHelper.getEventCaller(getMpi().getRegistryClass());
     }
+
     private final Map<OilKey, Type> mapEntry = new Object2ObjectOpenHashMap<>();
     private final Map<OilKey, TReg> mapRegistry = new Object2ObjectOpenHashMap<>();
     private final Set<Type> registered = new ObjectOpenHashSet<>();

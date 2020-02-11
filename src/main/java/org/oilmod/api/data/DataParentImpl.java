@@ -1,6 +1,7 @@
 package org.oilmod.api.data;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.oilmod.api.util.IUpdatable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -11,6 +12,7 @@ public class DataParentImpl implements IDataParent {
     private final Map<String,IData<?>> registeredIData = new Object2ObjectOpenHashMap<>();
     private final Map<String,IData<?>> readonly_registeredIData = Collections.unmodifiableMap(registeredIData);
     private boolean initiated = false;
+    private IUpdatable updatableParent;
 
     /**
      * Internal - should not be called by user code. Is called AFTER nms representation is initialised.
@@ -43,5 +45,15 @@ public class DataParentImpl implements IDataParent {
     @Override
     public Map<String, IData<?>> getRegisteredIData() {
         return readonly_registeredIData;
+    }
+
+    @Override
+    public IUpdatable getUpdatableParent() {
+        return updatableParent;
+    }
+
+    @Override
+    public void setUpdatableParent(IUpdatable updatable) {
+        this.updatableParent = updatable;
     }
 }

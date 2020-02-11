@@ -26,6 +26,7 @@ public class IntegerArrayData extends IClonableDataBase<int[]> {
 
     public void setData(int[] data) {
         this.data = data;
+        getParent().markUpdated();
     }
 
     @Override

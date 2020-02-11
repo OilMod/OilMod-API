@@ -6,6 +6,8 @@ import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.data.ItemStackData;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.inventory.InventoryRep;
+import org.oilmod.api.stateable.complex.IComplexState;
+import org.oilmod.api.stateable.complex.IInventoryState;
 import org.oilmod.api.util.ITicker;
 
 import java.util.List;
@@ -41,6 +43,14 @@ public abstract class InventoryFactory {
         return new Builder<>(nbtName);
     }
 
+    @FunctionalInterface
+    public interface DropPredicate {
+        boolean test(InventoryRep rep, int index, int top, int left);
+    }
+
+    private static final DropPredicate DROP_ALL = (rep, index, top, left) -> true;
+    private static final DropPredicate DROP_NONE = (rep, index, top, left) -> false;
+
     //tho only reason why this is generic is so that the create method can have output the right type without casting
     public static class Builder<T extends ModInventoryObjectBase<T>>{
         private final String nbtName;
@@ -48,11 +58,12 @@ public abstract class InventoryFactory {
         private int columns = -1;
         private ItemFilter filter;
         private boolean mainInventory;
-        private Function<OilItemStack, ModNMSIInventory<T>> factory;
+        private Function<IInventoryState, ModNMSIInventory<T>> factory;
         private Function<InventoryData<T>, T> ctor;
         private String standardTitle;
         private ITicker ticker;
         private List<Function<InventoryRep, ICraftingProcessor>> craftingProcessors;
+        private DropPredicate dropPredicate = DROP_NONE;
 
 
         public Builder(String nbtName) {
@@ -98,6 +109,16 @@ public abstract class InventoryFactory {
             return checkAccess();
         }
 
+        public Builder<T> dropAll() {
+            this.dropPredicate = DROP_ALL;
+            return this;
+        }
+
+        public Builder<T> dropConditional(DropPredicate dropPredicate) {
+            this.dropPredicate = dropPredicate;
+            return this;
+        }
+
 
         /*public Builder<T> processors(Function<InventoryRep, ICraftingProcessor>... processors) {
             if (craftingProcessors == null) craftingProcessors = new ObjectArrayList<>(processors);
@@ -121,7 +142,7 @@ public abstract class InventoryFactory {
             if (rows == -1 || columns == -1)throw new IllegalArgumentException("size not set!");
 
             Builder<ModInventoryObject> result  = (Builder<ModInventoryObject>) this; //abusing type erasure
-            result.factory = getInstance().getBasicInventoryFactory(rows, columns, standardTitle, filter, getCraftingProcessors());
+            result.factory = getInstance().getBasicInventoryFactory(rows, columns, standardTitle, filter, getCraftingProcessors(), dropPredicate);
             result.ctor = ModInventoryObject::new;
             return result;
         }
@@ -135,7 +156,7 @@ public abstract class InventoryFactory {
             if (ticker == null)throw new IllegalArgumentException("ticker not set!");
 
             Builder<ModFurnaceInventoryObject> result  = (Builder<ModFurnaceInventoryObject>) this; //abusing type erasure
-            result.factory = getInstance().getFurnaceInventoryFactory(standardTitle, ticker, filter, getCraftingProcessors());
+            result.factory = getInstance().getFurnaceInventoryFactory(standardTitle, ticker, filter, getCraftingProcessors(), dropPredicate);
             result.ctor = specialFactory;
             return result;
         }
@@ -144,13 +165,13 @@ public abstract class InventoryFactory {
             if (rows < 1 || columns < 1)throw new IllegalArgumentException("2d size not set!");
 
             Builder<ModPortableCraftingInventoryObject> result  = (Builder<ModPortableCraftingInventoryObject>) this; //abusing type erasure
-            result.factory = getInstance().getPortableCraftingInventoryFactory(rows, columns, standardTitle, filter, getCraftingProcessors());
+            result.factory = getInstance().getPortableCraftingInventoryFactory(rows, columns, standardTitle, filter, getCraftingProcessors(), dropPredicate);
             result.ctor = ModPortableCraftingInventoryObject::new;
             return result;
         }
 
 
-        public T create(OilItemStack itemStack) {
+        public T create(IInventoryState itemStack) {
             if (factory == null)throw new IllegalStateException("you need to call a type setter method. e.g.: basic(), furnace(), crafting()");
 
             InventoryData<T> iData = new InventoryData<>(nbtName, itemStack, () -> factory.apply(itemStack), false);
@@ -176,15 +197,16 @@ public abstract class InventoryFactory {
     public abstract ItemStackData createItemStackData(String name, IDataParent dataParent);
 
     //###Other stuff###
-    protected <T extends ModInventoryObjectBase<T>> void checkInventoryHolder(OilItemStack itemStack, T inventory, boolean mainItemstackInventory) {
-        if (mainItemstackInventory || itemStack.getInventory() == null) {
-            itemStack.setMainInventory(inventory);
+    protected <T extends ModInventoryObjectBase<T>> void checkInventoryHolder(IComplexState itemStack, T inventory, boolean mainItemstackInventory) {
+        if (!(itemStack instanceof OilItemStack))return;
+        if (mainItemstackInventory || ((OilItemStack) itemStack).getInventory() == null) {
+            ((OilItemStack) itemStack).setMainInventory(inventory);
         }
     }
 
     //###Factories###
-    protected abstract Function<OilItemStack, ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(int rows, int columns, String inventoryTitle, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory);
-    protected abstract Function<OilItemStack, ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(String inventoryTitle, ITicker ticker, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory);
-    protected abstract Function<OilItemStack, ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(int width, int height, String inventoryTitle, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory);
+    protected abstract Function<IInventoryState, ModNMSIInventory<ModInventoryObject>> getBasicInventoryFactory(int rows, int columns, String inventoryTitle, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory, DropPredicate dropPredicate);
+    protected abstract Function<IInventoryState, ModNMSIInventory<ModFurnaceInventoryObject>> getFurnaceInventoryFactory(String inventoryTitle, ITicker ticker, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory, DropPredicate dropPredicate);
+    protected abstract Function<IInventoryState, ModNMSIInventory<ModPortableCraftingInventoryObject>> getPortableCraftingInventoryFactory(int width, int height, String inventoryTitle, ItemFilter filter, Function<InventoryRep, ICraftingProcessor[]> processorFactory, DropPredicate dropPredicate);
 
 }

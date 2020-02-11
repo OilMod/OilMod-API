@@ -26,5 +26,6 @@ public class ByteData extends IPrimaryDataBase<Byte> {
 
     public void setData(Byte data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

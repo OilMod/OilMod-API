@@ -4,4 +4,5 @@ import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.stateable.IState;
 
 public interface IComplexState extends IState, IDataParent {
+    IComplexStateType<?> getComplexStateType();
 }

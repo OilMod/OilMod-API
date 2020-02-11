@@ -1,5 +1,6 @@
 package org.oilmod.api.items;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.oilmod.api.data.DataParentImpl;
 import org.oilmod.api.inventory.ModInventoryObjectBase;
 import org.oilmod.api.rep.enchant.EnchantmentRep;
@@ -11,11 +12,13 @@ import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
 import org.oilmod.api.rep.providers.ItemStackStateProvider;
 import org.oilmod.api.stateable.complex.ICStateable;
 import org.oilmod.api.stateable.complex.IComplexState;
+import org.oilmod.api.stateable.complex.IComplexStateType;
+import org.oilmod.api.stateable.complex.IInventoryState;
 
 /**
  * This class is used the handle special itemstack bound behavior.
  */
-public class OilItemStack extends DataParentImpl implements IComplexState, InventoryHolderRep, ItemStackStateProvider {
+public class OilItemStack extends DataParentImpl implements IInventoryState, InventoryHolderRep, ItemStackStateProvider {
     private NMSItemStack nmsItemStack;
     private OilItem item;
     private ModInventoryObjectBase<?> mainInventory;
@@ -129,5 +132,10 @@ public class OilItemStack extends DataParentImpl implements IComplexState, Inven
     @Override
     public ItemStackStateRep getProvidedItemStackState() {
         return asBukkitItemStack().getItemStackState();
+    }
+
+    @Override
+    public IComplexStateType<?> getComplexStateType() {
+        throw new NotImplementedException("todo");//todo
     }
 }

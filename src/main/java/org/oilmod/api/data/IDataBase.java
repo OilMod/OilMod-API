@@ -17,6 +17,7 @@ public abstract class IDataBase<T> implements IData<T> {
         return name;
     }
 
+
     public IDataParent getParent() {
         return dataParent;
     }

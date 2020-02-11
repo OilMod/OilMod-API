@@ -65,7 +65,7 @@ public abstract class EnumPopRegistryHelperBase<
 
 
     protected void autoRegister(TReg registry, Type entry) {
-        registry.register(entry.getTypeEnum().toString().toLowerCase(), entry);
+        registry.register(entry.getTypeEnum().toString().toLowerCase(), ()->entry);
     }
 
     protected TReg getGameRegistry() {

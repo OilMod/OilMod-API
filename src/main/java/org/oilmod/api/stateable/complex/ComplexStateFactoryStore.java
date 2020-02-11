@@ -1,18 +1,17 @@
 package org.oilmod.api.stateable.complex;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.stateable.IState;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
+import static org.oilmod.util.LamdbaCastUtils.cast;
 import static org.oilmod.util.Strings.simpleName;
 
-public class ComplexStateFactoryStore<TStateable extends ICStateable> {
+public class ComplexStateFactoryStore<TStateable extends ICStateable<TStateable>> {
     private final Set<ComplexStateFactory<TStateable, ?>> registeredFactories = new ObjectOpenHashSet<>();
     private final Set<ComplexStateFactory<TStateable, ?>> readonly_registeredFactories = Collections.unmodifiableSet(registeredFactories);
     private final TStateable stateable;
@@ -34,7 +33,7 @@ public class ComplexStateFactoryStore<TStateable extends ICStateable> {
 
 
     public <TCState extends IComplexState> void registerComplexState(Class<TCState> stateClass, BiFunction<TStateable, IState, TCState> factoryFunction, BiPredicate<TStateable, IState> validator) {
-        registerComplexState(new ComplexStateFactory<TStateable, TCState>((Class<TStateable>) stateable.getClass(), stateClass, factoryFunction, validator));
+        registerComplexState(new ComplexStateFactory<>(stateable, stateClass, factoryFunction, validator));
 
     }
     public <TCState extends IComplexState> void registerComplexState(ComplexStateFactory<TStateable, TCState> factory) {

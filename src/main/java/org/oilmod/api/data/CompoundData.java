@@ -28,5 +28,6 @@ public abstract class CompoundData<T> extends IDataBase<T> implements ICompoundD
 
     public void setData(T data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

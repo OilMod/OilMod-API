@@ -26,5 +26,6 @@ public class FloatData extends IPrimaryDataBase<Float> {
 
     public void setData(Float data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

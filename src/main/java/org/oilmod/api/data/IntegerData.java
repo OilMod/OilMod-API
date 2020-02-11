@@ -26,5 +26,6 @@ public class IntegerData extends IPrimaryDataBase<Integer> {
 
     public void setData(Integer data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

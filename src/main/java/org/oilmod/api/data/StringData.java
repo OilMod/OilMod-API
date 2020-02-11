@@ -26,5 +26,6 @@ public class StringData extends IPrimaryDataBase<String> {
 
     public void setData(String data) {
         this.data = data;
+        getParent().markUpdated();
     }
 }

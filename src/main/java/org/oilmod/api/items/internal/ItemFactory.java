@@ -2,6 +2,7 @@ package org.oilmod.api.items.internal;
 
 import org.oilmod.api.items.OilItem;
 import org.oilmod.api.rep.entity.EntityHumanRep;
+import org.oilmod.api.rep.item.ItemStateRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 
 /**
@@ -31,4 +32,5 @@ public abstract class ItemFactory {
     }
 
     public abstract ItemStackRep createStack(OilItem item, EntityHumanRep player, int count, int data);
+    public abstract ItemStateRep getDefaultState(OilItem item);
 }

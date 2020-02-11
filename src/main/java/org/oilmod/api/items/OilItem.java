@@ -6,6 +6,7 @@ import org.oilmod.api.items.type.IItemGeneric;
 import org.oilmod.api.registry.KeySettableBase;
 import org.oilmod.api.rep.entity.EntityHumanRep;
 import org.oilmod.api.rep.item.ItemRep;
+import org.oilmod.api.rep.item.ItemStateRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.providers.ItemProvider;
 import org.oilmod.api.util.OilKey;
@@ -140,6 +141,11 @@ public abstract class OilItem extends KeySettableBase implements IItemGeneric {
      */
     public final ItemStackRep createItemStack(int count) {
         return createItemStack(null, count, 0);
+    }
+
+
+    public ItemStateRep getDefaultState() {
+        return ItemFactory.getInstance().getDefaultState(this);
     }
 
     /**

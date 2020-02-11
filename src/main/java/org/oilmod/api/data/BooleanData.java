@@ -26,6 +26,7 @@ public class BooleanData extends IPrimaryDataBase<Boolean> {
 
     public void setData(Boolean data) {
         this.data = data;
+        getParent().markUpdated();
     }
 
 }
