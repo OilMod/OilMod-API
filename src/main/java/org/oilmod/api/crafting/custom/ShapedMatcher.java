@@ -92,6 +92,7 @@ public class ShapedMatcher implements IMatcher {
         for (int top = 0; top < height; top++) {
             for (int left = 0; left < width; left++) {
                 ItemStackRep supplied = supplier.getSupplied(left, top);
+                if (!ingredients[top][left].check(supplied, checkState)) return 0; //we do not rematch during processing but in the last round at least one resource had run out, so this check catches that. checking if a stack is empty is not sufficient as some stack done get empties but changed during crafting. e.g. water bucket -> bucket
                 if (simulate)supplied = supplied.copy(); //get a copy to operate on!
                 amount = ingredients[top][left].consume(supplied, stackConsumer, amount, supplier.getSupSlotMaxStack(left, top), checkState, simulate);
                 //todo find good way to reduce amount if insufficient

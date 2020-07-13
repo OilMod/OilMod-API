@@ -1,7 +1,9 @@
 package org.oilmod.api.UI;
 
+import org.apache.commons.lang3.Validate;
 import org.oilmod.api.UI.slot.ISlotType;
 import org.oilmod.api.crafting.ICraftingProcessor;
+import org.oilmod.api.rep.crafting.IResultCategory;
 import org.oilmod.api.rep.entity.EntityPlayerRep;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.spi.mpi.SingleMPI;
@@ -64,8 +66,9 @@ public class UIMPI extends SingleMPI<UIMPI, UIMPI.Helper<?>> {
     public static ISlotType getTakeOnlySlotType() {
 		return instance.getProvider().getTakeOnlySlotType();
 	}
-    public static ISlotType getProcessingSlotType(ICraftingProcessor processor) {
-		return instance.getProvider().getProcessingSlotType(processor);
+    public static ISlotType getProcessingSlotType(ICraftingProcessor processor, IResultCategory... categories) {
+        Validate.notEmpty(categories);
+		return instance.getProvider().getProcessingSlotType(processor, categories);
 	}
 	
     /*public static IItemInteractionHandler getNativeHandler() {
@@ -92,7 +95,7 @@ public class UIMPI extends SingleMPI<UIMPI, UIMPI.Helper<?>> {
         protected abstract int getSizeItemRender();
         protected abstract ISlotType getNormalSlotType();
         protected abstract ISlotType getTakeOnlySlotType();
-        protected abstract ISlotType getProcessingSlotType(ICraftingProcessor processor);
+        protected abstract ISlotType getProcessingSlotType(ICraftingProcessor processor, IResultCategory[] categories);
         
         
         //protected abstract IItemInteractionHandler getNativeHandler();

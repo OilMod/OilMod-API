@@ -2,30 +2,46 @@ package org.oilmod.api.crafting;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.Validate;
 import org.oilmod.api.rep.crafting.*;
+import org.oilmod.api.rep.inventory.InventoryFactory;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.inventory.InventoryStoreState;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
-import org.oilmod.api.rep.world.LocationRep;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public abstract class CraftingProcessorBase implements ICraftingProcessor {
     private final Map<IIngredientCategory, InventoryRep> supplierMap;
     private final Map<IResultCategory, InventoryRep> resultMap;
+    //private final Map<IResultCategory, InventoryRep> resultPreviewMap;
     private final ICraftingManager manager;
     private RecipeLookupResult last;
     private boolean active;
+    private int activePreviewAmount = 0;
 
     public CraftingProcessorBase(Map<IIngredientCategory, InventoryRep> supplierMap, Map<IResultCategory, InventoryRep> resultMap, ICraftingManager manager) {
         this.supplierMap = supplierMap;
         this.resultMap = resultMap;
+        /*if (needPreviewShadowInv()) {
+            this.resultPreviewMap = new Object2ObjectOpenHashMap<>();
+            for (Map.Entry<IResultCategory, InventoryRep> entry:resultMap.entrySet()) {
+                resultPreviewMap.put(entry.getKey(), InventoryFactory.INSTANCE.createHeadlessInventory(entry.getValue().getSize()));
+            }
+        } else {
+            resultPreviewMap = Collections.emptyMap();
+        }*/
+
         this.manager = manager;
     }
+
+    /*public InventoryRep getPreviewInventory(IResultCategory category) {
+        return resultPreviewMap.get(category);
+    }*/
 
     @Override
     public IIngredientSupplier getIngredients(IIngredientCategory category) {
@@ -121,15 +137,48 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     protected abstract void onActivate();
 
 
+    public int getActivePreviewAmount() {
+        return activePreviewAmount;
+    }
 
-    public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max, boolean simulateOutput, boolean simulateInput) {
-        int amount = checkOutput(lr, consumerRep, max);
+    protected void preview(int amount) {
+        //Validate.isTrue(needPreviewShadowInv(), "needPreviewShadowInv needs to return true for this method to be usable");
+        if (activePreviewAmount >= amount)return;
+        /*if (activePreviewAmount == 0) {
+            for (IResultCategory category:last.recipe.getResultCategories()) {
+                if (!getResultInventory(category).isEmpty())return; //if we are currently saving items we do not want to add a preview!
+            }
+        }*/
+        amount = onProcessCraft(last, (stack, testRun, max) -> true, amount, false, true, true);
+        activePreviewAmount = amount;
+    }
+
+    public void previewRemove() {
+        if (activePreviewAmount == 0) return;
+        for (IResultCategory category:last.recipe.getResultCategories()) {
+            List<IResult> resultList = last.recipe.getResultsCategory(category);
+            InventoryRep resultInv = getResultInventory(category);//getPreviewInventory(category);
+
+            for (IResult result:resultList) {
+                ItemStackRep stack =  result.getResult( last.craftingState, last.checkState);
+                stack.setAmount(stack.getAmount()* activePreviewAmount);
+
+                int missing  =resultInv.take(stack);
+                if (missing> 0) System.err.printf("Item Dupe: Cannot undo preview as the result %s could not be found often enough: needed %d but found %d\n", stack.toString(), stack.getAmount(), stack.getAmount()-missing);
+            }
+        }
+        activePreviewAmount = 0;
+    }
+
+    public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max, boolean simulateOutput, boolean simulateInput, boolean preview) {
+        int amount = checkOutput(lr, consumerRep, max-activePreviewAmount)+activePreviewAmount;
         if (amount == 0)return 0;
         amount = doInput(lr, consumerRep, amount, true);
         if (amount == 0)return 0;
 
-        if (!simulateOutput) {
-            addOutput(lr, consumerRep, amount);
+        if (!simulateOutput || preview) {
+            addOutput(lr, consumerRep, amount-activePreviewAmount, false&&preview);
+            activePreviewAmount = 0; //has been used
         }
         if (!simulateInput) {
             doInput(lr, consumerRep, amount, false);
@@ -142,7 +191,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     public int tryCrafting(int amount, ItemStackConsumerRep consumerRep, boolean simulate) {
         if (!active)return 0;
         RecipeLookupResult lr = getLast();
-        return onProcessCraft(lr, consumerRep, amount, simulate, simulate);
+        return onProcessCraft(lr, consumerRep, amount, simulate, simulate, false);
         //this can be improved theoretically as when shift crafting all slots free target slots should be usable as well. currently we will be constrained by the output slots stack limit
     }
 
@@ -191,11 +240,11 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     }
 
-    protected void addOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int amount) {
+    protected void addOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int amount, boolean preview) {
 
         for (IResultCategory category:lr.recipe.getResultCategories()) {
             List<IResult> resultList = lr.recipe.getResultsCategory(category);
-            InventoryRep resultInv = getResultInventory(category);
+            InventoryRep resultInv = /*preview? getPreviewInventory(category):*/getResultInventory(category);
 
             for (IResult result:resultList) {
                 ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);
@@ -213,4 +262,5 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     public RecipeLookupResult getLast() {
         return last;
     }
+
 }

@@ -25,6 +25,10 @@ public class SlotPanel extends UIElementBase implements IItemElement {
         this.type = type;
     }
 
+    public ISlotType getSlotType() {
+        return type;
+    }
+
     @Override
     public int getRows() {
         return rows;

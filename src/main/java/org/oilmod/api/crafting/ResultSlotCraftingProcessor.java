@@ -14,13 +14,18 @@ public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
 
     @Override
     protected void onUpdateRecipe(RecipeLookupResult lr) {
-       onProcessCraft(lr, (stack, testRun, max) -> true, 1, false, true);
+        preview(1);
     }
 
     @Override
     public void onSlotTake() {
         super.onSlotTake();
-        onProcessCraft(getLast(), (stack, testRun, max) -> true, 1, false, false);
+        onProcessCraft(getLast(), (stack, testRun, max) -> true, 1, false, false, false);
+    }
+
+    @Override
+    public void afterSlotTake() {
+        preview(1);
     }
 
     @Override
@@ -30,14 +35,12 @@ public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
 
     @Override
     protected void onInactivate() {
-        for (IResultCategory category:this.getManager().getResultCategories()) {
-            InventoryRep resultInv = getResultInventory(category);
-            resultInv.clear();
-        }
+        previewRemove();
     }
 
     @Override
     protected void onActivate() {
-
+        preview(1);
     }
+
 }

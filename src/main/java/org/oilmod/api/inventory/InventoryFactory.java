@@ -183,9 +183,12 @@ public abstract class InventoryFactory {
         private Function<InventoryRep, ICraftingProcessor[]> getCraftingProcessors() {
             return craftingProcessors==null?(inv)->emptyArrayPro:(inv)->{
                 ICraftingProcessor[] result = new ICraftingProcessor[craftingProcessors.size()];
+                //boolean needsPreviewInv = false;
                 for (int i = 0; i < result.length; i++) {
                     result[i] = craftingProcessors.get(i).apply(inv);
+                    //if (result[i].needPreviewShadowInv())needsPreviewInv = true;
                 }
+                //if (needsPreviewInv)
                 return result;
             };
         }
