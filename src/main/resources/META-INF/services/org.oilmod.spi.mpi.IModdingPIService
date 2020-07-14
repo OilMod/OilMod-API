@@ -18,6 +18,9 @@ org.oilmod.api.blocks.type.BlockImplementationProvider$MPI
 org.oilmod.api.UI.UIRegistry$RegistryMPI
 org.oilmod.api.UI.UIMPI
 
+#Crafting
+org.oilmod.api.crafting.CraftingMPI
+
 
 #Mods
 org.oilmod.api.OilMod$MPI
