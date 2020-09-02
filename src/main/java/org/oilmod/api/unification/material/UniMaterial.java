@@ -17,38 +17,19 @@ public abstract class UniMaterial implements IUniMaterial {
         wrapper = MaterialHelper.HelperImpl.getInstance().createWrapper(this);
     }
 
-    private Set<OilMod> requesters = new ObjectOpenHashSet<>();
-    private Set<OilMod> requestersReadOnly = Collections.unmodifiableSet(requesters);
-    private Set<UniMaterial> specialisations = new ObjectOpenHashSet<>();
-    private Set<UniMaterial> generalisations = new ObjectOpenHashSet<>();
-    private Set<String> identifiers = new HashSet<>();
-    private Set<String> identifiersReadOnly = Collections.unmodifiableSet(identifiers);
+    private final Set<OilMod> requesters = new ObjectOpenHashSet<>();
+    private final Set<OilMod> requestersReadOnly = Collections.unmodifiableSet(requesters);
+    private final Set<UniMaterial> specialisations = new ObjectOpenHashSet<>();
+    private final Set<UniMaterial> generalisations = new ObjectOpenHashSet<>();
+    private final Set<UniMaterial> variantSuppliers = new ObjectOpenHashSet<>();
+    private final Set<String> identifiers = new HashSet<>();
+    private final Set<String> identifiersReadOnly = Collections.unmodifiableSet(identifiers);  //todo this should be convertable into arrays once we freeze registration
     private UniMaterialWrapper wrapper;
-
-    public boolean isSpecialisation(UniMaterial mat, boolean directOnly) {
-        if (directOnly)return specialisations.contains(mat);
-        return containsRecursive(mat, specialisations, mat2 -> mat2.specialisations);
-    }
 
     @Override
     public boolean isGeneralisation(UniMaterial mat, boolean directOnly) {
         if (directOnly)return generalisations.contains(mat);
         return containsRecursive(mat, generalisations, mat2 -> mat2.generalisations);
-    }
-
-    //todo add a insert method
-
-    void addSpecialisation(UniMaterial mat) {
-        Validate.isTrue(!isGeneralisation(mat, false), "cannot create circle reference");
-        Validate.isTrue(!hasCommon(getGeneralisations(), mat.getSpecialisations()), "cannot create ring dependencies");
-        //todo: reconsider which links might become removable, see common(S, mat.S)
-        addSpecialisationInt(mat);
-        mat.addGeneralisationInt(this);
-    }
-
-    private void addSpecialisationInt(UniMaterial mat) {
-        if (isSpecialisation(mat, false))return; //someone already did better work
-        specialisations.add(mat);
     }
 
     void addGeneralisation(UniMaterial mat) {
@@ -65,17 +46,65 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     @Override
+    public Iterable<UniMaterial> getGeneralisations(boolean directOnly) {
+        return directOnly?
+                () -> specialisations.iterator():
+                () -> resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream()).iterator();
+    }
+
+
+
+    //todo add a insert method
+
+    public boolean isSpecialisation(UniMaterial mat, boolean directOnly) {
+        if (directOnly)return specialisations.contains(mat);
+        return containsRecursive(mat, specialisations, mat2 -> mat2.specialisations);
+    }
+
+    void addSpecialisation(UniMaterial mat) {
+        Validate.isTrue(!isGeneralisation(mat, false), "cannot create circle reference");
+        Validate.isTrue(!hasCommon(getGeneralisations(), mat.getSpecialisations()), "cannot create ring dependencies");
+        //todo: reconsider which links might become removable, see common(S, mat.S)
+        addSpecialisationInt(mat);
+        mat.addGeneralisationInt(this);
+    }
+
+    private void addSpecialisationInt(UniMaterial mat) {
+        if (isSpecialisation(mat, false))return; //someone already did better work
+        specialisations.add(mat);
+    }
+
+    @Override
     public Iterable<UniMaterial> getSpecialisations(boolean directOnly) {
         return directOnly?
                 () -> specialisations.iterator():
                 () -> resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream()).iterator();
     }
 
+
+
+    //todo add a variant method
+
+    public boolean isVariantSupplier(UniMaterial mat, boolean directOnly) {
+        if (directOnly)return variantSuppliers.contains(mat);
+        return containsRecursive(mat, variantSuppliers, mat2 -> mat2.variantSuppliers);
+    }
+
+    void addVariantSupplier(UniMaterial mat) {
+        Validate.isTrue(!hasCommon(getVariantSuppliers(), mat.getVariantSuppliers()), "cannot create ring variant dependencies");
+        addVariantSupplierInt(mat);
+    }
+
+    private void addVariantSupplierInt(UniMaterial mat) {
+        if (isVariantSupplier(mat, false))return; //someone already did better work
+        variantSuppliers.add(mat);
+    }
+
     @Override
-    public Iterable<UniMaterial> getGeneralisations(boolean directOnly) {
+    public Iterable<UniMaterial> getVariantSuppliers(boolean directOnly) {
         return directOnly?
-                () -> specialisations.iterator():
-                () -> resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream()).iterator();
+                () -> variantSuppliers.iterator():
+                () -> resolveRecursive(variantSuppliers.stream(), mat2 -> mat2.variantSuppliers.stream()).iterator();
     }
 
     @Override

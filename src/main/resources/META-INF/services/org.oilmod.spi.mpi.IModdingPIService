@@ -29,3 +29,6 @@ org.oilmod.api.util.OilUtil$UtilMPI
 
 #State
 org.oilmod.api.stateable.complex.ComplexStateTypeRegistry$RegistryMPI
+
+#Unification
+org.oilmod.api.unification.UnificationRegistry$MPI

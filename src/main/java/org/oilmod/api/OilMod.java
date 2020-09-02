@@ -14,6 +14,7 @@ import org.oilmod.api.items.type.TBBType;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.stateable.complex.ComplexStateTypeRegistry;
+import org.oilmod.api.unification.UnificationRegistry;
 import org.oilmod.api.util.OilKey;
 import org.oilmod.api.util.OilUtil;
 import org.oilmod.spi.dependencies.DependencyPipe;
@@ -48,6 +49,7 @@ public class OilMod {
         addEventCaller(BlockImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
         addEventCaller(TBBType.Registry.class, OilMod::onRegisterTBBType);
         addEventCaller(ComplexStateTypeRegistry.class, OilMod::onRegisterComplexStateType);
+        addEventCaller(UnificationRegistry.class, OilMod::onRegisterUnification);
     }
 
 
@@ -142,6 +144,7 @@ public class OilMod {
     protected void onRegisterImplementationProvider(BlockImplementationProvider.Registry registry){}
     protected void onRegisterTBBType(TBBType.Registry registry){}
     protected void onRegisterComplexStateType(ComplexStateTypeRegistry registry){}
+    protected void onRegisterUnification(UnificationRegistry registry){}
     //protected void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {
