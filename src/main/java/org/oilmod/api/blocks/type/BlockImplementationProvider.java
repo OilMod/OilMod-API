@@ -54,7 +54,7 @@ public abstract class BlockImplementationProvider extends EnumPopTypeBase<BlockI
             return res;
         }
 
-        protected abstract BlockImplementationProvider getProvider(TypeEnum itemType);
+        protected abstract BlockImplementationProvider getProvider(TypeEnum blockType);
     }
 
     /**MPI - for api meta programming*/

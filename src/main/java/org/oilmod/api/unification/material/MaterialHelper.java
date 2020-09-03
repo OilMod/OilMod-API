@@ -56,7 +56,7 @@ public class MaterialHelper {
         }
         protected void addSpecialisations(UniMaterial material, UniMaterial... specialisations) {
             for (UniMaterial mat2:specialisations) {
-                material.addGeneralisation(mat2);
+                material.addSpecialisation(mat2);
             }
         }
         protected void addGeneralisations(UniMaterial material, UniMaterial... generalisations) {
@@ -69,20 +69,20 @@ public class MaterialHelper {
             return new UniMaterialWrapper(material);
         }
 
-        protected Category createCategory(OilMod requester, String... identifiers) {
-            return new Category(requester, identifiers);
+        protected Category createCategory(OilMod[] requesters, String... identifiers) {
+            return new Category(requesters, identifiers);
         }
 
-        protected Composite createComposite(OilMod requester, UniMaterial[] constituents, String... identifiers) {
-            return new Composite(requester, constituents, identifiers);
+        protected Composite createComposite(OilMod[] requesters, UniMaterial[] constituents, String... identifiers) {
+            return new Composite(requesters, constituents, identifiers);
         }
 
-        protected Element createElement(OilMod requester, String... identifiers) {
-            return new Element(requester, identifiers);
+        protected Element createElement(OilMod[] requesters, String... identifiers) {
+            return new Element(requesters, identifiers);
         }
 
-        protected OrganicComponent createOrganic(OilMod requester, String... identifiers) {
-            return new OrganicComponent(requester, identifiers);
+        protected OrganicComponent createOrganic(OilMod[] requesters, String... identifiers) {
+            return new OrganicComponent(requesters, identifiers);
         }
         protected UniMaterial unwrap(IUniMaterial mat) {
             if (mat instanceof UniMaterial) {

@@ -3,10 +3,9 @@ package org.oilmod.api.unification;
 import org.oilmod.api.OilMod;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
-import org.oilmod.api.registry.RegistryMPIBase;
 import org.oilmod.api.registry.SimpleRegistryMPIBase;
 
-public class UnificationRegistry extends RegistryBase<UniRequest<?>, UnificationRegistry, UnificationRegistry.MPI, UnificationRegistry.Helper<?>> {
+public class UniExpressibleRegistry extends RegistryBase<UniRequest<?>, UniExpressibleRegistry, UniExpressibleRegistry.MPI, UniExpressibleRegistry.Helper<?>> {
 
     /**
      * Creates new instance of Registry
@@ -14,15 +13,15 @@ public class UnificationRegistry extends RegistryBase<UniRequest<?>, Unification
      * @param mod            associated mod with this item registry
      * @param registryHelper
      */
-    protected UnificationRegistry(OilMod mod, Helper<?> registryHelper) {
-        super(mod, registryHelper, "UniRequest<?>");
+    protected UniExpressibleRegistry(OilMod mod, Helper<?> registryHelper) {
+        super(mod, registryHelper, "uni_request");
     }
 
 
     /**
      * Internal - should not be called by user code
      */
-    public static abstract class Helper<Impl extends Helper<Impl>> extends RegistryHelperBase<UniRequest<?>, UnificationRegistry, MPI, Helper<?>, Impl> {
+    public static abstract class Helper<Impl extends Helper<Impl>> extends RegistryHelperBase<UniRequest<?>, UniExpressibleRegistry, MPI, Helper<?>, Impl> {
         private static Helper instance;
 
         @Override
@@ -36,13 +35,14 @@ public class UnificationRegistry extends RegistryBase<UniRequest<?>, Unification
         }
 
         @Override
-        public UnificationRegistry create(OilMod mod) {
-            return new UnificationRegistry(mod, this);
+        public UniExpressibleRegistry create(OilMod mod) {
+            return new UniExpressibleRegistry(mod, this);
         }
+
     }
 
     public static class DefaultHelper extends Helper<DefaultHelper>{}
-    public static final class MPI extends SimpleRegistryMPIBase<UniRequest<?>, UnificationRegistry, MPI, Helper<?>> {
+    public static final class MPI extends SimpleRegistryMPIBase<UniRequest<?>, UniExpressibleRegistry, MPI, Helper<?>> {
         @Override
         public Helper<?> createDefaultProvider() {
             return new DefaultHelper();

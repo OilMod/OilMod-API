@@ -9,11 +9,13 @@ import org.oilmod.spi.MPILoader;
 import org.oilmod.spi.mpi.IModdingPIService;
 import org.oilmod.spi.provider.IMPIImplementationProvider;
 import org.oilmod.spi.provider.ImplementationBase;
+import org.oilmod.util.Strings;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import static org.oilmod.util.ReflectionUtils.resolveGenericSuperClass;
 import static org.oilmod.util.ReflectionUtils.resolveGenericSuperInterface;
@@ -41,7 +43,7 @@ public abstract class RegistryHelperBase<
         this.regClass = (Class<TReg>) generics[1];
 
         Class<?>[] reg = resolveGenericSuperClass(regClass, RegistryBase.class, 0, 3);
-        Validate.isTrue(generics[1] == reg[1], "Malformed generics, mpi does not match: %s vs %s", generics[1], reg[1]);
+        Validate.isTrue(generics[1] == reg[1], "Malformed generics, mpi does not match: %s vs %s", Strings.simpleName(generics[1]), Strings.simpleName(reg[1]));
 
         registries.put(regClass, this);
     }
@@ -54,13 +56,24 @@ public abstract class RegistryHelperBase<
 
     @Override
     public void onReady() {
-        eventCaller = OilMod.ModHelper.getEventCaller(getMpi().getRegistryClass());
+        //we are adding our own event code todo: i am unhappy with how this is solved, when we have an event bus use that one instead!
+        BiConsumer<OilMod, TReg> _eventCaller = OilMod.ModHelper.getEventCaller(getMpi().getRegistryClass());
+        eventCaller = (mod, reg) -> {
+            _eventCaller.accept(mod, reg);
+            if (yetToRegister.size() > 0) {
+                yetToRegister.remove(mod);
+                if (yetToRegister.size() == 0) {
+                    afterAllMods();
+                }
+            }
+        };
     }
 
     private final Map<OilKey, Type> mapEntry = new Object2ObjectOpenHashMap<>();
     private final Map<OilKey, TReg> mapRegistry = new Object2ObjectOpenHashMap<>();
     private final Set<Type> registered = new ObjectOpenHashSet<>();
     private final Set<Type> registeredReadOnly = Collections.unmodifiableSet(registered);
+    private final Set<OilMod> yetToRegister = new ObjectOpenHashSet<>();
 
 
     public Set<Type> getRegistered() {
@@ -94,12 +107,14 @@ public abstract class RegistryHelperBase<
      *
      * This should be overridden to detect conflicts early*/
     protected final  <T extends Type> void _preregister(OilKey key, TReg registry, T entry) {
+        //todo this is unsafe! make this threading safe!
         Validate.isTrue(!registered.contains(entry), "Cannot register object twice");
         Validate.isTrue(!mapEntry.containsKey(key), "Cannot register same key twice. Key: " + key.toString());
     }
     /**Only for internal use! Call registry.register instead!*/
     protected final  <T extends Type> void _register(OilKey key, TReg registry, T entry) {
         _preregister(key, registry, entry);
+        //todo this is unsafe! make this threading safe! probably best solution is to not register globally until all mods did theirs and then combining
         mapEntry.put(key, entry);
         mapRegistry.put(key, registry);
         registered.add(entry);
@@ -112,6 +127,9 @@ public abstract class RegistryHelperBase<
 
 
     protected void initRegister(TReg register, InitRegisterCallback callback) {
+        if (register.getMod().isMod()) { //Minecraft and OilMod are assumed to be ignored when checking if mods are yet to be called for a specific registry
+            yetToRegister.add(register.getMod());
+        }
         callback.callback(true, null);
     }
 
@@ -119,6 +137,19 @@ public abstract class RegistryHelperBase<
 
     public BiConsumer<OilMod, TReg> getEventCaller() {
         return eventCaller;
+    }
+
+    protected void afterAllMods() {
+        System.out.println(String.format("All mods were called for the registry %s. Postprocessing can be done now!\n", Strings.simpleName(regClass)));
+    }
+
+    public static void assertAllEventsFired() {
+        for (RegistryHelperBase<?,?,?,?,?> helper:registries.values()) {
+            if (helper.yetToRegister.size() > 0) {
+                throw new IllegalStateException(String.format("Registry %s is yet to be called for mods: %s, but it was asserted that all should have been called!", Strings.simpleName(helper.regClass), helper.yetToRegister.stream().map(OilMod::getInternalName).collect(Collectors.joining(", "))));
+            }
+
+        }
     }
 
 

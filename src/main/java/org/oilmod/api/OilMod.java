@@ -14,7 +14,8 @@ import org.oilmod.api.items.type.TBBType;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.stateable.complex.ComplexStateTypeRegistry;
-import org.oilmod.api.unification.UnificationRegistry;
+import org.oilmod.api.unification.UniExpressibleRegistry;
+import org.oilmod.api.unification.material.UniMaterialRegistry;
 import org.oilmod.api.util.OilKey;
 import org.oilmod.api.util.OilUtil;
 import org.oilmod.spi.dependencies.DependencyPipe;
@@ -49,7 +50,8 @@ public class OilMod {
         addEventCaller(BlockImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
         addEventCaller(TBBType.Registry.class, OilMod::onRegisterTBBType);
         addEventCaller(ComplexStateTypeRegistry.class, OilMod::onRegisterComplexStateType);
-        addEventCaller(UnificationRegistry.class, OilMod::onRegisterUnification);
+        addEventCaller(UniExpressibleRegistry.class, OilMod::onRegisterUnification2);
+        addEventCaller(UniMaterialRegistry.class, OilMod::onRegisterUnification);
     }
 
 
@@ -144,7 +146,8 @@ public class OilMod {
     protected void onRegisterImplementationProvider(BlockImplementationProvider.Registry registry){}
     protected void onRegisterTBBType(TBBType.Registry registry){}
     protected void onRegisterComplexStateType(ComplexStateTypeRegistry registry){}
-    protected void onRegisterUnification(UnificationRegistry registry){}
+    protected void onRegisterUnification2(UniExpressibleRegistry registry){}
+    protected void onRegisterUnification(UniMaterialRegistry registry){}
     //protected void onRegisterCraftingRecipes(){}
 
     public static Collection<OilMod> getAll() {
@@ -184,6 +187,7 @@ public class OilMod {
         static boolean usingDelegatedCtor = false;
         private static OilMod game;
         private static OilMod implementation;
+        private boolean allowModConstruction = true;
 
 
         public static ModHelper<?> getInstance() {
@@ -202,6 +206,7 @@ public class OilMod {
          * @param displayName This is used rarely and only where things are presented pretty.
          */
         public static <T extends OilMod> T createInstance(Class<T> clazz, ModContext context, String internalName, String displayName) {
+            Validate.isTrue(instance.allowModConstruction, "Cannot create new mod instances after construction phase!");
             try {
                 usingDelegatedCtor = true;
                 T mod = clazz.newInstance();
@@ -241,6 +246,7 @@ public class OilMod {
         }
 
         protected void register(OilMod mod) {
+            Validate.isTrue(allowModConstruction, "Cannot register new mod instances after construction phase!");
             Validate.isTrue(!registeredMap.containsKey(mod.getInternalName()), "There is already a mod registered with the name " + mod.getInternalName());
             registeredMap.put(mod.getInternalName(), mod);
         }
@@ -271,7 +277,15 @@ public class OilMod {
         protected static void initialise(OilMod mod) {
             mod.init();
         }
+
+        protected void freeze() {
+            Validate.isTrue(allowModConstruction, "Cannot freeze mod construction twice!");
+            allowModConstruction = false;
+
+        }
+
         protected static <T extends RegistryBase<?, T, ?, ?>> void invokeRegister(OilMod mod, Class<T> clazz) {
+            Validate.isTrue(!instance.allowModConstruction, "Cannot invoke register during construction phase!  Call ModHelper.freeze() to end construction phase");
             T registry = getRegistry(mod, clazz);
             registry.getRegistryHelper().getEventCaller().accept(mod, registry);
             mod.uninvokedRegistries.remove(registry);
@@ -279,6 +293,7 @@ public class OilMod {
 
 
         protected static void invokeMissingRegister(OilMod mod) {
+            Validate.isTrue(!instance.allowModConstruction, "Cannot invoke register during construction phase!  Call ModHelper.freeze() to end construction phase");
             //noinspection unchecked,RedundantCast,rawtypes
             mod.uninvokedRegistries.forEach(registry -> ((RegistryHelperBase)registry.getRegistryHelper()).getEventCaller().accept(mod, registry));
             mod.uninvokedRegistries.clear();

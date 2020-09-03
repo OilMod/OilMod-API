@@ -26,7 +26,7 @@ public class Util {
     }
 
     public static <T> Stream<T> resolveRecursive(Stream<T> stream, Function<T, Stream<T>> f) {
-        return stream.flatMap(uniMaterial -> concat(of(uniMaterial), f.apply(uniMaterial)));
+        return stream.flatMap(uniMaterial -> concat(of(uniMaterial), resolveRecursive(f.apply(uniMaterial), f)));
     }
 
     public static void checkName(String str) {
@@ -40,12 +40,16 @@ public class Util {
     }
 
     public static <T1, T2 extends T1> boolean hasCommon(Iterable<? extends T1> set1, Iterable<? extends T2> set2) {
+        return getFirstCommon(set1, set2) != null;
+    }
+
+    public static <T1, T2 extends T1> T1 getFirstCommon(Iterable<? extends T1> set1, Iterable<? extends T2> set2) {
         Set<T1> helperSet = new ObjectOpenHashSet<>();
         set1.forEach(helperSet::add);
         for (T2 other:set2) {
-            if (helperSet.contains(other))return true;
+            if (helperSet.contains(other))return other;
         }
-        return false;
+        return null;
     }
 
 }

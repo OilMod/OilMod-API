@@ -33,16 +33,26 @@ public class UniMaterialWrapper implements IUniMaterial {
         return mat.isGeneralisation(mat, directOnly);
     }
 
+    @Override
+    public boolean isVariantSupplier(UniMaterial mat, boolean directOnly) {
+        return mat.isVariantSupplier(mat, directOnly);
+    }
+
     /*public Iterable<UniMaterialWrapper<?>> getSpecialisations(boolean directOnly) {
         return () ->  stream(wrapped.getSpecialisations(directOnly).spliterator(), false).map(o -> o.getWrapper()).iterator();
     }*/
 
-    public Iterable<? extends UniMaterial> getSpecialisations(boolean directOnly) {
-        return wrapped.getGeneralisations(directOnly);
+    public Iterable<? extends UniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf) {
+        return wrapped.getGeneralisations(directOnly, includeSelf);
     }
 
-    public Iterable<? extends UniMaterial> getGeneralisations(boolean directOnly) {
-        return wrapped.getGeneralisations(directOnly);
+    public Iterable<? extends UniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf) {
+        return wrapped.getGeneralisations(directOnly, includeSelf);
+    }
+
+    @Override
+    public Iterable<? extends IUniMaterial> getVariantSuppliers(boolean directOnly) {
+        return wrapped.getVariantSuppliers(directOnly);
     }
 
     @Override

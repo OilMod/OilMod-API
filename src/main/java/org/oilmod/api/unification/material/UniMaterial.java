@@ -3,17 +3,23 @@ package org.oilmod.api.unification.material;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
+import org.oilmod.api.util.LazyValidate;
 
+import javax.swing.plaf.synth.SynthTreeUI;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.oilmod.api.util.Util.*;
 
 public abstract class UniMaterial implements IUniMaterial {
-    protected UniMaterial(OilMod requester, String... identifiers){
-        requesters.add(requester);
+    protected UniMaterial(OilMod[] requesters, String... identifiers){
+        Collections.addAll(this.requesters, requesters);
         Collections.addAll(this.identifiers, identifiers);
+        mainIdentifier = identifiers[0];
         wrapper = MaterialHelper.HelperImpl.getInstance().createWrapper(this);
     }
 
@@ -23,6 +29,7 @@ public abstract class UniMaterial implements IUniMaterial {
     private final Set<UniMaterial> generalisations = new ObjectOpenHashSet<>();
     private final Set<UniMaterial> variantSuppliers = new ObjectOpenHashSet<>();
     private final Set<String> identifiers = new HashSet<>();
+    private final String mainIdentifier;
     private final Set<String> identifiersReadOnly = Collections.unmodifiableSet(identifiers);  //todo this should be convertable into arrays once we freeze registration
     private UniMaterialWrapper wrapper;
 
@@ -33,8 +40,8 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     void addGeneralisation(UniMaterial mat) {
-        Validate.isTrue(!isSpecialisation(mat, false), "cannot create circle reference");
-        Validate.isTrue(!hasCommon(getSpecialisations(), mat.getGeneralisations()), "cannot create ring dependencies");
+        LazyValidate.isTrue(!isSpecialisation(mat, false), "cannot create circle reference: %s", ()->findLoop(mat, this));
+
         //todo: reconsider which links might become removable, see common(G, mat.G)
         addGeneralisationInt(mat);
         mat.addSpecialisationInt(this);
@@ -46,10 +53,12 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     @Override
-    public Iterable<UniMaterial> getGeneralisations(boolean directOnly) {
-        return directOnly?
-                () -> specialisations.iterator():
-                () -> resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream()).iterator();
+    public Iterable<UniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf) {
+        Stream<UniMaterial> result = directOnly?
+                generalisations.stream():
+                resolveRecursive(generalisations.stream(), mat2 -> mat2.generalisations.stream());
+        if (includeSelf)result = Stream.concat(Stream.of(this), result);
+        return result::iterator;
     }
 
 
@@ -62,8 +71,8 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     void addSpecialisation(UniMaterial mat) {
-        Validate.isTrue(!isGeneralisation(mat, false), "cannot create circle reference");
-        Validate.isTrue(!hasCommon(getGeneralisations(), mat.getSpecialisations()), "cannot create ring dependencies");
+        LazyValidate.isTrue(!isGeneralisation(mat, false), "cannot create circle reference: %s", ()->findLoop(this, mat));
+
         //todo: reconsider which links might become removable, see common(S, mat.S)
         addSpecialisationInt(mat);
         mat.addGeneralisationInt(this);
@@ -75,10 +84,12 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     @Override
-    public Iterable<UniMaterial> getSpecialisations(boolean directOnly) {
-        return directOnly?
-                () -> specialisations.iterator():
-                () -> resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream()).iterator();
+    public Iterable<UniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf) {
+        Stream<UniMaterial> result = directOnly?
+                specialisations.stream():
+                resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream());
+        if (includeSelf)result = Stream.concat(Stream.of(this), result);
+        return result::iterator;
     }
 
 
@@ -122,11 +133,84 @@ public abstract class UniMaterial implements IUniMaterial {
         return wrapper;
     }
 
+    public String getMainIdentifier() {
+        return mainIdentifier;
+    }
+
     void addRequester(OilMod mod) {
         requesters.add(mod);
     }
 
     void addIdentifiers(String... identifiers) {
         Collections.addAll(this.identifiers, identifiers);
+    }
+
+
+
+    private static  CharSequence findLoop(UniMaterial specialized, UniMaterial generalised) {
+        UniMaterial last = specialized;
+        StringBuilder sb = new StringBuilder();
+        boolean success = false;
+        while (generalised.isSpecialisation(last, false)) {
+            sb.append(last.getMainIdentifier());
+            sb.append(" -> ");
+            boolean found = false;
+            for (UniMaterial toTest:last.getGeneralisations(true, false)) {
+                if (generalised.isSpecialisation(toTest, false) || generalised == toTest) {
+                    last = toTest;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found || generalised == last) {
+                break;
+            } else {
+                success = true;
+            }
+        }
+        if (!success) { //try other direction
+            last = generalised;
+            sb = new StringBuilder();
+            while (specialized.isGeneralisation(last, false)) {
+                sb.append(last.getMainIdentifier());
+                sb.append(" -> ");
+                boolean found = false;
+                for (UniMaterial toTest:last.getSpecialisations(true, false)) {
+                    if (specialized.isGeneralisation(toTest, false) || specialized == toTest) {
+                        last = toTest;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found || specialized == last) {
+                    break;
+                }
+            }
+        }
+
+        if ((success && last == generalised) || (!success && last == specialized)) {
+            sb.append((success?generalised:specialized).getMainIdentifier());
+            sb.append(" -> ");
+            sb.append((success? specialized : generalised).getMainIdentifier());
+        } else {
+            sb.append("ERROR, could not find loop, failed at: ");
+            sb.append(last.getMainIdentifier());
+            sb.append("=/=");
+            sb.append((success?generalised:specialized).getMainIdentifier());
+        }
+
+
+        return sb;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "identifiers=" + identifiers.stream().collect(Collectors.joining(", ", "(", ")")) +
+                ", requesters=" + requesters.stream().map(OilMod::getInternalName).collect(Collectors.joining(", ", "(", ")")) +
+                ", specialisations=" + specialisations.stream().map(UniMaterial::getMainIdentifier).collect(Collectors.joining(", ", "(", ")")) +
+                ", generalisations=" + generalisations.stream().map(UniMaterial::getMainIdentifier).collect(Collectors.joining(", ", "(", ")")) +
+                '}';
     }
 }

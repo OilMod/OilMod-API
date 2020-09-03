@@ -12,7 +12,10 @@ public interface IUniMaterial {
     default Iterable<? extends IUniMaterial> getSpecialisations() {
         return getSpecialisations(false);
     }
-    Iterable<? extends IUniMaterial> getSpecialisations(boolean directOnly);
+    default Iterable<? extends IUniMaterial> getSpecialisations(boolean directOnly) {
+        return getSpecialisations(directOnly, false);
+    }
+    Iterable<? extends IUniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf);
 
 
     default boolean isGeneralisation(UniMaterialWrapper mat, boolean directOnly) {
@@ -23,7 +26,10 @@ public interface IUniMaterial {
     default Iterable<? extends IUniMaterial> getGeneralisations() {
         return getGeneralisations(false);
     }
-    Iterable<? extends IUniMaterial> getGeneralisations(boolean directOnly);
+    default Iterable<? extends IUniMaterial> getGeneralisations(boolean directOnly) {
+        return getGeneralisations(directOnly, false);
+    }
+    Iterable<? extends IUniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf);
 
 
     default boolean isVariantSupplier(UniMaterialWrapper mat, boolean directOnly) {
