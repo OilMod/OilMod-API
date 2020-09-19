@@ -4,8 +4,13 @@ import org.oilmod.api.OilMod;
 import org.oilmod.api.registry.RegistryBase;
 import org.oilmod.api.registry.RegistryHelperBase;
 import org.oilmod.api.registry.SimpleRegistryMPIBase;
+import org.oilmod.api.unification.material.MaterialRequestBuilder;
+import org.oilmod.api.unification.material.UniMaterial;
 
-public class UniExpressibleRegistry extends RegistryBase<UniRequest<?>, UniExpressibleRegistry, UniExpressibleRegistry.MPI, UniExpressibleRegistry.Helper<?>> {
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+public class UniExpressibleRegistry extends RegistryBase<UniRequest<?,?,?>, UniExpressibleRegistry, UniExpressibleRegistry.MPI, UniExpressibleRegistry.Helper<?>> {
 
     /**
      * Creates new instance of Registry
@@ -18,10 +23,16 @@ public class UniExpressibleRegistry extends RegistryBase<UniRequest<?>, UniExpre
     }
 
 
+
+    public <Expressable extends IExpressable<Expression, Builder>, Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>>
+        void register(String id, Function<UniRequest<Expressable, Expression, Builder>, UniRequest<Expressable, Expression, Builder>> requestPopulator) {
+        register(id, () -> requestPopulator.apply(new UniRequest<>()));
+    }
+
     /**
      * Internal - should not be called by user code
      */
-    public static abstract class Helper<Impl extends Helper<Impl>> extends RegistryHelperBase<UniRequest<?>, UniExpressibleRegistry, MPI, Helper<?>, Impl> {
+    public static abstract class Helper<Impl extends Helper<Impl>> extends RegistryHelperBase<UniRequest<?,?,?>, UniExpressibleRegistry, MPI, Helper<?>, Impl> {
         private static Helper instance;
 
         @Override
@@ -42,7 +53,7 @@ public class UniExpressibleRegistry extends RegistryBase<UniRequest<?>, UniExpre
     }
 
     public static class DefaultHelper extends Helper<DefaultHelper>{}
-    public static final class MPI extends SimpleRegistryMPIBase<UniRequest<?>, UniExpressibleRegistry, MPI, Helper<?>> {
+    public static final class MPI extends SimpleRegistryMPIBase<UniRequest<?,?,?>, UniExpressibleRegistry, MPI, Helper<?>> {
         @Override
         public Helper<?> createDefaultProvider() {
             return new DefaultHelper();

@@ -148,6 +148,10 @@ public class MaterialBuilder {
         return result;
     }
 
+    protected UniMaterial getBuild() {
+        return build;
+    }
+
     public UniMaterial build() {
         if (build != null)return build;
         switch (type) {

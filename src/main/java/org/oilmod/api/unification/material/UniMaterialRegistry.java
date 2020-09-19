@@ -115,6 +115,7 @@ public class UniMaterialRegistry extends RegistryBase<MaterialRequestBuilder<?>,
 
             //now they are done!
             for (MaterialBuilder builder:builderSet) {
+                builder.getBuild().freeze();
                 builder.callLazyFutures();
             }
         }

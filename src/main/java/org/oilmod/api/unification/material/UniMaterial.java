@@ -16,6 +16,11 @@ import java.util.stream.Stream;
 import static org.oilmod.api.util.Util.*;
 
 public abstract class UniMaterial implements IUniMaterial {
+
+    private static final String ERR_FROZEN = "Cannot at %s as %s is already frozen";
+    private static final String ERR_RING = "Cannot create ring variant dependencies";
+    private static final String ERR_CIRCLE = "Cannot create circle reference: %s";
+
     protected UniMaterial(OilMod[] requesters, String... identifiers){
         Collections.addAll(this.requesters, requesters);
         Collections.addAll(this.identifiers, identifiers);
@@ -32,6 +37,7 @@ public abstract class UniMaterial implements IUniMaterial {
     private final String mainIdentifier;
     private final Set<String> identifiersReadOnly = Collections.unmodifiableSet(identifiers);  //todo this should be convertable into arrays once we freeze registration
     private UniMaterialWrapper wrapper;
+    private boolean frozen = false;
 
     @Override
     public boolean isGeneralisation(UniMaterial mat, boolean directOnly) {
@@ -40,7 +46,8 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     void addGeneralisation(UniMaterial mat) {
-        LazyValidate.isTrue(!isSpecialisation(mat, false), "cannot create circle reference: %s", ()->findLoop(mat, this));
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->mat, ()->this);
+        LazyValidate.isTrue(!isSpecialisation(mat, false), ERR_CIRCLE, ()->findLoop(mat, this));
 
         //todo: reconsider which links might become removable, see common(G, mat.G)
         addGeneralisationInt(mat);
@@ -48,6 +55,7 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     private void addGeneralisationInt(UniMaterial mat) {
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->mat, ()->this);
         if (isGeneralisation(mat, false))return; //someone already did better work
         generalisations.add(mat);
     }
@@ -71,7 +79,8 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     void addSpecialisation(UniMaterial mat) {
-        LazyValidate.isTrue(!isGeneralisation(mat, false), "cannot create circle reference: %s", ()->findLoop(this, mat));
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->mat, ()->this);
+        LazyValidate.isTrue(!isGeneralisation(mat, false), ERR_CIRCLE, ()->findLoop(this, mat));
 
         //todo: reconsider which links might become removable, see common(S, mat.S)
         addSpecialisationInt(mat);
@@ -79,6 +88,7 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     private void addSpecialisationInt(UniMaterial mat) {
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->mat, ()->this);
         if (isSpecialisation(mat, false))return; //someone already did better work
         specialisations.add(mat);
     }
@@ -102,11 +112,13 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     void addVariantSupplier(UniMaterial mat) {
-        Validate.isTrue(!hasCommon(getVariantSuppliers(), mat.getVariantSuppliers()), "cannot create ring variant dependencies");
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->mat, ()->this);
+        Validate.isTrue(!hasCommon(getVariantSuppliers(), mat.getVariantSuppliers()), ERR_RING);
         addVariantSupplierInt(mat);
     }
 
     private void addVariantSupplierInt(UniMaterial mat) {
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->mat, ()->this);
         if (isVariantSupplier(mat, false))return; //someone already did better work
         variantSuppliers.add(mat);
     }
@@ -114,7 +126,7 @@ public abstract class UniMaterial implements IUniMaterial {
     @Override
     public Iterable<UniMaterial> getVariantSuppliers(boolean directOnly) {
         return directOnly?
-                () -> variantSuppliers.iterator():
+                variantSuppliers :
                 () -> resolveRecursive(variantSuppliers.stream(), mat2 -> mat2.variantSuppliers.stream()).iterator();
     }
 
@@ -142,12 +154,18 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     void addIdentifiers(String... identifiers) {
+        LazyValidate.isTrue(!frozen, ERR_FROZEN, ()->identifiers, ()->this);
         Collections.addAll(this.identifiers, identifiers);
     }
 
+    public void freeze() {
+        if (!frozen) {
+            frozen = true;
+            specialisations.forEach(UniMaterial::freeze);
+        }
+    }
 
-
-    private static  CharSequence findLoop(UniMaterial specialized, UniMaterial generalised) {
+    private static CharSequence findLoop(UniMaterial specialized, UniMaterial generalised) {
         UniMaterial last = specialized;
         StringBuilder sb = new StringBuilder();
         boolean success = false;

@@ -17,12 +17,13 @@ import static org.oilmod.util.LamdbaCastUtils.cast;
 
 public class MaterialRequestBuilder<Type extends UniMaterial> implements IKeySettable {
     private OilMod requester;
-    private Set<String> specialisations = new ObjectOpenHashSet<>();
-    private Set<String> generalisations = new ObjectOpenHashSet<>();
-    private Set<String> identifiers = new HashSet<>();
-    private List<String> constituents = new ArrayList<>();
+    private final Set<String> specialisations = new ObjectOpenHashSet<>();
+    private final Set<String> generalisations = new ObjectOpenHashSet<>();
+    private final Set<String> identifiers = new ObjectOpenHashSet<>();
+    private final Set<String> variantSuppliers = new ObjectOpenHashSet<>(); //todo consider if this is needed
+    private final List<String> constituents = new ArrayList<>();
     private MaterialType type = MaterialType.Element;
-    private List<Consumer<? extends UniMaterial>> futures = new ObjectArrayList<>();
+    private final List<Consumer<? extends UniMaterial>> futures = new ObjectArrayList<>();
 
 
     public MaterialRequestBuilder() {
