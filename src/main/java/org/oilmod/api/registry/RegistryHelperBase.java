@@ -5,9 +5,6 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.OilMod;
 import org.oilmod.api.util.OilKey;
-import org.oilmod.spi.MPILoader;
-import org.oilmod.spi.mpi.IModdingPIService;
-import org.oilmod.spi.provider.IMPIImplementationProvider;
 import org.oilmod.spi.provider.ImplementationBase;
 import org.oilmod.util.Strings;
 
@@ -18,8 +15,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static org.oilmod.util.ReflectionUtils.resolveGenericSuperClass;
-import static org.oilmod.util.ReflectionUtils.resolveGenericSuperInterface;
-import static org.oilmod.util.Strings.simpleName;
 
 /**
  * Internal - should not be called by user code
@@ -143,12 +138,19 @@ public abstract class RegistryHelperBase<
         System.out.println(String.format("All mods were called for the registry %s. Postprocessing can be done now!\n", Strings.simpleName(regClass)));
     }
 
-    public static void assertAllEventsFired() {
-        for (RegistryHelperBase<?,?,?,?,?> helper:registries.values()) {
-            if (helper.yetToRegister.size() > 0) {
-                throw new IllegalStateException(String.format("Registry %s is yet to be called for mods: %s, but it was asserted that all should have been called!", Strings.simpleName(helper.regClass), helper.yetToRegister.stream().map(OilMod::getInternalName).collect(Collectors.joining(", "))));
-            }
 
+
+    public static void assertAllEventsFired() {
+        if (registries.values().stream().anyMatch((h) -> h.yetToRegister.size() > 0))  {
+            StringBuilder errorSb = registries.values().stream()
+                    .filter((h) -> h.yetToRegister.size() > 0)
+                    .collect(StringBuilder::new,
+                            (sb, h) ->
+                                    sb.append(String.format("Registry %s is yet to be called for mods: %s, but it was asserted that all should have been called!\n", Strings.simpleName(h.regClass), h.yetToRegister.stream()
+                                            .map(OilMod::getInternalName)
+                                            .collect(Collectors.joining(", ")))),
+                            StringBuilder::append);
+            throw new IllegalStateException(errorSb.toString());
         }
     }
 
