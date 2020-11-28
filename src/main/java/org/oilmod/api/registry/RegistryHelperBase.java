@@ -56,9 +56,11 @@ public abstract class RegistryHelperBase<
         eventCaller = (mod, reg) -> {
             _eventCaller.accept(mod, reg);
             if (yetToRegister.size() > 0) {
-                yetToRegister.remove(mod);
-                if (yetToRegister.size() == 0) {
-                    afterAllMods();
+                synchronized (yetToRegister) { //as this is pet mod, and mods cann be initialised async, this needs to be synced
+                    yetToRegister.remove(mod);
+                    if (yetToRegister.size() == 0) {
+                        afterAllMods();
+                    }
                 }
             }
         };
@@ -123,7 +125,9 @@ public abstract class RegistryHelperBase<
 
     protected void initRegister(TReg register, InitRegisterCallback callback) {
         if (register.getMod().isMod()) { //Minecraft and OilMod are assumed to be ignored when checking if mods are yet to be called for a specific registry
-            yetToRegister.add(register.getMod());
+            synchronized (yetToRegister) {
+                yetToRegister.add(register.getMod());
+            }
         }
         callback.callback(true, null);
     }
