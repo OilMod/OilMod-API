@@ -4,19 +4,29 @@ package org.oilmod.api.UI;
 import org.oilmod.api.UI.slot.ISlotType;
 import org.oilmod.api.rep.inventory.InventoryRep;
 
-public class SlotPanel extends UIElementBase implements IItemElement {
-    private int indexOffset;
-    private int rows;
-    private int columns;
-    private InventoryRep inventory;
-    private ISlotType type;
+public class SlotPanel extends FlexPosElement implements IItemElement {
+    private final int indexOffset;
+    private final int rows;
+    private final int columns;
+    private final InventoryRep inventory;
+    private final ISlotType type;
+
+
 
     public SlotPanel(int posX, int posY, int rows, int columns, int indexOffset, InventoryRep inventory) {
-        this(posX, posY, rows, columns, indexOffset, inventory, UIMPI.getNormalSlotType());
+        this(new FixedPos(posX, posY), rows, columns, indexOffset, inventory, UIMPI.getNormalSlotType());
     }
 
     public SlotPanel(int posX, int posY, int rows, int columns, int indexOffset, InventoryRep inventory, ISlotType type) {
-        super(posX, posY);
+        this(new FixedPos(posX, posY), rows, columns, indexOffset, inventory, type);
+    }
+
+    public SlotPanel(IPosition pos, int rows, int columns, int indexOffset, InventoryRep inventory) {
+        this(pos, rows, columns, indexOffset, inventory, UIMPI.getNormalSlotType());
+    }
+
+    public SlotPanel(IPosition pos, int rows, int columns, int indexOffset, InventoryRep inventory, ISlotType type) {
+        super(pos);
         this.indexOffset = indexOffset;
         //Validate.isTrue(inventory.getStorageSize() == rows*columns, "inventory.getStorageSize does not match columns*rows");
         this.rows = rows;
