@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface IItemRef {
     boolean isNative();
+    boolean isRedirectPreview();
     InventoryRep getRelatedInventory();
     int getSlotId();
     int getLocalRow();
@@ -17,5 +18,6 @@ public interface IItemRef {
     int getLocalColumn();
     int getGlobalColumn();
     List<IItemElement> getTrace();
-    void next(IItemElement element, int row, int column);
+    void deferTo(IItemElement element, int row, int column);
+    void setPreview(boolean isPreview);
 }

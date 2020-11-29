@@ -11,6 +11,7 @@ public abstract class OilIngredientBase implements OilCraftingIngredient {
 
     @Override
     public ItemStackRep onCrafted(ItemStackRep oldItemStack, DataHolder dataHolder) {
+        if (oldItemStack.isContainer())return oldItemStack.getContainerItem().createStack(1);
         oldItemStack.setAmount(oldItemStack.getAmount()-1);
         return oldItemStack.getAmount()>0?oldItemStack: ItemStackFactory.INSTANCE.empty();
     }

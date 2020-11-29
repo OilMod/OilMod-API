@@ -3,6 +3,8 @@ package org.oilmod.api.UI;
 import org.oilmod.api.rep.entity.EntityPlayerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 
+//todo remove - not version agnostic
+@Deprecated
 public interface IItemInteractionHandler {
 
     boolean isItemValid(IItemRef ref, ItemStackRep stack);

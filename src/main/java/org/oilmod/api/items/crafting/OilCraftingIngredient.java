@@ -37,9 +37,12 @@ public interface OilCraftingIngredient extends IIngredient {
 
     default int consume(ItemStackRep rep, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
         ItemStackStateRep state = rep.getItemStackState();
-        for (int i = 0; i < multiplier; i++) {//this should be doable with math instead of for loop
-            rep =  onCrafted(rep, null);
-            if (!rep.isSimilar(state) && rep.isEmpty())return ++i;
+        for (int i = 0; i < multiplier; i++) {//this should be doable with math instead of for loop //actually not for container items
+            ItemStackRep newRep =  onCrafted(rep, null);
+            if (!newRep.isSimilar(state) || newRep.isEmpty()) {
+                newRep.getProvidedItemStackState().applyTo(rep, false, true);
+                return ++i;
+            }
         }
         return multiplier;//no good way to support multiplier
     }

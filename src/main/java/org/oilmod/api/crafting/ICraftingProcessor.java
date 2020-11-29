@@ -8,7 +8,7 @@ import org.oilmod.api.rep.itemstack.state.Inventory;
 public interface ICraftingProcessor {
     IIngredientSupplier getIngredients(IIngredientCategory category);
     InventoryRep getResultInventory(IResultCategory category);
-    //InventoryRep getPreviewInventory(IResultCategory category);
+    InventoryRep getPreviewInventory(IResultCategory category);
     ICraftingState createCraftingState();
     ICraftingManager getManager();
     RecipeLookupResult updateRecipe(boolean previewOnly);

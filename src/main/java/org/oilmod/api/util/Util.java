@@ -52,4 +52,14 @@ public class Util {
         return null;
     }
 
+    public static void printTrace(String text) {
+        System.out.println("Printing stack trace for " + text + ":");
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        for (int i = 2; i < elements.length; i++) {
+            StackTraceElement s = elements[i];
+            System.out.println("\tat " + s.getClassName() + "." + s.getMethodName()
+                    + "(" + s.getFileName() + ":" + s.getLineNumber() + ")");
+        }
+    }
+
 }

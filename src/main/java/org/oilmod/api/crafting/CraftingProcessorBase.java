@@ -15,33 +15,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.oilmod.api.util.Util.printTrace;
+
 public abstract class CraftingProcessorBase implements ICraftingProcessor {
     private final Map<IIngredientCategory, InventoryRep> supplierMap;
     private final Map<IResultCategory, InventoryRep> resultMap;
-    //private final Map<IResultCategory, InventoryRep> resultPreviewMap;
+    private final Map<IResultCategory, InventoryRep> resultPreviewMap;
     private final ICraftingManager manager;
     private RecipeLookupResult last;
     private boolean active;
-    private int activePreviewAmount = 0;
 
     public CraftingProcessorBase(Map<IIngredientCategory, InventoryRep> supplierMap, Map<IResultCategory, InventoryRep> resultMap, ICraftingManager manager) {
         this.supplierMap = supplierMap;
         this.resultMap = resultMap;
-        /*if (needPreviewShadowInv()) {
+        if (needPreviewShadowInv()) {
             this.resultPreviewMap = new Object2ObjectOpenHashMap<>();
             for (Map.Entry<IResultCategory, InventoryRep> entry:resultMap.entrySet()) {
-                resultPreviewMap.put(entry.getKey(), InventoryFactory.INSTANCE.createHeadlessInventory(entry.getValue().getSize()));
+                resultPreviewMap.put(entry.getKey(), entry.getValue().createSizeMirror());
             }
         } else {
             resultPreviewMap = Collections.emptyMap();
-        }*/
+        }
 
         this.manager = manager;
     }
 
-    /*public InventoryRep getPreviewInventory(IResultCategory category) {
+    protected boolean needPreviewShadowInv() {
+        return true;
+    }
+
+    @Override
+    public InventoryRep getPreviewInventory(IResultCategory category) {
         return resultPreviewMap.get(category);
-    }*/
+    }
 
     @Override
     public IIngredientSupplier getIngredients(IIngredientCategory category) {
@@ -97,6 +103,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
             }
             //System.out.printf("found top %d, height %d, left %d, width %d\n", top, height, left, width);
             if (width == 0 || height == 0)continue; //its empty
+            //todo this should be possible without creating two classes, make createView2d be done by IngredientSupplier, and make the current area mutable. this will also allow implementing getIngredients. furthermore the size can be updated on inv manipulation, no brute force needed
             result.put(entry.getKey(), new IngredientSupplierImpl(inv.createView2d(left, width, top, height), true));
         }
 
@@ -137,48 +144,49 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     protected abstract void onActivate();
 
 
-    public int getActivePreviewAmount() {
-        return activePreviewAmount;
-    }
-
+    private boolean previewActive = false;
     protected void preview(int amount) {
+        if (previewActive)return;
+        previewActive = true;
         //Validate.isTrue(needPreviewShadowInv(), "needPreviewShadowInv needs to return true for this method to be usable");
-        if (activePreviewAmount >= amount)return;
         /*if (activePreviewAmount == 0) {
             for (IResultCategory category:last.recipe.getResultCategories()) {
                 if (!getResultInventory(category).isEmpty())return; //if we are currently saving items we do not want to add a preview!
             }
         }*/
         amount = onProcessCraft(last, (stack, testRun, max) -> true, amount, false, true, true);
-        activePreviewAmount = amount;
     }
 
     public void previewRemove() {
-        if (activePreviewAmount == 0) return;
+        if (!previewActive)return;
+        previewActive = false;
         for (IResultCategory category:last.recipe.getResultCategories()) {
             List<IResult> resultList = last.recipe.getResultsCategory(category);
-            InventoryRep resultInv = getResultInventory(category);//getPreviewInventory(category);
-
-            for (IResult result:resultList) {
+            InventoryRep resultInv = getPreviewInventory(category);//getPreviewInventory(category);
+            resultInv.clear();
+            /*for (IResult result:resultList) {
                 ItemStackRep stack =  result.getResult( last.craftingState, last.checkState);
                 stack.setAmount(stack.getAmount()* activePreviewAmount);
 
                 int missing  =resultInv.take(stack);
                 if (missing> 0) System.err.printf("Item Dupe: Cannot undo preview as the result %s could not be found often enough: needed %d but found %d\n", stack.toString(), stack.getAmount(), stack.getAmount()-missing);
-            }
+            }*/
         }
-        activePreviewAmount = 0;
     }
 
     public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max, boolean simulateOutput, boolean simulateInput, boolean preview) {
-        int amount = checkOutput(lr, consumerRep, max-activePreviewAmount)+activePreviewAmount;
+        if (lr == null || lr.recipe == null) {
+            printTrace("Tried crafting without recipe. This indicated a bug");
+            return 0;
+        }
+
+        int amount = checkOutput(lr, consumerRep, max);
         if (amount == 0)return 0;
         amount = doInput(lr, consumerRep, amount, true);
         if (amount == 0)return 0;
 
         if (!simulateOutput || preview) {
-            addOutput(lr, consumerRep, amount-activePreviewAmount, false&&preview);
-            activePreviewAmount = 0; //has been used
+            addOutput(lr, consumerRep, amount, preview); //false&&preview
         }
         if (!simulateInput) {
             doInput(lr, consumerRep, amount, false);
@@ -202,13 +210,13 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
         for (IResultCategory category:lr.recipe.getResultCategories()) {
             List<IResult> resultList = lr.recipe.getResultsCategory(category);
             InventoryStoreState storeState = new InventoryStoreState(getResultInventory(category));
-            for (IResult result:resultList) {
-                ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);
-                int resultAmount = stack.getAmount();
-
-                int unstoreable = storeState.store(stack, crafted);
-                crafted -= (unstoreable + resultAmount - 1) / resultAmount; //reduce crafted by amount of failed (This is an up rounding int div)
+            ItemStackRep[] resultStacks = new ItemStackRep[resultList.size()];
+            for (int i = 0, resultListSize = resultList.size(); i < resultListSize; i++) {
+                resultStacks[i] = resultList.get(i).getResult( lr.craftingState, lr.checkState);
             }
+
+            int unstoreable = storeState.store(resultStacks, crafted);
+            crafted -= unstoreable; //reduce crafted by amount of failed (This is an up rounding int div)
         }
         //this will fail if two categories share the same inventory space
         return  crafted;
@@ -244,7 +252,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
         for (IResultCategory category:lr.recipe.getResultCategories()) {
             List<IResult> resultList = lr.recipe.getResultsCategory(category);
-            InventoryRep resultInv = /*preview? getPreviewInventory(category):*/getResultInventory(category);
+            InventoryRep resultInv = preview? getPreviewInventory(category):getResultInventory(category);
 
             for (IResult result:resultList) {
                 ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);
