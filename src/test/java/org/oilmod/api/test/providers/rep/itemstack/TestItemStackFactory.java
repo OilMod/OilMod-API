@@ -11,7 +11,7 @@ import org.oilmod.api.rep.providers.ItemStackStateProvider;
 import org.oilmod.api.rep.states.implapi.StateCollector;
 import org.oilmod.api.rep.stdimpl.itemstack.state.ItemStackStateImpl;
 
-public class TestItemStackFactory extends ItemStackFactory<TestItemStackFactory> {
+public class TestItemStackFactory extends ItemStackFactory.Provider<TestItemStackFactory> {
     @Override
     public ItemStackRep create(ItemRep item, ItemStackStateRep state, int amount) {
         return new MyItemStackRep();

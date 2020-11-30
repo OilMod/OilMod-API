@@ -20,11 +20,11 @@ public class VanillaOilCraftingResult implements OilCraftingResult {
     }
 
     public VanillaOilCraftingResult(ItemRep material) {
-        this(ItemStackFactory.INSTANCE.create(material));
+        this(ItemStackFactory.create(material));
     }
 
     public VanillaOilCraftingResult(ItemRep material, int amount) {
-        this(ItemStackFactory.INSTANCE.create(material, amount));
+        this(ItemStackFactory.create(material, amount));
     }
 
     /**

@@ -1,5 +1,8 @@
 package org.oilmod.api.crafting.custom;
 
+import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
+import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apache.commons.lang3.NotImplementedException;
@@ -17,6 +20,7 @@ public class RecipeBuilder {
 
 
     public SupRecipeShaped shaped(IIngredientCategory category, Transformation... transformations) {
+        Validate.isTrue(!matchers.containsKey(category), "there is already a matcher for that category"); //we should fail early!
         return new SupRecipeShaped(category, transformations);
     }
 
@@ -72,7 +76,72 @@ public class RecipeBuilder {
     }
 
 
+    public SupRecipeShapedPattern shapedPattern(IIngredientCategory category, char empty, Transformation... transformations) {
+        Validate.isTrue(!matchers.containsKey(category), "there is already a matcher for that category"); //we should fail early!
+        return new SupRecipeShapedPattern(category, empty, transformations);
+    }
+
+    public class SupRecipeShapedPattern  {
+        private final IIngredientCategory category;
+        private int width;
+        private final List<Transformation> transformations;
+        private final List<String> rows;
+        private final Char2ObjectMap<IIngredient> ingredientMap;
+
+        public SupRecipeShapedPattern(IIngredientCategory category, char empty, Transformation... transformations) {
+            this.category = category;
+            this.transformations = new ObjectArrayList<>(transformations);
+            this.rows = new ObjectArrayList<>();
+            this.ingredientMap = new Char2ObjectOpenHashMap<>();
+            ingre(empty, empty());
+        }
+
+        public SupRecipeShapedPattern row(String ingredients) {
+            width = Math.max(width, ingredients.length());
+            this.rows.add(ingredients);
+            return this;
+        }
+
+        public SupRecipeShapedPattern ingre(char character, IIngredient ingredient) {
+            if (ingredientMap.putIfAbsent(character, ingredient) != ingredientMap.defaultReturnValue()) {
+                throw new IllegalArgumentException(String.format("There is already an ingredient associated with the character: %c", character));
+            }
+            return this;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return rows.size();
+        }
+
+        public RecipeBuilder ok() {
+            Validate.isTrue(!matchers.containsKey(category), "there is already a matcher for that category");
+            IIngredient[][] ingredients = new IIngredient[getHeight()][];
+            for (int i = 0; i < ingredients.length; i++) {
+                IIngredient[] ingreRow = new IIngredient[getWidth()];
+                ingredients[i] = ingreRow;
+                String strRow = rows.get(i);
+                for (int j = 0; j < ingreRow.length; j++) {
+                    if (j < strRow.length()) {
+                        ingreRow[j] = ingredientMap.computeIfAbsent(strRow.charAt(j), c -> {throw new IllegalStateException(String.format("Missing ingredient for character: %c", c));});
+                    } else {
+                        ingreRow[j] = empty();
+                    }
+                }
+            }
+
+
+            matchers.put(category, new ShapedMatcher(transformations.toArray(new Transformation[0]), ingredients));
+            return RecipeBuilder.this;
+        }
+    }
+
+
     public SupRecipeShapeless shapeless(IIngredientCategory category) {
+        Validate.isTrue(!matchers.containsKey(category), "there is already a matcher for that category"); //we should fail early!
         return new SupRecipeShapeless(category);
     }
 
@@ -86,17 +155,17 @@ public class RecipeBuilder {
 
         }
 
-        public SupRecipeShapeless row(IIngredient... ingredients) {
+        public SupRecipeShapeless add(IIngredient... ingredients) {
             this.ingredients.addAll(Arrays.asList(ingredients));
             return this;
         }
 
-        public SupRecipeShapeless row(Object... ingredients) {
+        public SupRecipeShapeless add(Object... ingredients) {
             IIngredient[] realIngredients = new IIngredient[ingredients.length];
             for (int i = 0; i < ingredients.length; i++) {
                 realIngredients[i] = convert(ingredients[i]);
             }
-            return row(realIngredients);
+            return add(realIngredients);
         }
 
         public int getAmount() {
@@ -121,7 +190,7 @@ public class RecipeBuilder {
     }
 
     public static IIngredient empty() {
-            throw new NotImplementedException("todo");
+        return IIngredient.EMPTY;
     }
 
     public static IIngredient convert(Object o) {

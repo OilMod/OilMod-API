@@ -2,9 +2,7 @@ package org.oilmod.api.crafting;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.Validate;
 import org.oilmod.api.rep.crafting.*;
-import org.oilmod.api.rep.inventory.InventoryFactory;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.inventory.InventoryStoreState;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
@@ -154,7 +152,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
                 if (!getResultInventory(category).isEmpty())return; //if we are currently saving items we do not want to add a preview!
             }
         }*/
-        amount = onProcessCraft(last, (stack, testRun, max) -> true, amount, false, true, true);
+        amount = onProcessCraft(last, (stack, testRun, max) -> true, null, null, amount, false, true, true);
     }
 
     public void previewRemove() {
@@ -174,19 +172,19 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
         }
     }
 
-    public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max, boolean simulateOutput, boolean simulateInput, boolean preview) {
+    public int onProcessCraft(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, IResultCategory resultToReplace, InventoryRep invReplaceWith, int max, boolean simulateOutput, boolean simulateInput, boolean preview) {
         if (lr == null || lr.recipe == null) {
             printTrace("Tried crafting without recipe. This indicated a bug");
             return 0;
         }
 
-        int amount = checkOutput(lr, consumerRep, max);
+        int amount = checkOutput(lr, consumerRep, resultToReplace, invReplaceWith, max);
         if (amount == 0)return 0;
         amount = doInput(lr, consumerRep, amount, true);
         if (amount == 0)return 0;
 
         if (!simulateOutput || preview) {
-            addOutput(lr, consumerRep, amount, preview); //false&&preview
+            addOutput(lr, consumerRep, resultToReplace, invReplaceWith, amount, preview); //false&&preview
         }
         if (!simulateInput) {
             doInput(lr, consumerRep, amount, false);
@@ -196,20 +194,21 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     }
 
     @Override
-    public int tryCrafting(int amount, ItemStackConsumerRep consumerRep, boolean simulate) {
+    public int tryCrafting(int amount, ItemStackConsumerRep consumerRep, IResultCategory resultToReplace, InventoryRep invReplaceWith, boolean simulate) {
         if (!active)return 0;
         RecipeLookupResult lr = getLast();
-        return onProcessCraft(lr, consumerRep, amount, simulate, simulate, false);
+        return onProcessCraft(lr, consumerRep, resultToReplace, invReplaceWith, amount, simulate, simulate, false);
         //this can be improved theoretically as when shift crafting all slots free target slots should be usable as well. currently we will be constrained by the output slots stack limit
     }
 
-    protected int checkOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int max) {
+    protected int checkOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, IResultCategory resultToReplace, InventoryRep invReplaceWith, int max) {
         int crafted = max;
 
 
         for (IResultCategory category:lr.recipe.getResultCategories()) {
             List<IResult> resultList = lr.recipe.getResultsCategory(category);
-            InventoryStoreState storeState = new InventoryStoreState(getResultInventory(category));
+            InventoryRep mainResultInv = category==resultToReplace?invReplaceWith:getResultInventory(category);
+            InventoryStoreState storeState = new InventoryStoreState(mainResultInv);
             ItemStackRep[] resultStacks = new ItemStackRep[resultList.size()];
             for (int i = 0, resultListSize = resultList.size(); i < resultListSize; i++) {
                 resultStacks[i] = resultList.get(i).getResult( lr.craftingState, lr.checkState);
@@ -248,11 +247,13 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     }
 
-    protected void addOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, int amount, boolean preview) {
+    protected void addOutput(RecipeLookupResult lr, ItemStackConsumerRep consumerRep, IResultCategory resultToReplace, InventoryRep invReplaceWith, int amount, boolean preview) {
 
         for (IResultCategory category:lr.recipe.getResultCategories()) {
             List<IResult> resultList = lr.recipe.getResultsCategory(category);
-            InventoryRep resultInv = preview? getPreviewInventory(category):getResultInventory(category);
+            InventoryRep resultInv = category==resultToReplace ?
+                    invReplaceWith :
+                    preview?getPreviewInventory(category):getResultInventory(category);
 
             for (IResult result:resultList) {
                 ItemStackRep stack =  result.getResult( lr.craftingState, lr.checkState);

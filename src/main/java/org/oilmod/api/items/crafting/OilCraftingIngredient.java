@@ -2,7 +2,6 @@ package org.oilmod.api.items.crafting;
 
 
 
-import org.oilmod.api.rep.crafting.ICraftingState;
 import org.oilmod.api.rep.crafting.IIngredient;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
@@ -31,11 +30,11 @@ public interface OilCraftingIngredient extends IIngredient {
     }
 
     //todo remove this mess below again, just for testing without having to implement ingredients yet
-    default boolean check(ItemStackRep rep, ICheckState checkState) {
+    default boolean check(ItemStackRep rep, ICheckState checkState, int slotId) {
         return match(rep, null);
     }
 
-    default int consume(ItemStackRep rep, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
+    default int consume(ItemStackRep rep, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
         ItemStackStateRep state = rep.getItemStackState();
         for (int i = 0; i < multiplier; i++) {//this should be doable with math instead of for loop //actually not for container items
             ItemStackRep newRep =  onCrafted(rep, null);

@@ -14,7 +14,12 @@ public interface ICraftingProcessor {
     RecipeLookupResult updateRecipe(boolean previewOnly);
     void onSlotTake();
     void afterSlotTake();
-    int tryCrafting(int amount, ItemStackConsumerRep consumerRep, boolean simulate);
+
+    default int tryCrafting(int amount, ItemStackConsumerRep consumerRep, boolean simulate) {
+        return tryCrafting(amount, consumerRep, null, null, simulate);
+    }
+
+    int tryCrafting(int amount, ItemStackConsumerRep consumerRep, IResultCategory resultToReplace, InventoryRep invReplaceWith, boolean simulate);
     boolean isCraftOnTake();
     void previewRemove();
 }

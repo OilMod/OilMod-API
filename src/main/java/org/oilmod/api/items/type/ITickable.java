@@ -19,13 +19,18 @@ import org.oilmod.api.items.OilItemStack;
 public interface ITickable extends IUnique{
     String lastTickKey = "lastTick";
     static void processTicks(OilItemStack stack, long currentTick, boolean limit) {
-        LongData lasttick = getLastTickData(stack);
+        LongData lasttickData = getLastTickData(stack);
+        long lasttick = lasttickData.getData();
+
         ITickable tickable = ((ITickable)stack.getItem());
-        long ticksToProcess =  currentTick - lasttick.getData();
+        long ticksToProcess =  currentTick - lasttick;
         if (limit) ticksToProcess = Math.min(ticksToProcess, tickable.getMaxLazyTicks());
+        if (lasttick == 0) { //newly created items have never been ticked so this property defaults to 0
+            ticksToProcess = 1;
+        }
         if (ticksToProcess <= 0)return;
         tickable.onTick(stack, ticksToProcess);
-        lasttick.setData(currentTick);
+        lasttickData.setData(currentTick);
     }
 
     static void setLastTick(OilItemStack stack, long value) {

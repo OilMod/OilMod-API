@@ -20,7 +20,7 @@ public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
     @Override
     public void onSlotTake() {
         super.onSlotTake();
-        onProcessCraft(getLast(), (stack, testRun, max) -> true, 1, false, false, false);
+        tryCrafting(1, (stack, testRun, max) -> true, false);
     }
 
     @Override
