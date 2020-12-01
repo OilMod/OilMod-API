@@ -9,10 +9,13 @@ import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.data.ItemStackData;
 import org.oilmod.api.items.OilItemStack;
 import org.oilmod.api.rep.crafting.ICraftingManager;
+import org.oilmod.api.rep.crafting.IIngredientCategory;
+import org.oilmod.api.rep.crafting.IResultCategory;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.stateable.complex.IComplexState;
 import org.oilmod.api.stateable.complex.IInventoryState;
 import org.oilmod.api.util.ITicker;
+import org.oilmod.api.util.InventoryBuilder;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -124,13 +127,6 @@ public abstract class InventoryFactory {
             return this;
         }
 
-
-        /*public Builder<T> processors(Function<InventoryRep, ICraftingProcessor>... processors) {
-            if (craftingProcessors == null) craftingProcessors = new ObjectArrayList<>(processors);
-            else craftingProcessors.addAll(Arrays.asList(processors));
-            return checkAccess();
-        }*/
-
         public Builder<T> processor(Function<InventoryRep, ICraftingProcessor> processor) {
             if (craftingProcessors == null) craftingProcessors = new ObjectArrayList<>();
             craftingProcessors.add(processor);
@@ -139,6 +135,33 @@ public abstract class InventoryFactory {
 
         public <Type extends ICraftingProcessor> Builder<T> processor(ICraftingManager manager, Function<CraftingProcessorBuilder<?>, CraftingProcessorBuilder<Type>> processor) {
             return processor(inventoryRep -> processor.apply(new CraftingProcessorBuilder<>(manager, inventoryRep)).build());
+        }
+
+        public static class CraftingProcessorBuilder<Type extends ICraftingProcessor> extends CraftingProcessorBuilderBase<CraftingProcessorBuilder<Type>, Type> {
+
+            private final InventoryRep invFor;
+
+            public CraftingProcessorBuilder(ICraftingManager craftingManager, InventoryRep invFor) {
+                super(craftingManager);
+                this.invFor = invFor;
+            }
+
+            @Override
+            public CraftingProcessorBuilder<ResultSlotCraftingProcessor> resultSlot() {
+                return super.resultSlot();
+            }
+
+            @Override
+            public Type build() {
+                return super.build();
+            }
+
+            public InventoryBuilder<CraftingProcessorBuilder<Type>> ingre(IIngredientCategory category) {
+                return ingre(invFor, category);
+            }
+            public InventoryBuilder<CraftingProcessorBuilder<Type>> result(IResultCategory category) {
+                return result(invFor, category);
+            }
         }
 
         private Builder<T> checkAccess() {

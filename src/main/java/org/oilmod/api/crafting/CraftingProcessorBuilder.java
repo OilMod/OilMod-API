@@ -7,7 +7,7 @@ public class CraftingProcessorBuilder<Type extends ICraftingProcessor> extends C
 
 
     public CraftingProcessorBuilder(ICraftingManager craftingManager, InventoryRep invFor) {
-        super(craftingManager, invFor);
+        super(craftingManager);
     }
 
     @Override

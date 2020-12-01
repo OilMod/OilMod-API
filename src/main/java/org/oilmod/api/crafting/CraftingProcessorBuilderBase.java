@@ -18,17 +18,12 @@ public abstract class CraftingProcessorBuilderBase<T extends CraftingProcessorBu
     private ICraftingManager craftingManager;
     private static final Function<CraftingProcessorBuilderBase<?, ResultSlotCraftingProcessor>, ResultSlotCraftingProcessor> ResultSlotCtor = b -> new ResultSlotCraftingProcessor(b.ingre, b.results, b.craftingManager);
     Function<CraftingProcessorBuilderBase<?, Type>, Type> ctor;
-    private final InventoryRep invFor;
 
-    protected CraftingProcessorBuilderBase(ICraftingManager craftingManager, InventoryRep invFor) {
+    protected CraftingProcessorBuilderBase(ICraftingManager craftingManager) {
         this.craftingManager = craftingManager;
-        this.invFor = invFor;
     }
 
 
-    public InventoryBuilder<T> ingre(IIngredientCategory category) {
-        return ingre(invFor, category);
-    }
     public InventoryBuilder<T> ingre(InventoryRep invArg, IIngredientCategory category) {
         return new InventoryBuilder<T>(inv
                 -> ingre.compute(category, (category1, oldInv) -> {
@@ -40,9 +35,6 @@ public abstract class CraftingProcessorBuilderBase<T extends CraftingProcessorBu
         }), invArg, cast(this));
     }
 
-    public InventoryBuilder<T> result(IResultCategory category) {
-        return result(invFor, category);
-    }
     public InventoryBuilder<T> result(InventoryRep invArg, IResultCategory category) {
         return new InventoryBuilder<T>(inv
                 -> results.compute(category, (category1, oldInv) -> {
