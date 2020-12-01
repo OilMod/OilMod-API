@@ -1,16 +1,21 @@
 package org.oilmod.api.inventory;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.oilmod.api.crafting.CraftingProcessorBuilder;
+import org.oilmod.api.crafting.CraftingProcessorBuilderBase;
 import org.oilmod.api.crafting.ICraftingProcessor;
+import org.oilmod.api.crafting.ResultSlotCraftingProcessor;
 import org.oilmod.api.data.IDataParent;
 import org.oilmod.api.data.ItemStackData;
 import org.oilmod.api.items.OilItemStack;
+import org.oilmod.api.rep.crafting.ICraftingManager;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.stateable.complex.IComplexState;
 import org.oilmod.api.stateable.complex.IInventoryState;
 import org.oilmod.api.util.ITicker;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -126,12 +131,15 @@ public abstract class InventoryFactory {
             return checkAccess();
         }*/
 
-        public Builder<T> processors(Function<InventoryRep, ICraftingProcessor> processor) {
+        public Builder<T> processor(Function<InventoryRep, ICraftingProcessor> processor) {
             if (craftingProcessors == null) craftingProcessors = new ObjectArrayList<>();
             craftingProcessors.add(processor);
             return checkAccess();
         }
 
+        public <Type extends ICraftingProcessor> Builder<T> processor(ICraftingManager manager, Function<CraftingProcessorBuilder<?>, CraftingProcessorBuilder<Type>> processor) {
+            return processor(inventoryRep -> processor.apply(new CraftingProcessorBuilder<>(manager, inventoryRep)).build());
+        }
 
         private Builder<T> checkAccess() {
             if (factory != null)throw new IllegalStateException("calling type setter makes builder immutable. e.g.: basic(), furnace(), crafting()");
