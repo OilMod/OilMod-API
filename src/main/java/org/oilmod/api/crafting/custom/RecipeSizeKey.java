@@ -117,7 +117,7 @@ public class RecipeSizeKey {
                 } else {
                     mask[i] = 1; //we skip shaped testing
                     shaped[i] = false;
-                    width[i] = supplier.getSuppliedWidth()*supplier.getSuppliedHeight();
+                    width[i] = supplier.getSuppliedWidth()*supplier.getSuppliedHeight(); //todo: we need a special method to get shapeless amount, shapeless is not equal to the rectangle spanned as the rectangle can contain empty stacks ignored by shapeless recipes
                     height[i] = -1;
                 }
             }
@@ -134,7 +134,7 @@ public class RecipeSizeKey {
             if (shaped.length != that.shaped.length)throw new IllegalStateException("Keys have different length of categories!");
             //if (isMasked && that.isMasked)
             for (int i = 0; i < shaped.length; i++) {
-                if (mask[i]>=2)continue;
+                if (mask[i]>=2)continue; //todo this needs to calculate shapeless dimensions. also just taken width*height is not correct for shapeless
                 if (shaped[i] != that.shaped[i])return false;
                 if (width[i] != that.width[i])return false;
                 if (height[i] != that.height[i])return false;
@@ -151,7 +151,7 @@ public class RecipeSizeKey {
                         result = getHashCodeRow(result, true, width[i], height[i]);
                         break;
                     case 1:
-                        result = getHashCodeRow(result, false, width[i]*height[i], -1); //needs to be same as if shaped=false in constructor
+                        result = getHashCodeRow(result, false, width[i]*height[i], -1); //needs to be same as if shaped=false in constructor //todo also just taken width*height is not correct for shapeless
                         break;
                     case 2:
                     case 3:

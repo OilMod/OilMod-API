@@ -5,10 +5,21 @@ import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.state.Inventory;
 
+import java.util.List;
+
 public interface ICraftingProcessor {
+    /**
+     * Returns the area currently considered by a matched recipe. If none is matched, this is undefined behaviour
+     * @param category
+     * @return
+     */
+    @Deprecated
     IIngredientSupplier getIngredients(IIngredientCategory category);
     InventoryRep getResultInventory(IResultCategory category);
     InventoryRep getPreviewInventory(IResultCategory category);
+    List<InventoryRep> getOverflowInventories(IResultCategory category);
+    InventoryRep getIngredientInventory(IIngredientCategory category);
+    List<InventoryRep> getReserveInventories(IIngredientCategory category);
     ICraftingState createCraftingState();
     ICraftingManager getManager();
     RecipeLookupResult updateRecipe(boolean previewOnly);

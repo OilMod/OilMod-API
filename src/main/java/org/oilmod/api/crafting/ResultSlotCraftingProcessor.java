@@ -1,15 +1,18 @@
 package org.oilmod.api.crafting;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import org.jetbrains.annotations.NotNull;
 import org.oilmod.api.rep.crafting.*;
 import org.oilmod.api.rep.inventory.InventoryRep;
-import org.oilmod.api.rep.itemstack.ItemStackRep;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
 public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
-    public ResultSlotCraftingProcessor(Map<IIngredientCategory, InventoryRep> supplierMap, Map<IResultCategory, InventoryRep> resultMap, ICraftingManager manager) {
-        super(supplierMap, resultMap, manager);
+
+    public ResultSlotCraftingProcessor(@NotNull Map<IIngredientCategory, InventoryRep> supplierMap, @Nullable Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap, Map<IResultCategory, InventoryRep> resultMap, @Nullable Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap, ICraftingManager manager) {
+        super(supplierMap, reserveMap, resultMap, overflowMap, manager);
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.oilmod.api.stateable.complex.IComplexState;
 import org.oilmod.api.stateable.complex.IInventoryState;
 import org.oilmod.api.util.ITicker;
 import org.oilmod.api.util.InventoryBuilder;
+import org.oilmod.api.util.InventoryListBuilder;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -151,8 +152,7 @@ public abstract class InventoryFactory {
                 return super.resultSlot();
             }
 
-            @Override
-            public Type build() {
+            @Override protected Type build() {
                 return super.build();
             }
 
@@ -161,6 +161,12 @@ public abstract class InventoryFactory {
             }
             public InventoryBuilder<CraftingProcessorBuilder<Type>> result(IResultCategory category) {
                 return result(invFor, category);
+            }
+            public InventoryListBuilder<CraftingProcessorBuilder<Type>> overflow(IResultCategory category) {
+                return overflow(invFor, category);
+            }
+            public InventoryListBuilder<CraftingProcessorBuilder<Type>> reserve(IIngredientCategory category) {
+                return reserve(invFor, category);
             }
         }
 

@@ -1,12 +1,15 @@
 package org.oilmod.api.crafting;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.NotNull;
 import org.oilmod.api.rep.crafting.*;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.inventory.InventoryStoreState;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
+import javax.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,15 +20,19 @@ import static org.oilmod.api.util.Util.printTrace;
 
 public abstract class CraftingProcessorBase implements ICraftingProcessor {
     private final Map<IIngredientCategory, InventoryRep> supplierMap;
+    @Nullable private final Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap;
     private final Map<IResultCategory, InventoryRep> resultMap;
-    private final Map<IResultCategory, InventoryRep> resultPreviewMap;
+    @Nullable private final Map<IResultCategory, InventoryRep> resultPreviewMap;
+    @Nullable private final Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap;
     private final ICraftingManager manager;
     private RecipeLookupResult last;
     private boolean active;
 
-    public CraftingProcessorBase(Map<IIngredientCategory, InventoryRep> supplierMap, Map<IResultCategory, InventoryRep> resultMap, ICraftingManager manager) {
+    public CraftingProcessorBase(@NotNull Map<IIngredientCategory, InventoryRep> supplierMap, @Nullable Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap, Map<IResultCategory, InventoryRep> resultMap, @Nullable  Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap, ICraftingManager manager) {
         this.supplierMap = supplierMap;
+        this.reserveMap = reserveMap;
         this.resultMap = resultMap;
+        this.overflowMap = overflowMap;
         if (needPreviewShadowInv()) {
             this.resultPreviewMap = new Object2ObjectOpenHashMap<>();
             for (Map.Entry<IResultCategory, InventoryRep> entry:resultMap.entrySet()) {
@@ -33,6 +40,12 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
             }
         } else {
             resultPreviewMap = Collections.emptyMap();
+        }
+        if (reserveMap != null) {
+            reserveMap.replaceAll((cat, list) -> Collections.unmodifiableList(list));
+        }
+        if (reserveMap != null) {
+            reserveMap.replaceAll((cat, list) -> Collections.unmodifiableList(list));
         }
 
         this.manager = manager;
@@ -44,7 +57,22 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     @Override
     public InventoryRep getPreviewInventory(IResultCategory category) {
-        return resultPreviewMap.get(category);
+        return resultPreviewMap==null?InventoryRep.EMPTY:resultPreviewMap.get(category);
+    }
+
+    @Override
+    public List<InventoryRep> getOverflowInventories(IResultCategory category) {
+        return overflowMap==null?Collections.emptyList():overflowMap.computeIfAbsent(category, ($) ->  Collections.emptyList());
+    }
+
+    @Override
+    public List<InventoryRep> getReserveInventories(IIngredientCategory category) {
+        return reserveMap==null?Collections.emptyList():reserveMap.computeIfAbsent(category, ($) ->  Collections.emptyList());
+    }
+
+    @Override
+    public InventoryRep getIngredientInventory(IIngredientCategory category) {
+        return supplierMap.getOrDefault(category, InventoryRep.EMPTY);
     }
 
     @Override
@@ -146,12 +174,6 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     protected void preview(int amount) {
         if (previewActive)return;
         previewActive = true;
-        //Validate.isTrue(needPreviewShadowInv(), "needPreviewShadowInv needs to return true for this method to be usable");
-        /*if (activePreviewAmount == 0) {
-            for (IResultCategory category:last.recipe.getResultCategories()) {
-                if (!getResultInventory(category).isEmpty())return; //if we are currently saving items we do not want to add a preview!
-            }
-        }*/
         amount = onProcessCraft(last, (stack, testRun, max) -> true, null, null, amount, false, true, true);
     }
 
@@ -159,16 +181,8 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
         if (!previewActive)return;
         previewActive = false;
         for (IResultCategory category:last.recipe.getResultCategories()) {
-            List<IResult> resultList = last.recipe.getResultsCategory(category);
-            InventoryRep resultInv = getPreviewInventory(category);//getPreviewInventory(category);
+            InventoryRep resultInv = getPreviewInventory(category);
             resultInv.clear();
-            /*for (IResult result:resultList) {
-                ItemStackRep stack =  result.getResult( last.craftingState, last.checkState);
-                stack.setAmount(stack.getAmount()* activePreviewAmount);
-
-                int missing  =resultInv.take(stack);
-                if (missing> 0) System.err.printf("Item Dupe: Cannot undo preview as the result %s could not be found often enough: needed %d but found %d\n", stack.toString(), stack.getAmount(), stack.getAmount()-missing);
-            }*/
         }
     }
 
