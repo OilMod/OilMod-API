@@ -17,6 +17,7 @@ public class ResultSlotCraftingProcessor extends CraftingProcessorBase {
 
     @Override
     protected void onUpdateRecipe(RecipeLookupResult lr) {
+        previewRemove();
         preview(1);
     }
 

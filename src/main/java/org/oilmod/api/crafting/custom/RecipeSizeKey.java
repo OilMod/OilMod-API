@@ -4,14 +4,14 @@ import org.oilmod.api.rep.crafting.*;
 
 public class RecipeSizeKey {
     final boolean[] shaped;
-    final int[] width;
-    final int[] height;
+    final int[] highDim;
+    final int[] lowDim;
     private int hashCode;
 
-    private RecipeSizeKey(boolean[] shaped, int[] width, int[] height) {
+    private RecipeSizeKey(boolean[] shaped, int[] highDim, int[] lowDim) {
         this.shaped = shaped;
-        this.width = width;
-        this.height = height;
+        this.highDim = highDim;
+        this.lowDim = lowDim;
     }
 
 
@@ -26,16 +26,18 @@ public class RecipeSizeKey {
             IMatcher matcher = recipe.getMatcher(categories[i]);
             if (matcher == null) {
                 shaped[i] = false;
-                width[i] = 0;
-                height[i] = 0;
+                highDim[i] = 0;
+                lowDim[i] = 0;
             } else  if (matcher.isShaped()) {
                 shaped[i] = true;
-                width[i] = matcher.getInputWidth();
-                height[i] = matcher.getInputHeight();
+                int width = matcher.getInputWidth();
+                int height = matcher.getInputHeight();
+                highDim[i] = Math.max(width, height);
+                lowDim[i] = Math.min(width, height);
             } else {
                 shaped[i] = false;
-                width[i] = matcher.getInputSize();
-                height[i] = -1;
+                highDim[i] = matcher.getInputSize();
+                lowDim[i] = -1;
             }
         }
     }
@@ -46,7 +48,7 @@ public class RecipeSizeKey {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof Mask)return o.equals(this);
+        if (o instanceof Mask)return o.equals(this); //mask do equality based on current state, not based on fields
         if (o == null || getClass() != o.getClass()) return false;
         RecipeSizeKey that = (RecipeSizeKey) o;
 
@@ -56,16 +58,16 @@ public class RecipeSizeKey {
 
         for (int i = 0; i < shaped.length; i++) {
             if (shaped[i] != that.shaped[i])return false;
-            if (width[i] != that.width[i])return false;
-            if (height[i] != that.height[i])return false;
+            if (highDim[i] != that.highDim[i])return false;
+            if (lowDim[i] != that.lowDim[i])return false;
         }
         return true;
     }
 
-    private static int getHashCodeRow(int result, boolean shaped, int width, int height) {
+    private static int getHashCodeRow(int result, boolean shaped, int high, int low) {
         result = 31 * result + (shaped ? 1231 : 1237);
-        result = 31 * result + width;
-        result = 31 * result + height;
+        result = 31 * result + high;
+        result = 31 * result + low;
         return result;
     }
 
@@ -81,7 +83,7 @@ public class RecipeSizeKey {
     int calcHashCode() {
         int result = 1;
         for (int i = 0; i < shaped.length; i++) {
-            result = getHashCodeRow(result, shaped[i], width[i], height[i]);
+            result = getHashCodeRow(result, shaped[i], highDim[i], lowDim[i]);
         }
         return result;
     }
@@ -95,6 +97,7 @@ public class RecipeSizeKey {
     public static class Mask extends RecipeSizeKey{
 
         private final byte[] mask; //three-state
+        private final int[] shapeless;
 
         /**
          * ordering of suppliers matters!
@@ -103,22 +106,28 @@ public class RecipeSizeKey {
         public Mask(IIngredientSupplier[] suppliers) {
             super(new boolean[suppliers.length], new int[suppliers.length], new int[suppliers.length]);
             mask = new byte[suppliers.length];
+            shapeless = new int[suppliers.length];
             for (int i = 0; i < suppliers.length; i++) {
                 IIngredientSupplier supplier = suppliers[i];
                 if (supplier == null || supplier.getSuppliedAmount() == 0) {
                     mask[i] = 3; //nothing here, we can skip it already! (this is 3 to make sure it doesnt get reset!)
                     shaped[i] = false;
-                    width[i] = 0;
-                    height[i] = 0;
-                } else  if (supplier.isShaped()) {
-                    shaped[i] = true;
-                    width[i] = supplier.getSuppliedWidth();
-                    height[i] = supplier.getSuppliedHeight();
-                } else {
-                    mask[i] = 1; //we skip shaped testing
-                    shaped[i] = false;
-                    width[i] = supplier.getSuppliedWidth()*supplier.getSuppliedHeight(); //todo: we need a special method to get shapeless amount, shapeless is not equal to the rectangle spanned as the rectangle can contain empty stacks ignored by shapeless recipes
-                    height[i] = -1;
+                    highDim[i] = 0;
+                    lowDim[i] = 0;
+                } else  {
+                    shapeless[i] = supplier.getSuppliedAmount();
+                    if (supplier.isShaped()) {
+                        shaped[i] = true;
+                        int width = supplier.getSuppliedWidth();
+                        int height = supplier.getSuppliedHeight();
+                        highDim[i] = Math.max(width, height);
+                        lowDim[i] = Math.min(width, height);
+                    } else {
+                        mask[i] = 1; //we skip shaped testing
+                        shaped[i] = false;
+                        highDim[i] = shapeless[i];
+                        lowDim[i] = -1;
+                    }
                 }
             }
         }
@@ -135,9 +144,17 @@ public class RecipeSizeKey {
             //if (isMasked && that.isMasked)
             for (int i = 0; i < shaped.length; i++) {
                 if (mask[i]>=2)continue; //todo this needs to calculate shapeless dimensions. also just taken width*height is not correct for shapeless
-                if (shaped[i] != that.shaped[i])return false;
-                if (width[i] != that.width[i])return false;
-                if (height[i] != that.height[i])return false;
+                boolean shaped = mask[i]==0;
+                if (shaped != that.shaped[i])return false;
+                if (shaped) {
+                    if (highDim[i] != that.highDim[i])return false;
+                    if (lowDim[i] != that.lowDim[i])return false;
+                } else {
+                    if (-1 != that.lowDim[i])return false;
+                    if (shapeless[i] != that.highDim[i])return false;
+                }
+
+
             }
             return true;
         }
@@ -148,10 +165,10 @@ public class RecipeSizeKey {
             for (int i = 0; i < shaped.length; i++) {
                 switch (mask[i]) {
                     case 0:
-                        result = getHashCodeRow(result, true, width[i], height[i]);
+                        result = getHashCodeRow(result, true, highDim[i], lowDim[i]);
                         break;
                     case 1:
-                        result = getHashCodeRow(result, false, width[i]*height[i], -1); //needs to be same as if shaped=false in constructor //todo also just taken width*height is not correct for shapeless
+                        result = getHashCodeRow(result, false, shapeless[i], -1); //needs to be same as if shaped=false in constructor
                         break;
                     case 2:
                     case 3:

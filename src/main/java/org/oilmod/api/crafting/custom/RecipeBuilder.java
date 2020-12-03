@@ -173,9 +173,8 @@ public class RecipeBuilder {
         }
 
         public RecipeBuilder ok() {
-            //shapelesses.add(this);
-            throw new NotImplementedException("todo");
-            //return RecipeBuilder.this;
+            matchers.put(category, new ShapelessMatcher(ingredients.toArray(new IIngredient[0])));
+            return RecipeBuilder.this;
         }
     }
 
