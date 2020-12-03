@@ -2,13 +2,16 @@ package org.oilmod.api.crafting;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.oilmod.api.rep.crafting.*;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.inventory.InventoryStoreState;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
+import org.oilmod.api.rep.itemstack.ItemStackFactory;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
+import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
+import org.oilmod.api.rep.providers.ItemStackStateProvider;
+
 import javax.annotation.Nullable;
 
 import java.util.Collections;
@@ -19,22 +22,27 @@ import java.util.Objects;
 import static org.oilmod.api.util.Util.printTrace;
 
 public abstract class CraftingProcessorBase implements ICraftingProcessor {
-    private final Map<IIngredientCategory, InventoryRep> supplierMap;
+    private final Map<IIngredientCategory, ReusableIngredientSupplier> supplierMap;
     @Nullable private final Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap;
     private final Map<IResultCategory, InventoryRep> resultMap;
     @Nullable private final Map<IResultCategory, InventoryRep> resultPreviewMap;
     @Nullable private final Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap;
     private final ICraftingManager manager;
+    private final ReusableIngredientAccessor accessor = new ReusableIngredientAccessorImpl();
+    private final CraftingState craftingState = new CraftingState();
     private RecipeLookupResult last;
     private boolean active;
 
-    public CraftingProcessorBase(@NotNull Map<IIngredientCategory, InventoryRep> supplierMap, @Nullable Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap, Map<IResultCategory, InventoryRep> resultMap, @Nullable  Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap, ICraftingManager manager) {
-        this.supplierMap = supplierMap;
+    public CraftingProcessorBase(@NotNull Map<IIngredientCategory, InventoryRep> supplierInvMap, @Nullable Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap, Map<IResultCategory, InventoryRep> resultMap, @Nullable  Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap, ICraftingManager manager) {
+        this.supplierMap = new Object2ObjectOpenHashMap<>(supplierInvMap.size());
+        for (Map.Entry<IIngredientCategory, InventoryRep> entry:supplierInvMap.entrySet()) {
+            supplierMap.put(entry.getKey(), new ReusableIngredientSupplier(entry.getValue(), accessor));
+        }
         this.reserveMap = reserveMap;
         this.resultMap = resultMap;
         this.overflowMap = overflowMap;
         if (needPreviewShadowInv()) {
-            this.resultPreviewMap = new Object2ObjectOpenHashMap<>();
+            this.resultPreviewMap = new Object2ObjectOpenHashMap<>(resultMap.size());
             for (Map.Entry<IResultCategory, InventoryRep> entry:resultMap.entrySet()) {
                 resultPreviewMap.put(entry.getKey(), entry.getValue().createSizeMirror());
             }
@@ -72,13 +80,13 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     @Override
     public InventoryRep getIngredientInventory(IIngredientCategory category) {
-        return supplierMap.getOrDefault(category, InventoryRep.EMPTY);
+        ReusableIngredientSupplier sup = getIngredients(category);
+        return sup == null?InventoryRep.EMPTY:sup.getRoot();
     }
 
     @Override
-    public IIngredientSupplier getIngredients(IIngredientCategory category) {
-        throw new NotImplementedException("todo");
-        //return supplierMap.get(category);
+    public ReusableIngredientSupplier getIngredients(IIngredientCategory category) {
+        return supplierMap.get(category);
     }
 
     @Override
@@ -88,53 +96,79 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     @Override
     public ICraftingState createCraftingState() {
-        Map<IIngredientCategory, IIngredientSupplier> result = new Object2ObjectOpenHashMap<>(supplierMap.size());
-        for (Map.Entry<IIngredientCategory, InventoryRep> entry:supplierMap.entrySet()) {
-            InventoryRep inv = entry.getValue();
+        int supplierCount = 0;
+        for (Map.Entry<IIngredientCategory, ReusableIngredientSupplier> entry: supplierMap.entrySet()) {
+            ReusableIngredientSupplier supplier = entry.getValue();
+            InventoryRep inv = supplier.getRoot(); //need to get root
             int top = 0;
             int left = 0;
             int width = 0;
             int height = 0;
-            //todo shapeless
-            boolean flagTop = true;
-            outer: for (int cTop = 0; cTop < inv.getHeight(); cTop++) {
-                for (int cLeft = 0; cLeft < inv.getWidth(); cLeft++) {
-                    if (!inv.getStored(cLeft, cTop).isEmpty()) {
-                        if (flagTop) {
-                            top = cTop;
-                            height = 1;
-                            flagTop =false;
-                        } else {
-                            height = cTop - top + 1;
+            if (inv.is2d()) {
+                boolean flagTop = true;
+                outer: for (int cTop = 0; cTop < inv.getHeight(); cTop++) {
+                    for (int cLeft = 0; cLeft < inv.getWidth(); cLeft++) {
+                        if (!inv.getStored(cLeft, cTop).isEmpty()) {
+                            if (flagTop) {
+                                top = cTop;
+                                height = 1;
+                                flagTop =false;
+                            } else {
+                                height = cTop - top + 1;
+                            }
+                            continue outer;
                         }
-                        continue outer;
                     }
                 }
+
+                boolean flagLeft = true;
+                outer: for (int cLeft = 0; cLeft < inv.getWidth(); cLeft++) {
+                    for (int cTop = top; cTop < top+height; cTop++) {
+                        if (!inv.getStored(cLeft, cTop).isEmpty()) {
+                            if (flagLeft) {
+                                left = cLeft;
+                                width = 1;
+                                flagLeft =false;
+                            } else {
+                                width = cLeft - left + 1;
+                            }
+                            continue outer;
+                        }
+                    }
+                }
+
+                supplier.resize(left, width, top, height);
+                if (width == 0 || height == 0) {
+                    continue;
+                }
+            } else {
+                supplier.reset();
             }
 
-            boolean flagLeft = true;
-            outer: for (int cLeft = 0; cLeft < inv.getWidth(); cLeft++) {
-                for (int cTop = top; cTop < top+height; cTop++) {
-                    if (!inv.getStored(cLeft, cTop).isEmpty()) {
-                        if (flagLeft) {
-                            left = cLeft;
-                            width = 1;
-                            flagLeft =false;
-                        } else {
-                            width = cLeft - left + 1;
-                        }
-                        continue outer;
-                    }
+            int low = supplier.getSize();
+            int high = 0;
+            int stacks = 0;
+            for (int i = 0; i < supplier.getSize(); i++) {
+                if (!supplier.isEmpty(i)) {
+                    low = Math.min(i, low);
+                    high = Math.max(i, high);
+                    stacks++;
                 }
             }
-            //System.out.printf("found top %d, height %d, left %d, width %d\n", top, height, left, width);
-            if (width == 0 || height == 0)continue; //its empty
-            //todo this should be possible without creating two classes, make createView2d be done by IngredientSupplier, and make the current area mutable. this will also allow implementing getIngredients. furthermore the size can be updated on inv manipulation, no brute force needed
-            result.put(entry.getKey(), new IngredientSupplierImpl(inv.createView2d(left, width, top, height), true));
+            if (stacks > 0) {
+                supplierCount++;
+                int[] shapelessAccessorMap = new int[stacks];
+                int index = 0;
+                for (int i = low; i <= high; i++) {
+                    if (!supplier.isEmpty(i)) {
+                        shapelessAccessorMap[index++] = i;
+                    }
+                }
+                supplier.setShapelessAccessorMap(shapelessAccessorMap);
+            }
         }
-
-
-        return new CraftingStateImpl(result);
+        craftingState.supplierCount = supplierCount;
+        return craftingState;
     }
 
     @Override
@@ -173,8 +207,10 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     private boolean previewActive = false;
     protected void preview(int amount) {
         if (previewActive)return;
-        previewActive = true;
-        amount = onProcessCraft(last, (stack, testRun, max) -> true, null, null, amount, false, true, true);
+        amount = onProcessCraft(last, (stack, max, testRun) -> max, null, null, amount, false, true, true);
+        if (amount > 0) {
+            previewActive = true;
+        }
     }
 
     public void previewRemove() {
@@ -284,6 +320,67 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     public RecipeLookupResult getLast() {
         return last;
+    }
+
+    private class CraftingState implements ICraftingState {
+        private int supplierCount = 0;
+
+        @Override
+        public IIngredientSupplier getIngredients(IIngredientCategory category) {
+            return CraftingProcessorBase.this.getIngredients(category);
+        }
+
+        @Override
+        public int getSupplierCount() {
+            return supplierCount;
+        }
+
+        @Override
+        public IRecipeRep getRecipe() {
+            return getLast()==null?null:getLast().recipe;
+        }
+    }
+
+    private class ReusableIngredientAccessorImpl extends ReusableIngredientAccessor{
+
+        @Override
+        public int use(int amount, boolean simulate) {
+            ItemStackRep stack = getStack();
+            amount = Math.min(stack.getAmount(), amount);
+            if (!simulate)stack.shrink(amount);
+            return amount;
+        }
+
+        @Override
+        public int use(int amount, ItemStackStateProvider replaceWithPro, ItemStackConsumerRep stackConsumer, boolean simulate) {
+            ItemStackRep stack = getStack();
+            int stackAmount = stack.getAmount();
+            amount = Math.min(stackAmount, amount);
+            ItemStackStateRep replaceWith = replaceWithPro.getProvidedItemStackState();
+            if (stackAmount == amount) {
+                int toSet = Math.min(replaceWith.getMaxStackSize(), amount);
+                if (!simulate) {
+                    stack.shrink(amount);
+                    setStack(replaceWith.createStack(toSet));
+                }
+                if (toSet < amount) {
+                    amount = Math.min(amount, toSet + stackConsumer.consume(replaceWith.createStack(1), amount-toSet, simulate));
+                }
+            } else {
+                if (!simulate)stack.shrink(amount);
+            }
+            return amount;
+        }
+
+        @Override
+        public int getSameMatched() {
+            return getAmount();
+        }
+
+        @Override
+        public int getTotalMatched() {
+            return getAmount();
+        }
     }
 
 }

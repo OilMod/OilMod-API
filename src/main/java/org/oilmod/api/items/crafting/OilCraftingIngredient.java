@@ -3,6 +3,7 @@ package org.oilmod.api.items.crafting;
 
 
 import org.oilmod.api.rep.crafting.IIngredient;
+import org.oilmod.api.rep.crafting.IIngredientAccessor;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
@@ -30,19 +31,25 @@ public interface OilCraftingIngredient extends IIngredient {
     }
 
     //todo remove this mess below again, just for testing without having to implement ingredients yet
-    default boolean check(ItemStackRep rep, ICheckState checkState, int slotId) {
-        return match(rep, null);
+    @Override
+    default boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId) {
+        //yes this is horrible, thats why it needs to be replaced anyway
+        return match(accessor.getItemState().createStack(accessor.getTotalMatched()), null);
     }
 
-    default int consume(ItemStackRep rep, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
-        ItemStackStateRep state = rep.getItemStackState();
-        for (int i = 0; i < multiplier; i++) {//this should be doable with math instead of for loop //actually not for container items
-            ItemStackRep newRep =  onCrafted(rep, null);
-            if (!newRep.isSimilar(state) || newRep.isEmpty()) {
-                newRep.getProvidedItemStackState().applyTo(rep, false, true);
-                return ++i;
-            }
+    @Override
+    default int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
+        ItemStackStateRep state = accessor.getItemState().getProvidedItemStackState();
+        ItemStackRep rep = state.createStack(accessor.getTotalMatched()); //yes this is horrible, thats why it needs to be replaced anyway
+        ItemStackRep newRep =  onCrafted(rep, null);
+        if (newRep.isSimilar(state) || newRep.isEmpty()) {
+            int sizeDiff = accessor.getTotalMatched() - newRep.getAmount();
+            multiplier = Math.min(multiplier, accessor.getTotalMatched()/sizeDiff);
+            multiplier = Math.min(multiplier, accessor.use(sizeDiff * multiplier, simulate));
+        } else {
+            multiplier = Math.min(multiplier, accessor.getTotalMatched());
+            multiplier = Math.min(multiplier, accessor.use(multiplier, newRep, stackConsumer, simulate)); //todo this kinda ignored stacksize of replaced item
         }
-        return multiplier;//no good way to support multiplier
+        return multiplier;
     }
 }

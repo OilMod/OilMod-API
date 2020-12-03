@@ -9,72 +9,12 @@ import org.oilmod.api.rep.itemstack.ItemStackRep;
 public class TestInventoryFactory extends InventoryFactory<TestInventoryFactory> {
     @Override
     public InventoryRep createHeadlessInventory(int size) {
-        return new InventoryRep() {
-            @Override
-            public int getWidth() {
-                return size;
-            }
-
-            @Override
-            public int getHeight() {
-                return 1;
-            }
-
-            @Override
-            public ItemStackRep getStored(int slot) {
-                return null;
-            }
-
-            @Override
-            public void setStored(int slot, ItemStackRep stack) {
-
-            }
-
-            @Override
-            public boolean isNative() {
-                return false;
-            }
-
-            @Override
-            public int getMaxStack(int slot) {
-                return 0;
-            }
-        };
+        return InventoryRep.EMPTY;
     }
 
     @Override
     public InventoryRep createHeadlessInventory(int height, int width) {
-        return new InventoryRep() {
-            @Override
-            public int getWidth() {
-                return width;
-            }
-
-            @Override
-            public int getHeight() {
-                return height;
-            }
-
-            @Override
-            public ItemStackRep getStored(int slot) {
-                return null;
-            }
-
-            @Override
-            public void setStored(int slot, ItemStackRep stack) {
-
-            }
-
-            @Override
-            public boolean isNative() {
-                return false;
-            }
-
-            @Override
-            public int getMaxStack(int slot) {
-                return 0;
-            }
-        };
+        return InventoryRep.EMPTY;
     }
 
 
@@ -105,6 +45,16 @@ public class TestInventoryFactory extends InventoryFactory<TestInventoryFactory>
             @Override
             public void setStored(int slot, ItemStackRep stack) {
 
+            }
+
+            @Override
+            public boolean isEmpty(int slot) {
+                return true;
+            }
+
+            @Override
+            public int getStack(int slot) {
+                return 0;
             }
 
             @Override
@@ -148,6 +98,16 @@ public class TestInventoryFactory extends InventoryFactory<TestInventoryFactory>
             @Override
             public void setStored(int slot, ItemStackRep stack) {
 
+            }
+
+            @Override
+            public boolean isEmpty(int slot) {
+                return true;
+            }
+
+            @Override
+            public int getStack(int slot) {
+                return 0;
             }
 
             @Override

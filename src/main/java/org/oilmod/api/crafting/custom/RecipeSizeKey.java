@@ -105,7 +105,7 @@ public class RecipeSizeKey {
             mask = new byte[suppliers.length];
             for (int i = 0; i < suppliers.length; i++) {
                 IIngredientSupplier supplier = suppliers[i];
-                if (supplier == null) {
+                if (supplier == null || supplier.getSuppliedAmount() == 0) {
                     mask[i] = 3; //nothing here, we can skip it already! (this is 3 to make sure it doesnt get reset!)
                     shaped[i] = false;
                     width[i] = 0;

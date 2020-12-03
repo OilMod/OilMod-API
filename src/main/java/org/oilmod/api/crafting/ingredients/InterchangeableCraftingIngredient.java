@@ -2,6 +2,7 @@ package org.oilmod.api.crafting.ingredients;
 
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.rep.crafting.IIngredient;
+import org.oilmod.api.rep.crafting.IIngredientAccessor;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.checkstate.ArrayState;
@@ -32,7 +33,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
     }
 
     @Override
-    public boolean check(ItemStackRep rep, ICheckState checkState, int slotId) {
+    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId) {
         checkState.requireMaxBackup(1);
         checkState.backupState();
         ArrayState<ImmutableIntState> flags = checkState.getTag(this, ImmutableIntState.FACTORY_ARRAY);
@@ -44,7 +45,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
             //as we saved the slotid for the ingredient that matched with it, we will find it again
             if (flags.hasState(i) && flags.getOrCreateState(i).get() == slotId) {
                 //we found a rematch, make sure its still valid
-                if (ingredients[i].check(rep, checkState, slotId)) {
+                if (ingredients[i].check(accessor, checkState, slotId)) {
                     checkState.confirmState();
                     return true;
                 } else {
@@ -58,7 +59,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
         for (int i = 0; i < ingredients.length; i++) {
             if (!flags.hasState(i)) {
                 //first time
-                if (ingredients[i].check(rep, checkState, slotId)) {
+                if (ingredients[i].check(accessor, checkState, slotId)) {
                     flags.getOrCreateState(i).set(slotId);
 
                     checkState.confirmState();
@@ -71,7 +72,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
     }
 
     @Override
-    public int consume(ItemStackRep rep, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
+    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
         ArrayState<ImmutableIntState> flags = checkState.getTag(this, ImmutableIntState.FACTORY_ARRAY);
         //here we are just using a previously written checkstate, it should already be valid!
         // this is a naive approach to verify it. if checkstate is partially created this will not catch it
@@ -80,7 +81,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
         for (int i = 0; i < ingredients.length; i++) {
 
             if (flags.hasState(i) && flags.getOrCreateState(i).get() == slotId) {
-                return ingredients[i].consume(rep, slotId, stackConsumer, multiplier, maxStack, checkState, simulate);
+                return ingredients[i].consume(accessor, slotId, stackConsumer, multiplier, maxStack, checkState, simulate);
             }
         }
 

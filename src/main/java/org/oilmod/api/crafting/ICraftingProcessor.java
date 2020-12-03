@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface ICraftingProcessor {
     /**
-     * Returns the area currently considered by a matched recipe. If none is matched, this is undefined behaviour
+     * Returns the area currently considered by a matched recipe. If none is matched, this is undefined behaviour. Default to empty inventory!
      * @param category
      * @return
      */
-    @Deprecated
     IIngredientSupplier getIngredients(IIngredientCategory category);
     InventoryRep getResultInventory(IResultCategory category);
     InventoryRep getPreviewInventory(IResultCategory category);

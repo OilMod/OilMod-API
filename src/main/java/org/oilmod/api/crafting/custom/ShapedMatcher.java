@@ -50,7 +50,7 @@ public class ShapedMatcher implements IMatcher {
                 for (int left = 0; left < width; left++) {//transformer bug
 
                     //it is important that slotId for any specific slot matches in all calls used the same valid checkstate
-                    if (!ingredients[top][left].check(supplier.getSupplied(left, top), checkState, top * width + left)) {
+                    if (!ingredients[top][left].check(supplier.getSuppliedShaped(left, top), checkState, top * width + left)) {
                         checkState.revertState();
                         continue outer;
                     }
@@ -93,18 +93,13 @@ public class ShapedMatcher implements IMatcher {
 
         for (int top = 0; top < height; top++) {
             for (int left = 0; left < width; left++) {
-                ItemStackRep supplied = supplier.getSupplied(left, top);
+                IIngredientAccessor accessor = supplier.getSuppliedShaped(left, top);
                 //it is important that slotId for any specific slot matches in all calls used the same valid checkstate
                 int slotId =top * width + left;
-                //we do not rematch during processing but in the last round at least one resource had run out, so this check catches that. checking if a stack is empty is not sufficient as some stack done get empties but changed during crafting. e.g. water bucket -> bucket
-                if (!ingredients[top][left].check(supplied, checkState, slotId)) return 0;
-                if (simulate)supplied = supplied.copy(); //get a copy to operate on!
-                int newAmount = ingredients[top][left].consume(supplied, slotId, stackConsumer, amount, supplier.getSupSlotMaxStack(left, top), checkState, simulate);
+                //we do not rematch during processing but in the last round some resource might have run out, so this check catches that. checking if a stack is empty is not sufficient as some stack dont get emptied but changed during crafting. e.g. water bucket -> bucket
+                if (!ingredients[top][left].check(accessor, checkState, slotId)) return 0;
+                int newAmount = ingredients[top][left].consume(accessor, slotId, stackConsumer, amount, supplier.getSupSlotMaxStack(left, top), checkState, simulate);
                 amount = Math.min(amount, newAmount);
-                //todo find way to update base inventory, that is not as hacky as this
-                //supplied.setAmount(result.getAmount());
-                //result.getItemStackState().applyTo(supplied, false, true);
-                //if (result.getAmount() < 0)
             }
         }
 

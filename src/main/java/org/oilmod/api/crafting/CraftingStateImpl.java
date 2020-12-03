@@ -26,6 +26,6 @@ public class CraftingStateImpl implements ICraftingState {
 
     @Override
     public IRecipeRep getRecipe() {
-        return null;
+        return null; //todo: what
     }
 }
