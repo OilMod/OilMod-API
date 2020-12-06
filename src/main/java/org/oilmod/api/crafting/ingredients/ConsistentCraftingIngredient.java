@@ -1,23 +1,30 @@
 package org.oilmod.api.crafting.ingredients;
 
+import it.unimi.dsi.fastutil.ints.IntIterator;
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import org.apache.commons.lang3.Validate;
+import org.oilmod.api.rep.crafting.IComplexIngredient;
 import org.oilmod.api.rep.crafting.IIngredient;
 import org.oilmod.api.rep.crafting.IIngredientAccessor;
+import org.oilmod.api.rep.crafting.IIngredientSupplier;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.checkstate.ArrayState;
 import org.oilmod.api.util.checkstate.ICheckState;
+import org.oilmod.api.util.checkstate.StateHolderFactory;
 import org.oilmod.api.util.checkstate.immutable.FlagState;
-import org.oilmod.api.util.checkstate.immutable.ImmutableIntState;
+import org.oilmod.api.util.checkstate.immutable.ImmutableState;
+import org.oilmod.api.util.checkstate.mutable.MutableIntState;
+import org.oilmod.util.IntFixedRangeSet;
 
 import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 /**
  * Created by sirati97 on 04.07.2016 for OilMod-Api.
  */
-public class ConsistentCraftingIngredient implements IIngredient {
+public class ConsistentCraftingIngredient implements IComplexIngredient {
     private final IIngredient[] ingredients;
 
 
@@ -34,8 +41,8 @@ public class ConsistentCraftingIngredient implements IIngredient {
         return null;
     }
 
-    @Override
-    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId) {
+    /*@Override
+    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId, int slotCount, IntPredicate disclaimer, IntPredicate reclaimer) {
         checkState.requireMaxBackup(1);
         checkState.backupState();
         FlagState.FlagArrayState flags = checkState.getTag(this, FlagState.FACTORY_ARRAY);
@@ -46,7 +53,7 @@ public class ConsistentCraftingIngredient implements IIngredient {
         for (int i = 0; i < ingredients.length; i++) {
             if (!flags.hasFlag(i)) {
                 //first time or still active
-                if (ingredients[i].check(accessor, checkState, slotId)) {
+                if (ingredients[i].check(accessor, checkState, slotId, slotCount, disclaimer, reclaimer)) {
                     foundAny = true;
                 } else {
                     flags.setFlag(i); //this matcher is out
@@ -62,7 +69,25 @@ public class ConsistentCraftingIngredient implements IIngredient {
     }
 
     @Override
-    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
+    public boolean confirmState(IIngredientSupplier supplier, IntSortedSet slots, int current, int needed, ICheckState checkState, IntPredicate disclaimer) {
+        if (current < needed)return false;
+        if (!checkState.hasTag(this))return false;
+        FlagState.FlagArrayState flags = checkState.getTag(this, FlagState.FACTORY_ARRAY);
+        if (!flags.isInUse()) return false;
+        boolean found = false;
+
+        for (int i = 0; i < ingredients.length; i++) {
+            if (flags.hasFlag(i)) {
+                if (found)return false;
+                found = true;
+            }
+        }
+
+        return found && current == needed;
+    }
+
+    @Override
+    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, ICheckState checkState, boolean simulate) {
         FlagState.FlagArrayState flags = checkState.getTag(this, FlagState.FACTORY_ARRAY);
         //here we are just using a previously written checkstate, it should already be valid!
         // this is a naive approach to verify it. if checkstate is partially created this will not catch it
@@ -70,60 +95,131 @@ public class ConsistentCraftingIngredient implements IIngredient {
 
         for (int i = 0; i < ingredients.length; i++) {
             if (flags.hasFlag(i))continue;
-            return ingredients[i].consume(accessor, slotId, stackConsumer, multiplier, maxStack, checkState, simulate);
+            return ingredients[i].consume(accessor, slotId, stackConsumer, multiplier, checkState, simulate);
         }
 
         throw new IllegalStateException("Either some of the ingredients were never matched, or most likely consume was called without a valid checkstate. make sure that ALL input categories are checked while given the same checkstate as this method to ensure proper initialisation of said");
+    }*/
+
+    @Override
+    public boolean resetCheckState(ICheckState checkState) {
+        ImmutableState<Data> dataContainer = checkState.getTag(this, FACTORY);
+        if (!dataContainer.isInUse()) {
+            return false;
+        }
+
+        if (dataContainer.get().ingreId >= 0) {
+            dataContainer.get().ingreId = -1;
+            return true;
+        }
+
+        return false;
     }
 
-/*    @Override
-    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId) {
-        checkState.requireMaxBackup(1);
-        checkState.backupState();
-        ArrayState<MutableIntState> flags = checkState.getTag(this, MutableIntState.FACTORY_ARRAY);
-        flags.assureCreated(ingredients.length);
+    public static final StateHolderFactory<ImmutableState<Data>, Object> FACTORY = (currentBackup, maxBackup, key) -> new ImmutableState<>(Data.class);
+    private static class Data {
+        private final IntFixedRangeSet[] timesMatched;
+        private final IntFixedRangeSet[] mapping;
+        private int ingreId = -1;
 
-        int currentMax = 0;
-        int foundMax = 0;
-        //IntStream.range(0, ingredients.length).map(index -> flags.getOrCreateState(index).getOrDefault()).toArray();
-        for (int i = 0; i < ingredients.length; i++) {
-            MutableIntState state = flags.getOrCreateState(i);
-            if (ingredients[i].check(accessor, checkState, slotId)) {
-                foundMax = Math.max(foundMax,  state.increment());
+        private Data(int ingre, int slotCount) {
+            timesMatched = new IntFixedRangeSet[ingre];
+            for (int i = 0; i < ingre; i++) {
+                timesMatched[i] = new IntFixedRangeSet(slotCount, false);
             }
-            currentMax = Math.max(currentMax, state.getOrDefault());
+            mapping = new IntFixedRangeSet[slotCount];
         }
-        if (foundMax <= maxMatch) {
-            checkState.confirmState();
-        } else {
-            checkState.revertState();
-        }
-        return foundMax == currentMax && foundMax <= maxMatch;
     }
 
     @Override
-    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
-        ArrayState<MutableIntState> flags = checkState.getTag(this, MutableIntState.FACTORY_ARRAY);
-        //here we are just using a previously written checkstate, it should already be valid!
-        // this is a naive approach to verify it. if checkstate is partially created this will not catch it
-        Validate.isTrue(flags.isInUse(), "Consume can only be called with a valid checkstate generated by consume");
+    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId, int slotCount, IntPredicate disclaimer, IntPredicate reclaimer) {
+        ImmutableState<Data> dataContainer = checkState.getTag(this, FACTORY);
+        if (!dataContainer.isInUse()) {
+            dataContainer.set(new Data(ingredients.length, slotCount));
+        }
+        IntFixedRangeSet[] timesMatched = dataContainer.get().timesMatched;
+        IntFixedRangeSet[] mappings = dataContainer.get().mapping;
 
-        int max = 0;
-        int index = -1;
-        for (int i = 0; i < ingredients.length; i++) {
-            int state = flags.getOrCreateState(i).get();
-            if (state > max) {
-                index = i;
-                max = state;
-            }
+        //we are already done
+        if (dataContainer.get().ingreId >= 0) {
+            return ingredients[dataContainer.get().ingreId].check(accessor, checkState, slotId, slotCount, disclaimer, reclaimer);
         }
 
-        if (index == -1 || max < maxMatch)return 0;
 
-        return ingredients[index].consume(accessor, slotId, stackConsumer, multiplier, maxStack, checkState, simulate);
+        boolean found = false;
+        //IntStream.range(0, ingredients.length).map(index -> flags.getOrCreateState(index).getOrDefault()).toArray();
+        for (int i = 0; i < ingredients.length; i++) {
+            if (ingredients[i].check(accessor, checkState, slotId, slotCount, disclaimer, reclaimer)) {
+                timesMatched[i].add(slotId);
+                IntFixedRangeSet mapping = mappings[slotId];
+                if (mapping == null) {
+                    mapping = new IntFixedRangeSet(ingredients.length, false);
+                    mappings[slotId] = mapping;
+                }
+                mapping.add(i);
+                found = true;
+            }
+        }
+        return found;
+    }
+
+    @Override
+    public boolean confirmState(IIngredientSupplier supplier, IntSortedSet slots, int current, int needed, ICheckState checkState, IntPredicate disclaimer) {
+        if (current < needed)return false;
+        if (!checkState.hasTag(this))return false;
+        Data data = checkState.getTag(this, FACTORY).get();
+        IntFixedRangeSet[] timesMatched = data.timesMatched;
+        IntFixedRangeSet[] mappings = data.mapping;
+
+
+        if (slots != null) {
+            for (int i = 0; i < mappings.length; i++) {
+                IntFixedRangeSet mapping = mappings[i];
+                if (mapping == null)continue;
+                if (!slots.contains(i)) { //we have that slot but apparently we are not allocated for it. remove
+                    IntIterator iter = mapping.iterator();
+                    while (iter.hasNext()) {
+                        timesMatched[iter.nextInt()].remove(i);
+                    }
+                    mappings[i] = null;
+                }
+            }
+        }
+        int ingreId = -1;
+        for (int i = 0; i < timesMatched.length; i++) {
+            if (timesMatched[i].size() >= needed) {
+                ingreId = i;
+                break;
+            }
+        }
+        if (ingreId == -1)return false;
+        data.ingreId = ingreId;
+        int found = 0;
+        for (int i = 0; i < mappings.length; i++) {
+            IntFixedRangeSet mapping = mappings[i];
+            if (mapping == null)continue;
+            if (found < needed && mapping.contains(ingreId)) {
+                found++;
+            } else {
+                mappings[i] = null;
+                if (!disclaimer.test(i)) return false;
+            }
+        }
+        return found == needed;
+    }
+
+    @Override
+    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, ICheckState checkState, boolean simulate) {
+        ImmutableState<Data> dataContainer = checkState.getTag(this, FACTORY);
+        //here we are just using a previously written checkstate, it should already be valid!
+        // this is a naive approach to verify it. if checkstate is partially created this will not catch it
+        Validate.isTrue(dataContainer.isInUse(), "Consume can only be called with a valid checkstate generated by consume");
+        int ingre = dataContainer.get().ingreId;
+        if (ingre == -1)throw new IllegalStateException("confirmState was never called");
+        return ingredients[ingre].consume(accessor, slotId, stackConsumer, multiplier, checkState, simulate);
 
         //throw new IllegalStateException("Either some of the ingredients were never matched, or most likely consume was called without a valid checkstate. make sure that ALL input categories are checked while given the same checkstate as this method to ensure proper initialisation of said");
-    }*/
+    }
 
 
 

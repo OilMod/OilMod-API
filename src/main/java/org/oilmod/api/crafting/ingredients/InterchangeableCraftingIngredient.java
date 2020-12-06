@@ -1,8 +1,10 @@
 package org.oilmod.api.crafting.ingredients;
 
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import org.apache.commons.lang3.Validate;
 import org.oilmod.api.rep.crafting.IIngredient;
 import org.oilmod.api.rep.crafting.IIngredientAccessor;
+import org.oilmod.api.rep.crafting.IIngredientSupplier;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.util.checkstate.ArrayState;
@@ -10,6 +12,7 @@ import org.oilmod.api.util.checkstate.ICheckState;
 import org.oilmod.api.util.checkstate.immutable.ImmutableIntState;
 
 import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 
 /**
@@ -33,7 +36,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
     }
 
     @Override
-    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId) {
+    public boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId, int slotCount, IntPredicate disclaimer, IntPredicate reclaimer) {
         checkState.requireMaxBackup(1);
         checkState.backupState();
         ArrayState<ImmutableIntState> flags = checkState.getTag(this, ImmutableIntState.FACTORY_ARRAY);
@@ -47,7 +50,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
             //as we saved the slotid for the ingredient that matched with it, we will find it again
             if (flags.hasState(i) && flags.getOrCreateState(i).get() == slotId) {
                 //we found a rematch, make sure its still valid
-                if (ingredients[i].check(accessor, checkState, slotId)) {
+                if (ingredients[i].check(accessor, checkState, slotId, slotCount, disclaimer, reclaimer)) {
                     checkState.confirmState();
                     return true;
                 } else {
@@ -61,7 +64,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
         for (int i = 0; i < ingredients.length; i++) {
             if (!flags.hasState(i)) {
                 //first time
-                if (ingredients[i].check(accessor, checkState, slotId)) {
+                if (ingredients[i].check(accessor, checkState, slotId, slotCount, disclaimer, reclaimer)) {
                     flags.getOrCreateState(i).set(slotId);
 
                     checkState.confirmState();
@@ -74,7 +77,12 @@ public class InterchangeableCraftingIngredient implements IIngredient {
     }
 
     @Override
-    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, int maxStack, ICheckState checkState, boolean simulate) {
+    public boolean confirmState(IIngredientSupplier supplier, IntSortedSet slots, int current, int needed, ICheckState checkState, IntPredicate disclaimer) {
+        return current == needed;
+    }
+
+    @Override
+    public int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, ICheckState checkState, boolean simulate) {
         ArrayState<ImmutableIntState> flags = checkState.getTag(this, ImmutableIntState.FACTORY_ARRAY);
         //here we are just using a previously written checkstate, it should already be valid!
         // this is a naive approach to verify it. if checkstate is partially created this will not catch it
@@ -83,17 +91,37 @@ public class InterchangeableCraftingIngredient implements IIngredient {
         for (int i = 0; i < ingredients.length; i++) {
 
             if (flags.hasState(i) && flags.getOrCreateState(i).get() == slotId) {
-                return ingredients[i].consume(accessor, slotId, stackConsumer, multiplier, maxStack, checkState, simulate);
+                return ingredients[i].consume(accessor, slotId, stackConsumer, multiplier, checkState, simulate);
             }
         }
 
         throw new IllegalStateException("Either some of the ingredients were never matched, or most likely consume was called without a valid checkstate. make sure that ALL input categories are checked while given the same checkstate as this method to ensure proper initialisation of said");
     }
 
+    @Override
+    public boolean resetCheckState(ICheckState checkState) {
+        return false;
+    }
 
+    @Override
+    public boolean isStatic() {
+        return false;
+    }
 
+    @Override
+    public boolean isSingular() {
+        return false;
+    }
 
+    @Override
+    public boolean equals(IIngredient that) {
+        return equals((Object)that);
+    }
 
+    @Override
+    public int createHashCode() {
+        return hashCode();
+    }
 
 
     /**
