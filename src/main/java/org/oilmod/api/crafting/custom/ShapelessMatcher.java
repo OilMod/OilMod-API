@@ -89,57 +89,89 @@ public class ShapelessMatcher implements IMatcher {
         }
 
 
-        //BitSet bits = new BitSet(size * ingredientsCompelex.length); //size == supplier.getSuppliedAmount()
         IntSortedSet[] claims = new IntSortedSet[ingredientsCompelex.length];
         IntSortedSet matchersTBD = new IntFixedRangeSet(ingredientsCompelex.length, true);
-        //int[] antiMapping = new int[ingredientsCompelex.length]; //usused is inserted ordered SortedSet, we did not readd any indices yet, so natural order is preserved
 
         //try minimum check strategy (will work when there are no conflicts
 
-        IntSortedSet ignore = new IntFixedRangeSet(size, false);
-
         int failFlag = -1;
         for (int i = 0; i < ingredientsCompelex.length; i++) {
-            if (!normalCheck(supplier, checkState, mapping, unused, claims, matchersTBD, ignore, i)) {
+
+            //this is succeed-fast
+            if (!normalCheck(supplier, checkState, mapping, unused, claims, matchersTBD, i)) {
                 failFlag = i;
                 break;
             }
         }
 
         if (failFlag != -1) { //okay we failed with ingredientsCompelex[failFlag]
-            //this is failfast
-            if (!backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, ignore, 0)) {
+            //this is fail-fast
+            if (!backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, 0)) {
                 return false;
             }
 
         }
-
-
-
-
-        /*int[] mapping = ForgeShapelessRecipeHelper.findMatches(size, (ingreId, itemId) -> {
-            //i am just thinking this might not be it, state needs to be reverted when backtracking
-            checkState.requireMaxBackup(1);
-            checkState.backupState();
-            boolean result = ingredients[ingreId].check(supplier.getSuppliedShapeless(itemId), checkState, itemId);
-            if (result) {
-                checkState.confirmState();
-            } else {
-                checkState.revertState();
-            }
-            return result;
-        });
-        if (mapping == null) {
-            checkState.revertState();
-            return false;
-        }*/
 
         checkState.getTag(this, MATCHED_TRANSFORMATION).set(mapping);
         checkState.confirmState();
         return true;
     }
 
-    private boolean normalCheck(IIngredientSupplier supplier, ICheckState checkState, int[] mapping, IntSortedSet unused, IntSortedSet[] claims, IntSortedSet matchersTBD, IntSortedSet ignore, int i) {
+    private boolean backtrack(IIngredientSupplier supplier, ICheckState checkState, int[] mapping, IntSortedSet unused, IntSortedSet[] claims, IntSortedSet matchersTBD, int ingreId, int min) {
+        System.out.printf("%s called backtrack with min=%d\n", Thread.currentThread().getName(), min);
+        IIngredient failIngredient = ingredientsCompelex[ingreId];
+        int timesNeeded = ingredientsCompelexCount[ingreId];
+
+
+
+        IntSortedSet claim = claims[ingreId];
+        IntPredicate disclaimer = getDisclaimer(claim, unused, mapping);
+        IntPredicate reclaimer = getReclaimer(claim, unused, mapping, ingredientsStatic.length + ingreId);
+
+        //check for all that were claimed by previous ingredients, this might allow us to complete this ingredient
+        for (int i = 0; i < ingreId && !failIngredient.confirmState(supplier, claim, claim.size(), timesNeeded, checkState, disclaimer); i++) {
+            IntSortedSet claimOther = claims[i];
+            IntIterator iter= claimOther.iterator(min);
+
+            boolean found = 0<checkSlots(supplier, checkState, failIngredient, ingredientsStatic.length + ingreId, timesNeeded, mapping, iter, claim, disclaimer, reclaimer, claim::add);
+
+
+            //as that matcher is incomplete now, we need to recheck it
+            if (found) {
+                matchersTBD.add(i);
+            }
+        }
+
+        if (failIngredient.confirmState(supplier, claim, claim.size() , timesNeeded, checkState, disclaimer)) {
+            matchersTBD.remove(ingreId);
+        } else {
+            //this matcher could not be satisfied. we tried everything
+            checkState.revertState();
+            return false;
+        }
+
+        //we backtracked, so there are remaining matchers, lets do them now
+        int failFlag = -1;
+        IntIterator ingreIter= matchersTBD.iterator(min);
+        while (ingreIter.hasNext()) {
+            int i = ingreIter.nextInt();
+            if (!normalCheck(supplier, checkState, mapping, unused, claims, matchersTBD, i)) {
+                failFlag = i;
+                break;
+            }
+        }
+
+        if (failFlag != -1) { //okay we failed with ingredientsCompelex[failFlag]
+            //this is fail-fast
+            if (!backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, min+1)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean normalCheck(IIngredientSupplier supplier, ICheckState checkState, int[] mapping, IntSortedSet unused, IntSortedSet[] claims, IntSortedSet matchersTBD, int i) {
         IntIterator iter= unused.iterator();
         IntSortedSet claim = claims[i];
         if (claim == null) {
@@ -147,8 +179,8 @@ public class ShapelessMatcher implements IMatcher {
             claims[i] = claim;
         }
 
-        IntPredicate disclaimer = getDisclaimer(ignore, claim, mapping);
-        IntPredicate reclaimer = getReclaimer(ignore, claim, unused, mapping, ingredientsStatic.length + i);
+        IntPredicate disclaimer = getDisclaimer(claim, unused, mapping);
+        IntPredicate reclaimer = getReclaimer(claim, unused, mapping, ingredientsStatic.length + i);
         boolean found = 2==checkSlots(supplier, checkState, this.ingredientsCompelex[i], ingredientsStatic.length + i, ingredientsCompelexCount[i], mapping, iter, claim, disclaimer, reclaimer, claim::add);
         //either recipe is not matched or we have a conflict. to make sure we need to use more complicated algorithm
         if (found) {
@@ -175,13 +207,10 @@ public class ShapelessMatcher implements IMatcher {
     }
 
     @NotNull
-    private IntPredicate getReclaimer(IntSortedSet ignore, IntSortedSet claim, IntSortedSet unused, int[] mapping, int ingreId) {
+    private IntPredicate getReclaimer(IntSortedSet claim, IntSortedSet unused, int[] mapping, int ingreId) {
         return reclaimSlot -> {
-            if (ignore.contains(reclaimSlot)) {
-                ignore.remove(reclaimSlot);
-            } else if (unused.contains(reclaimSlot)) {
-                unused.remove(reclaimSlot);
-            }
+            Validate.isTrue(unused.contains(reclaimSlot), "Shapeless matcher failed, ingredient tried reclaiming other ingredient's claim! - this means the shapeless matcher algorithm failed not the ingredient, as there are legitimate reasons for doing so, like delegating to different ingredient");
+            unused.remove(reclaimSlot);
             claim.add(reclaimSlot);
             mapping[reclaimSlot] = ingreId;
             return true;
@@ -189,103 +218,14 @@ public class ShapelessMatcher implements IMatcher {
     }
 
     @NotNull
-    private IntPredicate getDisclaimer(IntSortedSet ignore, IntSortedSet claim, int[] mapping) {
+    private IntPredicate getDisclaimer(IntSortedSet claim, IntSortedSet unused, int[] mapping) {
         return disclaimSlot -> {
             Validate.isTrue(claim.contains(disclaimSlot), "Shapeless matcher failed, ingredient tried disclaiming other ingredient's claim! - this means the shapeless matcher algorithm failed not the ingredient, as there are legitimate reasons for doing so, like delegating to different ingredient");
             claim.remove(disclaimSlot);
-            ignore.add(disclaimSlot);
+            unused.add(disclaimSlot);
             mapping[disclaimSlot] = 0;
             return true;
         };
-    }
-
-    private boolean backtrack(IIngredientSupplier supplier, ICheckState checkState, int[] mapping, IntSortedSet unused, IntSortedSet[] claims, IntSortedSet matchersTBD, int ingreId, IntSortedSet ignore, int min) {
-        //Util.printTrace(String.format("%s called backtrack with min=%d\n", Thread.currentThread().getName(), min));
-        System.out.printf("%s called backtrack with min=%d\n", Thread.currentThread().getName(), min);
-        IIngredient failIngredient = ingredientsCompelex[ingreId];
-        int timesNeeded = ingredientsCompelexCount[ingreId];
-
-
-        /* I do not think anymore that we need to do that
-        //first we need to readd the already used slots
-        unused.addAll(claims[failFlag]); //return all claimed
-        claims[failFlag].clear();*/
-
-
-        IntSortedSet claim = claims[ingreId];
-        IntPredicate disclaimer = getDisclaimer(ignore, claim, mapping);
-        IntPredicate reclaimer = getReclaimer(ignore, claim, unused, mapping, ingredientsStatic.length + ingreId);
-
-        //check for all that were claimed by previous ingredients, this might allow us to complete this ingredient
-        for (int i = 0; i < ingreId && !failIngredient.confirmState(supplier, claim, claim.size(), timesNeeded, checkState, disclaimer); i++) {
-            IntSortedSet claimOther = claims[i];
-            IntIterator iter= claimOther.iterator(min);
-
-            boolean found = 0<checkSlots(supplier, checkState, failIngredient, ingredientsStatic.length + ingreId, timesNeeded, mapping, iter, claim, disclaimer, reclaimer, claim::add);
-
-
-            //we now need reset all claims for that matcher as well
-            if (found) {
-                /* I do not think anymore that we need to do that
-                unused.addAll(claimOther); //return all claimed (that we did not match or ignore) aka those that we did not consider yet
-                claimOther.clear();*/
-                matchersTBD.add(i);
-            }
-        }
-
-        if (failIngredient.confirmState(supplier, claim, claim.size() , timesNeeded, checkState, disclaimer)) {
-            matchersTBD.remove(ingreId);
-        } else {
-            //this matcher could not be satisfied. we tried everything
-            checkState.revertState();
-            return false;
-        }
-
-        //we backtracked, so there are remaining matchers, lets do them now
-        int failFlag = -1;
-        IntIterator ingreIter= matchersTBD.iterator(min);
-        while (ingreIter.hasNext()) {
-            int i = ingreIter.nextInt();
-            if (!normalCheck(supplier, checkState, mapping, unused, claims, matchersTBD, ignore, i)) {
-                failFlag = i;
-                break;
-            }
-        }
-
-        if (failFlag != -1) { //okay we failed with ingredientsCompelex[failFlag]
-            //this is failfast
-            if (!backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, ignore, min+1)) {
-                return false;
-            }
-        }
-
-
-        /*
-        //now if we need to check all
-        if (currentFound < needTimes) {
-            IntIterator iter= unused.iterator();
-            while (iter.hasNext() && currentFound < needTimes) {
-                int slot = iter.nextInt();
-                if (checkIngredient(failIngredient, supplier.getSuppliedShapeless(slot), checkState, slot, unused, ignore, claim)) {
-                    iter.remove();
-                    mapping[slot] = failFlag;
-
-                    //the reason why we prematurely store this data is the assumption that allocating/gc cost is lower than retesting the matchers. i did not test this though
-                    claim.add(slot);
-                    currentFound++;
-                }
-            }
-            if (currentFound < needTimes) {
-                //this matcher could not be satisfied. we tried everything
-                checkState.revertState();
-                return false;
-            }
-        }*/
-
-
-        unused.addAll(ignore); //return all ignored
-        ignore.clear();
-        return true;
     }
 
 
