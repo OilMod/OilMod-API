@@ -13,6 +13,7 @@ import org.oilmod.api.util.checkstate.StateHolderFactory;
 import org.oilmod.api.util.checkstate.immutable.ImmutableState;
 import org.oilmod.util.IntFixedRangeSet;
 
+import java.util.Arrays;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 
@@ -66,6 +67,7 @@ public class ShapelessMatcher implements IMatcher {
         checkState.requireMaxBackup(1);
         checkState.backupState();
         int[] mapping = new int[size];
+        Arrays.fill(mapping, -1); //not needed but makes debugging easier
 
         //matching static to simplify problem
         IntSortedSet unused = new IntFixedRangeSet(size, true); //i hate myself   //size == supplier.getSuppliedAmount()
@@ -138,6 +140,7 @@ public class ShapelessMatcher implements IMatcher {
 
             //as that matcher is incomplete now, we need to recheck it
             if (found) {
+                ingredientsCompelex[i].prepareRematch(checkState);
                 matchersTBD.add(i);
             }
         }
@@ -223,7 +226,7 @@ public class ShapelessMatcher implements IMatcher {
             Validate.isTrue(claim.contains(disclaimSlot), "Shapeless matcher failed, ingredient tried disclaiming other ingredient's claim! - this means the shapeless matcher algorithm failed not the ingredient, as there are legitimate reasons for doing so, like delegating to different ingredient");
             claim.remove(disclaimSlot);
             unused.add(disclaimSlot);
-            mapping[disclaimSlot] = 0;
+            mapping[disclaimSlot] = -1;
             return true;
         };
     }

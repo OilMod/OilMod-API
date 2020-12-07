@@ -102,18 +102,17 @@ public class ConsistentCraftingIngredient implements IComplexIngredient {
     }*/
 
     @Override
-    public boolean resetCheckState(ICheckState checkState) {
+    public boolean prepareRematch(ICheckState checkState) {
         ImmutableState<Data> dataContainer = checkState.getTag(this, FACTORY);
         if (!dataContainer.isInUse()) {
-            return false;
+            return true;
         }
 
         if (dataContainer.get().ingreId >= 0) {
             dataContainer.get().ingreId = -1;
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     public static final StateHolderFactory<ImmutableState<Data>, Object> FACTORY = (currentBackup, maxBackup, key) -> new ImmutableState<>(Data.class);
@@ -240,7 +239,7 @@ public class ConsistentCraftingIngredient implements IComplexIngredient {
     /**
      * Use this class if you want to make specific slots of a shaped crafting recipe interchangeable. Create one instance of this and pass it for every interchangeable slot that should behave the same
      */
-    public ConsistentCraftingIngredient(int toMatch,IIngredient... ingredients) {
+    public ConsistentCraftingIngredient(IIngredient... ingredients) {
         this.ingredients = ingredients;
     }
 

@@ -99,7 +99,7 @@ public class InterchangeableCraftingIngredient implements IIngredient {
     }
 
     @Override
-    public boolean resetCheckState(ICheckState checkState) {
+    public boolean prepareRematch(ICheckState checkState) {
         return false;
     }
 
