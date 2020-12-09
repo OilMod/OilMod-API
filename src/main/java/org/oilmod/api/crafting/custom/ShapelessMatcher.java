@@ -23,8 +23,8 @@ public class ShapelessMatcher implements IMatcher {
     private final int size;
     private final IIngredient[] ingredientsStatic;
     private final int[] ingredientsStaticCount;
-    private final IIngredient[] ingredientsCompelex;
-    private final int[] ingredientsCompelexCount;
+    private final IIngredient[] ingredientsComplex;
+    private final int[] ingredientsComplexCount;
     private final IIngredient[] ingredientsAll;
 
     public ShapelessMatcher(IIngredient[] ingredients) {
@@ -44,14 +44,14 @@ public class ShapelessMatcher implements IMatcher {
         this.size = size;
         ingredientsStatic = statics.keySet().toArray(new IIngredient[0]); //actually we could also do duplicate detection for static ingredients, allows us to skip some
         ingredientsStaticCount = statics.values().toIntArray(); //actually we could also do duplicate detection for static ingredients, allows us to skip some
-        ingredientsCompelex = complex.keySet().toArray(new IIngredient[0]);
-        ingredientsCompelexCount = complex.values().toIntArray(); //yolo, obviously there is no contract that ensures that both will have the same order, but i think that bug would be quickly reported because of wildly wrong crafting recipes
+        ingredientsComplex = complex.keySet().toArray(new IIngredient[0]);
+        ingredientsComplexCount = complex.values().toIntArray(); //yolo, obviously there is no contract that ensures that both will have the same order, but i think that bug would be quickly reported because of wildly wrong crafting recipes
         if (ingredientsStatic.length == size) {
             ingredientsAll = ingredientsStatic;
         } else if (ingredientsStatic.length == 0) {
-            ingredientsAll = ingredientsCompelex;
+            ingredientsAll = ingredientsComplex;
         } else {
-            ingredientsAll = ArrayUtils.addAll(ingredientsStatic, ingredientsCompelex);
+            ingredientsAll = ArrayUtils.addAll(ingredientsStatic, ingredientsComplex);
         }
     }
 
@@ -84,20 +84,20 @@ public class ShapelessMatcher implements IMatcher {
         }
 
         if (unused.size() == 0) {
-            if (ingredientsCompelex.length > 0) throw new IllegalStateException("How can we match all static ingre, when there are still complex left?!");
+            if (ingredientsComplex.length > 0) throw new IllegalStateException("How can we match all static ingre, when there are still complex left?!");
             checkState.getTag(this, MATCHED_TRANSFORMATION).set(mapping);
             checkState.confirmState();
             return true;
         }
 
 
-        IntSortedSet[] claims = new IntSortedSet[ingredientsCompelex.length];
-        IntSortedSet matchersTBD = new IntFixedRangeSet(ingredientsCompelex.length, true);
+        IntSortedSet[] claims = new IntSortedSet[ingredientsComplex.length];
+        IntSortedSet matchersTBD = new IntFixedRangeSet(ingredientsComplex.length, true);
 
         //try minimum check strategy (will work when there are no conflicts
 
         int failFlag = -1;
-        for (int i = 0; i < ingredientsCompelex.length; i++) {
+        for (int i = 0; i < ingredientsComplex.length; i++) {
 
             //this is succeed-fast
             if (!normalCheck(supplier, checkState, mapping, unused, claims, matchersTBD, i)) {
@@ -106,7 +106,7 @@ public class ShapelessMatcher implements IMatcher {
             }
         }
 
-        if (failFlag != -1) { //okay we failed with ingredientsCompelex[failFlag]
+        if (failFlag != -1) { //okay we failed with ingredientsComplex[failFlag]
             //this is fail-fast
             if (!backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, 0)) {
                 return false;
@@ -121,8 +121,8 @@ public class ShapelessMatcher implements IMatcher {
 
     private boolean backtrack(IIngredientSupplier supplier, ICheckState checkState, int[] mapping, IntSortedSet unused, IntSortedSet[] claims, IntSortedSet matchersTBD, int ingreId, int min) {
         System.out.printf("%s called backtrack with min=%d\n", Thread.currentThread().getName(), min);
-        IIngredient failIngredient = ingredientsCompelex[ingreId];
-        int timesNeeded = ingredientsCompelexCount[ingreId];
+        IIngredient failIngredient = ingredientsComplex[ingreId];
+        int timesNeeded = ingredientsComplexCount[ingreId];
 
 
 
@@ -140,7 +140,7 @@ public class ShapelessMatcher implements IMatcher {
 
             //as that matcher is incomplete now, we need to recheck it
             if (found) {
-                ingredientsCompelex[i].prepareRematch(checkState);
+                ingredientsComplex[i].prepareRematch(checkState);
                 matchersTBD.add(i);
             }
         }
@@ -164,11 +164,9 @@ public class ShapelessMatcher implements IMatcher {
             }
         }
 
-        if (failFlag != -1) { //okay we failed with ingredientsCompelex[failFlag]
+        if (failFlag != -1) { //okay we failed with ingredientsComplex[failFlag]
             //this is fail-fast
-            if (!backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, min+1)) {
-                return false;
-            }
+            return backtrack(supplier, checkState, mapping, unused, claims, matchersTBD, failFlag, min + 1);
         }
 
         return true;
@@ -184,7 +182,7 @@ public class ShapelessMatcher implements IMatcher {
 
         IntPredicate disclaimer = getDisclaimer(claim, unused, mapping);
         IntPredicate reclaimer = getReclaimer(claim, unused, mapping, ingredientsStatic.length + i);
-        boolean found = 2==checkSlots(supplier, checkState, this.ingredientsCompelex[i], ingredientsStatic.length + i, ingredientsCompelexCount[i], mapping, iter, claim, disclaimer, reclaimer, claim::add);
+        boolean found = 2==checkSlots(supplier, checkState, this.ingredientsComplex[i], ingredientsStatic.length + i, ingredientsComplexCount[i], mapping, iter, claim, disclaimer, reclaimer, claim::add);
         //either recipe is not matched or we have a conflict. to make sure we need to use more complicated algorithm
         if (found) {
             matchersTBD.remove(i);
