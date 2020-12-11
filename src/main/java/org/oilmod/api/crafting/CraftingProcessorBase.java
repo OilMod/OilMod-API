@@ -2,12 +2,13 @@ package org.oilmod.api.crafting;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.NotNull;
 import org.oilmod.api.rep.crafting.*;
 import org.oilmod.api.rep.inventory.InventoryRep;
 import org.oilmod.api.rep.inventory.InventoryStoreState;
 import org.oilmod.api.rep.itemstack.ItemStackConsumerRep;
-import org.oilmod.api.rep.itemstack.ItemStackFactory;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.itemstack.state.ItemStackStateRep;
 import org.oilmod.api.rep.providers.ItemStackStateProvider;
@@ -36,7 +37,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     public CraftingProcessorBase(@NotNull Map<IIngredientCategory, InventoryRep> supplierInvMap, @Nullable Object2ObjectMap<IIngredientCategory, List<InventoryRep>> reserveMap, Map<IResultCategory, InventoryRep> resultMap, @Nullable  Object2ObjectMap<IResultCategory, List<InventoryRep>> overflowMap, ICraftingManager manager) {
         this.supplierMap = new Object2ObjectOpenHashMap<>(supplierInvMap.size());
         for (Map.Entry<IIngredientCategory, InventoryRep> entry:supplierInvMap.entrySet()) {
-            supplierMap.put(entry.getKey(), new ReusableIngredientSupplier(entry.getValue(), accessor));
+            supplierMap.put(entry.getKey(), new ReusableIngredientSupplier(entry.getKey(), entry.getValue(), accessor));
         }
         this.reserveMap = reserveMap;
         this.resultMap = resultMap;
@@ -95,7 +96,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     }
 
     @Override
-    public ICraftingState createCraftingState() {
+    public CraftingState createCraftingState() {
         int supplierCount = 0;
         for (Map.Entry<IIngredientCategory, ReusableIngredientSupplier> entry: supplierMap.entrySet()) {
             ReusableIngredientSupplier supplier = entry.getValue();
@@ -167,7 +168,7 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
                 supplier.setShapelessAccessorMap(shapelessAccessorMap);
             }
         }
-        craftingState.supplierCount = supplierCount;
+        craftingState.reset(supplierCount);
         return craftingState;
     }
 
@@ -178,15 +179,18 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
 
     @Override
     public RecipeLookupResult updateRecipe(boolean previewOnly) {
-        ICraftingState craftingState = createCraftingState();
+        CraftingState craftingState = createCraftingState();
 
         RecipeLookupResult result =  last==null?manager.find(craftingState):manager.find(craftingState, last.recipe);
         if (result == null) {
+            craftingState.reset(-1);
             if (active) {
                 active = false;
                 onInactivate();
             }
             return null;
+        } else {
+            craftingState.setRecipe(result.recipe);
         }
 
         if (active && Objects.equals(last.recipe, result.recipe))return result;
@@ -323,7 +327,9 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
     }
 
     private class CraftingState implements ICraftingState {
-        private int supplierCount = 0;
+        private int supplierCount = -1;
+        private IRecipeRep recipe;
+        private Object2ObjectMap<IIngredientCategory, ObjectList<ReserveState>> reserveStates = new Object2ObjectOpenHashMap<>();
 
         @Override
         public IIngredientSupplier getIngredients(IIngredientCategory category) {
@@ -335,10 +341,59 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
             return supplierCount;
         }
 
+        private void setRecipe(IRecipeRep recipe) {
+            this.recipe = recipe;
+        }
+
+        private void reset(int supplierCount) {
+            this.supplierCount = supplierCount;
+            this.recipe = null;
+            this.reserveStates.clear();
+        }
+
         @Override
         public IRecipeRep getRecipe() {
-            return getLast()==null?null:getLast().recipe;
+            return recipe;
         }
+
+
+        public ReserveState getReserveStateOrCreate(IIngredientCategory category, int index) {
+            ObjectList<ReserveState> list = getList(category);
+            if (list.get(index) == null) {
+                ReserveState result = new ReserveState();
+                list.set(index, result);
+                return result;
+            }
+            return list.get(index);
+        }
+
+        public ReserveState getReserveState(IIngredientCategory category, int index) {
+            ObjectList<ReserveState> list = getList(category);
+            return list.get(index);
+        }
+
+        @NotNull
+        private ObjectList<ReserveState> getList(IIngredientCategory category) {
+            return reserveStates.computeIfAbsent(category, (i) -> {
+                int size = getIngredients(i).getSize();
+                ObjectArrayList<ReserveState> result = new ObjectArrayList<>(size);
+                for (int j = 0; j < size; j++) {
+                    result.add(null);
+                }
+                return result;
+            });
+        }
+
+        public void setReserveState(IIngredientCategory category, int index, ReserveState reserveState) {
+            ObjectList<ReserveState> list = getList(category);
+            list.set(index, reserveState);
+        }
+    }
+
+    private class ReserveState {
+        int maxRequested;
+        int firstClassMatches;
+        int secondClassMatches;
     }
 
     private class ReusableIngredientAccessorImpl extends ReusableIngredientAccessor{
@@ -373,12 +428,28 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
         }
 
         @Override
-        public int getSameMatched() {
+        public int getSameMatched(int requested) {
+            int amount = getAmount();
+            if (amount > requested)return amount;
+            if (craftingState.recipe == null)return amount;
+            IIngredientCategory category = getSupplier().getCategory();
+            ReserveState state = craftingState.getReserveState(category, getIndex());
+            if (state.maxRequested >= requested)return state.firstClassMatches;
+
+
             return getAmount();
         }
 
         @Override
-        public int getTotalMatched() {
+        public int getTotalMatched(int requested) {
+            int amount = getAmount();
+            if (amount > requested)return amount;
+            if (craftingState.recipe == null)return amount;
+            IIngredientCategory category = getSupplier().getCategory();
+            ReserveState state = craftingState.getReserveState(category, getIndex());
+            if (state.maxRequested >= requested)return state.secondClassMatches;
+
+
             return getAmount();
         }
     }

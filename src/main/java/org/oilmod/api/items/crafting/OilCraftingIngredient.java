@@ -35,20 +35,20 @@ public interface OilCraftingIngredient extends IIngredient {
     @Override
     default boolean check(IIngredientAccessor accessor, ICheckState checkState, int slotId, int slotCount, IntPredicate disclaimer, IntPredicate reclaimer) {
         //yes this is horrible, thats why it needs to be replaced anyway
-        return match(accessor.getItemState().createStack(accessor.getTotalMatched()), null);
+        return match(accessor.getItemState().createStack(accessor.getTotalMatched(1)), null);
     }
 
     @Override
     default int consume(IIngredientAccessor accessor, int slotId, ItemStackConsumerRep stackConsumer, int multiplier, ICheckState checkState, boolean simulate) {
         ItemStackStateRep state = accessor.getItemState().getProvidedItemStackState();
-        ItemStackRep rep = state.createStack(accessor.getTotalMatched()); //yes this is horrible, thats why it needs to be replaced anyway
+        ItemStackRep rep = state.createStack(accessor.getTotalMatched(multiplier)); //yes this is horrible, thats why it needs to be replaced anyway
         ItemStackRep newRep =  onCrafted(rep, null);
         if (newRep.isSimilar(state) || newRep.isEmpty()) {
-            int sizeDiff = accessor.getTotalMatched() - newRep.getAmount();
-            multiplier = Math.min(multiplier, accessor.getTotalMatched()/sizeDiff);
+            int sizeDiff = accessor.getTotalMatched(multiplier) - newRep.getAmount();
+            multiplier = Math.min(multiplier, accessor.getTotalMatched(multiplier)/sizeDiff);
             multiplier = Math.min(multiplier, accessor.use(sizeDiff * multiplier, simulate));
         } else {
-            multiplier = Math.min(multiplier, accessor.getTotalMatched());
+            multiplier = Math.min(multiplier, accessor.getTotalMatched(multiplier));
             multiplier = Math.min(multiplier, accessor.use(multiplier, newRep, stackConsumer, simulate)); //todo this kinda ignored stacksize of replaced item
         }
         return multiplier;
