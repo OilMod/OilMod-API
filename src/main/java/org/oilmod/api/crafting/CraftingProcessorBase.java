@@ -430,10 +430,10 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
         @Override
         public int getSameMatched(int requested) {
             int amount = getAmount();
-            if (amount > requested)return amount;
+            if (amount >= requested)return amount;
             if (craftingState.recipe == null)return amount;
             IIngredientCategory category = getSupplier().getCategory();
-            ReserveState state = craftingState.getReserveState(category, getIndex());
+            ReserveState state = craftingState.getReserveStateOrCreate(category, getIndex());
             if (state.maxRequested >= requested)return state.firstClassMatches;
 
 
@@ -443,10 +443,10 @@ public abstract class CraftingProcessorBase implements ICraftingProcessor {
         @Override
         public int getTotalMatched(int requested) {
             int amount = getAmount();
-            if (amount > requested)return amount;
+            if (amount >= requested)return amount;
             if (craftingState.recipe == null)return amount;
             IIngredientCategory category = getSupplier().getCategory();
-            ReserveState state = craftingState.getReserveState(category, getIndex());
+            ReserveState state = craftingState.getReserveStateOrCreate(category, getIndex());
             if (state.maxRequested >= requested)return state.secondClassMatches;
 
 
