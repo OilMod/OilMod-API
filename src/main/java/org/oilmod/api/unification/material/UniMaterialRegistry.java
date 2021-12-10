@@ -94,9 +94,10 @@ public class UniMaterialRegistry extends RegistryBase<MaterialRequestBuilder<?>,
                 current.identifiers.addAll(request.getIdentifiers());
                 current.requesters.add(request.getRequester());
                 //System.out.printf("Request %s with", current.identifiers.iterator().next());
-                request.getSpecialisations().stream()/*.peek(id -> System.out.printf(" specialisation: %s", id))*/.map(id -> builders.computeIfAbsent(id, id2 -> new MaterialBuilder(request.getRequester()).identifier(id2))).forEach(current::specialisation);
+                request.getSpecialisations().stream()/*.peek(id -> System.out.printf(" specialisation: %s", id))*/.map(id -> builders.computeIfAbsent(id, id2 -> new MaterialBuilder(request.getRequester()).identifier(id2))).forEach(current::specialisation); //todo secondary requesters need be added
                 request.getGeneralisations().stream()/*.peek(id -> System.out.printf(" generalisation: %s", id))*/.map(id -> builders.computeIfAbsent(id, id2 -> new MaterialBuilder(request.getRequester()).identifier(id2))).forEach(current::generalisation);
-                request.getConstituents().stream()/*.peek(id -> System.out.printf(" constituents: %s", id))*/.map(id -> builders.computeIfAbsent(id, id2 -> new MaterialBuilder(request.getRequester()).identifier(id2))).forEach(current::constituent);
+                request.getVariantSuppliers().stream()/*.peek(id -> System.out.printf(" generalisation: %s", id))*/.map(id -> builders.computeIfAbsent(id, id2 -> new MaterialBuilder(request.getRequester()).identifier(id2))).forEach(current::variantSuppliers);
+                request.getConstituents().stream()/*.peek(id -> System.out.printf(" constituents: %s", id))*/     .map(id -> builders.computeIfAbsent(id, id2 -> new MaterialBuilder(request.getRequester()).identifier(id2))).forEach(current::constituent);
                 for (Consumer<? extends UniMaterial> f:request.getFutures()) {
                     current.lazyFuture(cast(f));
                 }

@@ -20,7 +20,7 @@ public class MaterialRequestBuilder<Type extends UniMaterial> implements IKeySet
     private final Set<String> specialisations = new ObjectOpenHashSet<>();
     private final Set<String> generalisations = new ObjectOpenHashSet<>();
     private final Set<String> identifiers = new ObjectOpenHashSet<>();
-    private final Set<String> variantSuppliers = new ObjectOpenHashSet<>(); //todo consider if this is needed
+    private final Set<String> variantSuppliers = new ObjectOpenHashSet<>();
     private final List<String> constituents = new ArrayList<>();
     private MaterialType type = MaterialType.Element;
     private final List<Consumer<? extends UniMaterial>> futures = new ObjectArrayList<>();
@@ -55,6 +55,13 @@ public class MaterialRequestBuilder<Type extends UniMaterial> implements IKeySet
         Collections.addAll(generalisations, mats);
         return this;
     }
+
+    public MaterialRequestBuilder<Type> variantSuppliers(String... mats) {
+        checkName(mats);
+        Collections.addAll(variantSuppliers, mats);
+        return this;
+    }
+
     
     public MaterialRequestBuilder<Composite> constituents(String... mats) {
         checkName(mats);
@@ -84,6 +91,10 @@ public class MaterialRequestBuilder<Type extends UniMaterial> implements IKeySet
 
     public Set<String> getSpecialisations() {
         return specialisations;
+    }
+
+    public Set<String> getVariantSuppliers() {
+        return variantSuppliers;
     }
 
     public Set<String> getIdentifiers() {

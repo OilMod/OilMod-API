@@ -20,9 +20,11 @@ public class MaterialBuilder {
     protected final  Set<String> identifiers = new HashSet<>();
     private final Set<UniMaterial> specialisations = new ObjectOpenHashSet<>();
     private final  Set<UniMaterial> generalisations = new ObjectOpenHashSet<>();
+    private final  Set<UniMaterial> variantSuppliers = new ObjectOpenHashSet<>();
     private final  List<UniMaterial> constituents = new ArrayList<>();
     private final Set<MaterialBuilder> specialisationBuilders = new ObjectOpenHashSet<>();
     private final  Set<MaterialBuilder> generalisationBuilders = new ObjectOpenHashSet<>();
+    private final  Set<MaterialBuilder> variantSuppliersBuilders = new ObjectOpenHashSet<>();
     private final  List<MaterialBuilder> constituentBuilders = new ArrayList<>();
     private UniMaterial build = null;
     private final Set<BiConsumer<MaterialBuilder, UniMaterial>> futures = new ObjectOpenHashSet<>();
@@ -34,9 +36,11 @@ public class MaterialBuilder {
         constituentBuilders.addAll(other.constituentBuilders);
         specialisationBuilders.addAll(other.specialisationBuilders);
         generalisationBuilders.addAll(other.generalisationBuilders);
+        variantSuppliersBuilders.addAll(other.variantSuppliersBuilders);
         constituents.addAll(other.constituents);
         specialisations.addAll(other.specialisations);
         generalisations.addAll(other.generalisations);
+        variantSuppliers.addAll(other.variantSuppliers);
         identifiers.addAll(other.identifiers);
         requesters.addAll(other.requesters);
         futures.addAll(other.futures);
@@ -115,6 +119,30 @@ public class MaterialBuilder {
         return this;
     }
 
+    public MaterialBuilder variantSuppliers(MaterialBuilder... mats) {
+        if (build == null) {
+            Collections.addAll(this.variantSuppliersBuilders, mats);
+        }
+        Arrays.stream(mats).forEach((r)-> r.futures.add((builder, mat) -> {
+            MaterialBuilder.this.variantSuppliers(mat);
+            variantSuppliersBuilders.remove(builder);
+        }));
+        return this;
+    }
+
+    public MaterialBuilder variantSuppliers(UniMaterial... mats) {
+        if (build != null) {
+            Arrays.stream(mats).forEach((r)->build.addVariantSupplier(r));
+        }
+        Collections.addAll(variantSuppliers, mats);
+        return this;
+    }
+
+    public MaterialBuilder variantSuppliers(IUniMaterial... mats) {
+        variantSuppliers(unwrap(mats));
+        return this;
+    }
+
     public MaterialBuilder constituent(MaterialBuilder... mats) {
         if (build == null) {
             Collections.addAll(this.constituentBuilders, mats);
@@ -143,6 +171,7 @@ public class MaterialBuilder {
         result = helper.registerMaterial(result);
         helper.addGeneralisations(result, generalisations.toArray(MATERIALS_EMPTY_ARRAY));
         helper.addSpecialisations(result, specialisations.toArray(MATERIALS_EMPTY_ARRAY));
+        helper.addSpecialisations(result, variantSuppliers.toArray(MATERIALS_EMPTY_ARRAY));
         build = result;
         futures.forEach(c -> c.accept(this, build));
         return result;

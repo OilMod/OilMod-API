@@ -41,6 +41,8 @@ public class OilMod {
     }
 
     static {
+        addEventCaller(UniMaterialRegistry.class, OilMod::onRegisterUnification);
+        addEventCaller(UniExpressibleRegistry.class, OilMod::onRegisterUnification2);
         addEventCaller(ItemRegistry.class, OilMod::onRegisterItems);
         addEventCaller(ItemFilterRegistry.class, OilMod::onRegisterItemFilter);
         addEventCaller(ItemImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
@@ -50,8 +52,6 @@ public class OilMod {
         addEventCaller(BlockImplementationProvider.Registry.class, OilMod::onRegisterImplementationProvider);
         addEventCaller(TBBType.Registry.class, OilMod::onRegisterTBBType);
         addEventCaller(ComplexStateTypeRegistry.class, OilMod::onRegisterComplexStateType);
-        addEventCaller(UniExpressibleRegistry.class, OilMod::onRegisterUnification2);
-        addEventCaller(UniMaterialRegistry.class, OilMod::onRegisterUnification);
     }
 
 
@@ -90,7 +90,7 @@ public class OilMod {
     }
 
     private void init() {
-        if (initialised) throw new IllegalStateException("Cannot initalise mod twice");
+        if (initialised) throw new IllegalStateException("Cannot initialise mod twice");
         initialising = true;
 
         //now register dependencies

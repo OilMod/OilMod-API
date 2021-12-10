@@ -2,12 +2,11 @@ package org.oilmod.api.unification;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.registry.KeySettableBase;
-import org.oilmod.api.unification.material.IUniMaterial;
+import org.oilmod.api.unification.item.UniItemBuilder;
 import org.oilmod.api.unification.material.UniMaterial;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.function.Function;
 
 public class UniRequest<Expressable extends IExpressable<Expression, Builder>, Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>> extends KeySettableBase {
 

@@ -64,6 +64,12 @@ public class MaterialHelper {
                 material.addGeneralisation(mat2);
             }
         }
+        protected void addVariantSupplier(UniMaterial material, UniMaterial... variantSuppliers) {
+            for (UniMaterial mat2:variantSuppliers) {
+                material.addVariantSupplier(mat2);
+            }
+        }
+
 
         protected UniMaterialWrapper createWrapper(UniMaterial material) {
             return new UniMaterialWrapper(material);

@@ -10,6 +10,8 @@ import org.oilmod.api.unification.material.UniMaterial;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static org.oilmod.util.LamdbaCastUtils.cast;
+
 public class UniExpressibleRegistry extends RegistryBase<UniRequest<?,?,?>, UniExpressibleRegistry, UniExpressibleRegistry.MPI, UniExpressibleRegistry.Helper<?>> {
 
     /**
@@ -25,7 +27,7 @@ public class UniExpressibleRegistry extends RegistryBase<UniRequest<?,?,?>, UniE
 
 
     public <Expressable extends IExpressable<Expression, Builder>, Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>>
-        void register(String id, Function<UniRequest<Expressable, Expression, Builder>, UniRequest<Expressable, Expression, Builder>> requestPopulator) {
+        void register(String id, Class<? extends Expressable> expressableClass, Class<? extends Expression> expressionClass, Function<UniRequest<Expressable, Expression, Builder>, UniRequest<Expressable, Expression, Builder>> requestPopulator) {
         register(id, () -> requestPopulator.apply(new UniRequest<>()));
     }
 
@@ -33,7 +35,7 @@ public class UniExpressibleRegistry extends RegistryBase<UniRequest<?,?,?>, UniE
      * Internal - should not be called by user code
      */
     public static abstract class Helper<Impl extends Helper<Impl>> extends RegistryHelperBase<UniRequest<?,?,?>, UniExpressibleRegistry, MPI, Helper<?>, Impl> {
-        private static Helper instance;
+        private static Helper<?> instance;
 
         @Override
         public void onReady() {
@@ -42,7 +44,7 @@ public class UniExpressibleRegistry extends RegistryBase<UniRequest<?,?,?>, UniE
         }
 
         public static <Impl extends Helper<Impl>> Impl getInstance() {
-            return (Impl)(Object)instance;
+            return cast(instance);
         }
 
         @Override
@@ -50,6 +52,10 @@ public class UniExpressibleRegistry extends RegistryBase<UniRequest<?,?,?>, UniE
             return new UniExpressibleRegistry(mod, this);
         }
 
+        @Override
+        protected void afterAllMods() {
+            super.afterAllMods();
+        }
     }
 
     public static class DefaultHelper extends Helper<DefaultHelper>{}

@@ -229,6 +229,7 @@ public abstract class UniMaterial implements IUniMaterial {
                 ", requesters=" + requesters.stream().map(OilMod::getInternalName).collect(Collectors.joining(", ", "(", ")")) +
                 ", specialisations=" + specialisations.stream().map(UniMaterial::getMainIdentifier).collect(Collectors.joining(", ", "(", ")")) +
                 ", generalisations=" + generalisations.stream().map(UniMaterial::getMainIdentifier).collect(Collectors.joining(", ", "(", ")")) +
+                ", variantSuppliers=" + variantSuppliers.stream().map(UniMaterial::getMainIdentifier).collect(Collectors.joining(", ", "(", ")")) +
                 '}';
     }
 }

@@ -38,17 +38,18 @@ public class UniMod extends OilMod {
         registry.register("electrum", b->b.generalisation("alloy").constituents("silver", "gold"), c->Standard.ELECTRUM=c);
 
 
+
         registry.register("plate", MaterialRequestBuilder::category, c->Standard.PLATE=c);
-        registry.register("plate_metal", b->b.generalisation("plate", "metal").category(), c->Standard.PLATE_METAL=c); //todo metal is not a generalisation but a variant supplier
+        registry.register("plate_metal", b->b.generalisation("plate").variantSuppliers("metal").category(), c->Standard.PLATE_METAL=c); //todo metal is not a generalisation but a variant supplier
 
         registry.register("stick", MaterialRequestBuilder::category, c->Standard.STICK=c);
-        registry.register("stick_metal", b->b.generalisation("stick", "metal").category(), c->Standard.STICK_METAL=c);
+        registry.register("stick_metal", b->b.generalisation("stick").variantSuppliers("metal").category(), c->Standard.STICK_METAL=c);
 
         registry.register("ingot", MaterialRequestBuilder::category, c->Standard.INGOT=c);
-        registry.register("ingot_metal", b->b.generalisation("ingot", "metal").category(), c->Standard.INGOT_METAL=c);
+        registry.register("ingot_metal", b->b.generalisation("ingot").variantSuppliers("metal").category(), c->Standard.INGOT_METAL=c);
 
         registry.register("ore", MaterialRequestBuilder::category, c->Standard.ORE=c);
-        registry.register("ore_metal", b->b.generalisation("ore", "metal").category(), c->Standard.ORE_METAL=c);
+        registry.register("ore_metal", b->b.generalisation("ore").variantSuppliers("metal").category(), c->Standard.ORE_METAL=c);
 
 
 
@@ -62,5 +63,8 @@ public class UniMod extends OilMod {
         registry.register("acacia", b->b.generalisation("species_tree").category(), c->Standard.ACACIA=c);
     }
 
-
+    @Override
+    protected void onRegisterUnification2(UniExpressibleRegistry registry) {
+      //registry.register("plate", uni->uni.entryPoint(Standard.PLATE).builder()  );
+    }
 }

@@ -36,7 +36,6 @@ public interface IUniMaterial {
         return isVariantSupplier(mat.getWrapped(), directOnly);
     }
     boolean isVariantSupplier(UniMaterial mat, boolean directOnly);
-
     default Iterable<? extends IUniMaterial> getVariantSuppliers() {
         return getVariantSuppliers(false);
     }
