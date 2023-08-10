@@ -87,9 +87,6 @@ public class MaterialHelper {
             return new Element(requesters, identifiers);
         }
 
-        protected OrganicComponent createOrganic(OilMod[] requesters, String... identifiers) {
-            return new OrganicComponent(requesters, identifiers);
-        }
         protected UniMaterial unwrap(IUniMaterial mat) {
             if (mat instanceof UniMaterial) {
                 return (UniMaterial) mat;

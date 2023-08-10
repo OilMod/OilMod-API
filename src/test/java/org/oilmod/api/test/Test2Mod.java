@@ -8,23 +8,23 @@ import org.oilmod.api.unification.UniExpressibleRegistry;
 import org.oilmod.api.unification.item.ItemExpressable;
 import org.oilmod.api.unification.item.UniItem;
 import org.oilmod.api.unification.item.UniItemBuilder;
-import org.oilmod.api.unification.material.Category;
 import org.oilmod.api.unification.material.MaterialRequestBuilder;
 import org.oilmod.api.unification.material.UniMaterial;
 import org.oilmod.api.unification.material.UniMaterialRegistry;
 import org.oilmod.api.unification.material.UniMaterialWrapper;
 
-public class TestMod extends OilMod {
+public class Test2Mod extends OilMod {
 
     @Override
     protected void onRegisterUnification(UniMaterialRegistry registry) {
         registry.register("intermediate", () -> new MaterialRequestBuilder().generalisation("metal").specialisation("alloy")); //todo this is supposed to be inserted between metal and alloy!
+        //add special insert method? no because this needs to work agnostic of what other mods are doing
 
         registry.register("a1", (b) -> b.generalisation("a2", "b1"));
         registry.register("a2", (b) -> b.specialisation("a3"), (c)->a2=c);
 
 
-        registry.register("b1", (b) -> b.generalisation("a2").category(), (c)->b1=c);
+        registry.register("b1", (b) -> b.generalisation("a2").element(), (c)->b1=c);
         registry.register("b2", (b) -> b.specialisation("b3"));
         registry.register("b3", (b) -> b.specialisation("a3"));
     }
@@ -37,7 +37,7 @@ public class TestMod extends OilMod {
         System.out.println("a2 was set to: " + a2);
     }
 
-    Category b1;
+    UniMaterial b1;
     UniMaterial a2;
 
     private static class TestUniItem extends UniItem{

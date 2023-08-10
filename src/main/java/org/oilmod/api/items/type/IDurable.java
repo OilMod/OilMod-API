@@ -34,7 +34,7 @@ public interface IDurable extends IVDAdapter {
     }
 
     default int getVanillaData(OilItemStack stack) {
-        int v = ((OilItem)stack.getItem()).getVanillaItem(stack).getProvidedItem().getMaxDurability();
+        int v = ((OilItem)stack.getItem()).getVanillaIcon(stack).getProvidedItem().getMaxDurability();
         return (int)(v*getDurabilityForDisplay(stack));
     }
 }

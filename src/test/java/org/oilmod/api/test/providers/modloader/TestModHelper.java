@@ -2,6 +2,7 @@ package org.oilmod.api.test.providers.modloader;
 
 import org.oilmod.api.OilMod;
 import org.oilmod.api.registry.RegistryBase;
+import org.oilmod.api.test.Test2Mod;
 import org.oilmod.api.test.TestMain;
 import org.oilmod.api.test.TestMod;
 import org.oilmod.api.unification.Standard;
@@ -32,6 +33,7 @@ public class TestModHelper extends OilMod.ModHelper<TestModHelper>{
         TestMain.ModMinecraft = createInstance(OilModMinecraft.class, getDefaultContext(),"minecraft", "Minecraft");
         TestMain.ModOilMod =  createInstance(OilModOilForge.class, getDefaultContext(),"oilmod", "OilMod");
         TestMain.ModTest =  createInstance(TestMod.class, getDefaultContext(),"test", "Debug Test Mod");
+        TestMain.ModTest2 =  createInstance(Test2Mod.class, getDefaultContext(),"test2", "Debug Test2 Mod");
         TestMain.ModUniOil  = Standard.mod; //to load class
     }
 

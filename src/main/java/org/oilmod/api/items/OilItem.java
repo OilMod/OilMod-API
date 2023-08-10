@@ -1,15 +1,12 @@
 package org.oilmod.api.items;
 
-import org.apache.commons.lang3.Validate;
 import org.oilmod.api.items.internal.ItemFactory;
 import org.oilmod.api.items.type.IItemGeneric;
 import org.oilmod.api.registry.KeySettableBase;
 import org.oilmod.api.rep.entity.EntityHumanRep;
-import org.oilmod.api.rep.item.ItemRep;
 import org.oilmod.api.rep.item.ItemStateRep;
 import org.oilmod.api.rep.itemstack.ItemStackRep;
 import org.oilmod.api.rep.providers.ItemProvider;
-import org.oilmod.api.util.OilKey;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +15,7 @@ import java.util.List;
  * This class is used to add new items to the game
  */
 public abstract class OilItem extends KeySettableBase implements IItemGeneric {
-    private ItemProvider vanillaItem;
+    private ItemProvider vanillaIcon;
     private String displayName;
     private Object nmsItem;
     private OilItemStackFactory[] creativeItems;
@@ -28,11 +25,11 @@ public abstract class OilItem extends KeySettableBase implements IItemGeneric {
 
 
     /**
-     * @param vanillaItem The Vanilla Material that is shown to the client
+     * @param vanillaIcon The Vanilla Material that is shown to the client
      * @param displayName displayed displayName of the item
      */
-    public OilItem(ItemProvider vanillaItem, String displayName) {
-        this.vanillaItem = vanillaItem;
+    public OilItem(ItemProvider vanillaIcon, String displayName) {
+        this.vanillaIcon = vanillaIcon;
         this.displayName = displayName;
     }
 
@@ -42,8 +39,8 @@ public abstract class OilItem extends KeySettableBase implements IItemGeneric {
      *
      * @return returns that material used to display this item on vanilla clients
      */
-    public ItemProvider getVanillaItem(OilItemStack itemStack) {
-        return vanillaItem; //todo utilise resolvers to find alternatives if not available
+    public ItemProvider getVanillaIcon(OilItemStack itemStack) {
+        return vanillaIcon; //todo utilise resolvers to find alternatives if not available
     }
 
     /**

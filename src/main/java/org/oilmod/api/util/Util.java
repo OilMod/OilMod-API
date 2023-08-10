@@ -5,6 +5,8 @@ import org.apache.commons.lang3.Validate;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -39,17 +41,22 @@ public class Util {
         }
     }
 
-    public static <T1, T2 extends T1> boolean hasCommon(Iterable<? extends T1> set1, Iterable<? extends T2> set2) {
+    public static <T> Iterable<T> over(Iterator<T> iterator) {
+        return () -> iterator;
+    }
+    public static <T> Iterable<T> over(Stream<T> stream) {
+        return stream::iterator;
+    }
+
+    public static <T1, T2 extends T1> boolean hasCommon(Stream<? extends T1> set1, Stream<? extends T2> set2) {
         return getFirstCommon(set1, set2) != null;
     }
 
-    public static <T1, T2 extends T1> T1 getFirstCommon(Iterable<? extends T1> set1, Iterable<? extends T2> set2) {
+    public static <T1, T2 extends T1> T1 getFirstCommon(Stream<? extends T1> set1, Stream<? extends T2> set2) {
         Set<T1> helperSet = new ObjectOpenHashSet<>();
         set1.forEach(helperSet::add);
-        for (T2 other:set2) {
-            if (helperSet.contains(other))return other;
-        }
-        return null;
+        Optional<? extends T1> op = set2.filter(helperSet::contains).findFirst();
+        return op.orElse(null);
     }
 
     public static void printTrace(String text) {

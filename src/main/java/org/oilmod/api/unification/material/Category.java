@@ -8,4 +8,8 @@ public class Category extends UniMaterial {
     }
 
 
+    @Override
+    public MaterialType getType() {
+        return MaterialType.Category;
+    }
 }

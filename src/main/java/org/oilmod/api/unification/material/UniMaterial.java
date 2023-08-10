@@ -61,12 +61,12 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     @Override
-    public Iterable<UniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf) {
+    public Stream<UniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf) {
         Stream<UniMaterial> result = directOnly?
                 generalisations.stream():
                 resolveRecursive(generalisations.stream(), mat2 -> mat2.generalisations.stream());
         if (includeSelf)result = Stream.concat(Stream.of(this), result);
-        return result::iterator;
+        return result;
     }
 
 
@@ -94,12 +94,12 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     @Override
-    public Iterable<UniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf) {
+    public Stream<UniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf) {
         Stream<UniMaterial> result = directOnly?
                 specialisations.stream():
                 resolveRecursive(specialisations.stream(), mat2 -> mat2.specialisations.stream());
         if (includeSelf)result = Stream.concat(Stream.of(this), result);
-        return result::iterator;
+        return result;
     }
 
 
@@ -124,10 +124,16 @@ public abstract class UniMaterial implements IUniMaterial {
     }
 
     @Override
-    public Iterable<UniMaterial> getVariantSuppliers(boolean directOnly) {
+    public Stream<UniMaterial> getVariantSuppliers(boolean directOnly) {
         return directOnly?
-                variantSuppliers :
-                () -> resolveRecursive(variantSuppliers.stream(), mat2 -> mat2.variantSuppliers.stream()).iterator();
+                variantSuppliers.stream() :
+                resolveRecursive(variantSuppliers.stream(), mat2 -> mat2.variantSuppliers.stream());
+    }
+
+
+    @Override
+    public Stream<UniMaterial> getVariants(boolean directOnly) {
+        return getVariantSuppliers(directOnly).flatMap(mat2 -> mat2.getSpecialisations(directOnly, true)).filter(mat -> mat.getType() != MaterialType.Category).distinct();
     }
 
     @Override
@@ -173,7 +179,7 @@ public abstract class UniMaterial implements IUniMaterial {
             sb.append(last.getMainIdentifier());
             sb.append(" -> ");
             boolean found = false;
-            for (UniMaterial toTest:last.getGeneralisations(true, false)) {
+            for (UniMaterial toTest:over(last.getGeneralisations(true, false))) {
                 if (generalised.isSpecialisation(toTest, false) || generalised == toTest) {
                     last = toTest;
                     found = true;
@@ -193,7 +199,7 @@ public abstract class UniMaterial implements IUniMaterial {
                 sb.append(last.getMainIdentifier());
                 sb.append(" -> ");
                 boolean found = false;
-                for (UniMaterial toTest:last.getSpecialisations(true, false)) {
+                for (UniMaterial toTest:over(last.getSpecialisations(true, false))) {
                     if (specialized.isGeneralisation(toTest, false) || specialized == toTest) {
                         last = toTest;
                         found = true;

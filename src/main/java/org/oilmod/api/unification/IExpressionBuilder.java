@@ -1,24 +1,21 @@
 package org.oilmod.api.unification;
 
-import org.oilmod.api.unification.material.UniMaterialWrapper;
+import org.oilmod.api.registry.DeferredObject;
+import org.oilmod.api.registry.RegistryBase;
+import org.oilmod.api.registry.DeferredRegister;
+import org.oilmod.api.unification.material.IUniMaterial;
 
-import java.util.concurrent.Future;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
-public interface IExpressionBuilder<Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>> extends Cloneable {
-    UniMaterialWrapper getMaterial();
-    Builder material(UniMaterialWrapper material);
-    Builder factory(Function<Builder, Expression> factory);
-    Builder clone();
+public interface IExpressionBuilder<Expression extends IExpression, Builder extends IExpressionBuilder<Expression, Builder>> {
 
 
-    void build();
-    void build(Consumer<Expression> future);
+    void subscribe(Consumer<DeferredObject<? extends Expression>> future);
 
+    Class<? extends RegistryBase<?, ?, ?, ?>> getRegistry();
     /**
      * only to be called internally. Should invoke all waiting consumers
      * @return
      */
-    Expression implement();
+    <TReg extends RegistryBase<? super Expression, TReg, ?, ?>> DeferredRegister<Expression, TReg>[] register(IUniMaterial type, IUniMaterial base, String id);
 }

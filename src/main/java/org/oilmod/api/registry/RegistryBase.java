@@ -86,11 +86,11 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
         if (!registered) {
             throw new IllegalStateException(String.format("%s was not successfully initialized", simpleName(getClass())));
         }
-        T entry = entrySupplier.get(); //todo make those lazy and subscribe DeferredObject
+        T entry = entrySupplier.get(); //todo make those lazy and subscribe DeferredObject / see blow
 
         //Check entry and avoid duplicates
         Validate.isTrue(!registeredSet.contains(entry), "Cannot register object twice");
-        Validate.isTrue(!mapEntry.containsKey(key.getKeyString()), "Cannot register same key twice. Key: " + key.toString());
+        Validate.isTrue(!mapEntry.containsKey(key.getKeyString()), "Cannot register same key twice. Key: " + key);
         getRegistryHelper()._preregister(key, cast(this), entry); //this can even be called if we are deferred
 
         //Apply key
@@ -103,7 +103,7 @@ public abstract class RegistryBase<Type, TReg extends RegistryBase<Type, TReg, M
         registeredSet.add(entry);
         mapEntry.put(key.getKeyString(), entry);
 
-        //register global
+        //register global  //todo make lazy here / see above
         if (isDeferred()) {
             deferredEntries.add(new DeferredRegistryEntry<>(key, entry));
         } else {

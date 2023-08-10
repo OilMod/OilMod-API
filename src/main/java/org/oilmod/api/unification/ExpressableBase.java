@@ -1,5 +1,6 @@
 package org.oilmod.api.unification;
 
+import org.oilmod.api.registry.DeferredRegister;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;

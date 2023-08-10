@@ -29,4 +29,10 @@ public class Composite extends UniMaterial {
                 ", constituents=" + constituents.stream().map(UniMaterial::getMainIdentifier).collect(Collectors.joining(", ", "(", ")")) +
                 '}';
     }
+
+
+    @Override
+    public MaterialType getType() {
+        return MaterialType.Composite;
+    }
 }

@@ -12,6 +12,7 @@ public class TestMain {
     public static OilMod ModOilMod;
     public static OilMod ModUniOil;
     public static OilMod ModTest;
+    public static OilMod ModTest2;
 
     public static void init() {
         MPILoader.init();
@@ -22,7 +23,9 @@ public class TestMain {
         init();
         TestModHelper.invokeRegister(ModUniOil, UniMaterialRegistry.class);
         TestModHelper.invokeRegister(ModTest, UniMaterialRegistry.class);
+        TestModHelper.invokeRegister(ModTest2, UniMaterialRegistry.class);
         TestModHelper.invokeRegister(ModUniOil, UniExpressibleRegistry.class);
         TestModHelper.invokeRegister(ModTest, UniExpressibleRegistry.class);
+        TestModHelper.invokeRegister(ModTest2, UniExpressibleRegistry.class);
     }
 }

@@ -3,6 +3,7 @@ package org.oilmod.api.unification.material;
 import org.oilmod.api.OilMod;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.util.stream.StreamSupport.stream;
 
@@ -38,21 +39,26 @@ public class UniMaterialWrapper implements IUniMaterial {
         return mat.isVariantSupplier(mat, directOnly);
     }
 
-    /*public Iterable<UniMaterialWrapper<?>> getSpecialisations(boolean directOnly) {
+    /*public Stream<UniMaterialWrapper<?>> getSpecialisations(boolean directOnly) {
         return () ->  stream(wrapped.getSpecialisations(directOnly).spliterator(), false).map(o -> o.getWrapper()).iterator();
     }*/
 
-    public Iterable<? extends UniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf) {
+    public Stream<? extends UniMaterial> getSpecialisations(boolean directOnly, boolean includeSelf) {
         return wrapped.getGeneralisations(directOnly, includeSelf);
     }
 
-    public Iterable<? extends UniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf) {
+    public Stream<? extends UniMaterial> getGeneralisations(boolean directOnly, boolean includeSelf) {
         return wrapped.getGeneralisations(directOnly, includeSelf);
     }
 
     @Override
-    public Iterable<? extends IUniMaterial> getVariantSuppliers(boolean directOnly) {
+    public Stream<? extends IUniMaterial> getVariantSuppliers(boolean directOnly) {
         return wrapped.getVariantSuppliers(directOnly);
+    }
+
+    @Override
+    public Stream<? extends IUniMaterial> getVariants(boolean directOnly) {
+        return wrapped.getVariants(directOnly);
     }
 
     @Override
@@ -68,6 +74,11 @@ public class UniMaterialWrapper implements IUniMaterial {
     @Override
     public UniMaterialWrapper getWrapper() {
         return this;
+    }
+
+    @Override
+    public MaterialType getType() {
+        return wrapped.getType();
     }
 
     @Override

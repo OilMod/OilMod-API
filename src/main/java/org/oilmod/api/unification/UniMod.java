@@ -1,23 +1,48 @@
 package org.oilmod.api.unification;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.oilmod.api.OilMod;
 import org.oilmod.api.blocks.BlockRegistry;
 import org.oilmod.api.items.ItemRegistry;
-import org.oilmod.api.unification.material.Category;
-import org.oilmod.api.unification.material.MaterialBuilder;
+import org.oilmod.api.registry.DeferredRegister;
+import org.oilmod.api.registry.RegistryBase;
+import org.oilmod.api.registry.RegistryHelperBase;
+import org.oilmod.api.registry.RegistryMPIBase;
+import org.oilmod.api.rep.providers.minecraft.MinecraftItem;
+import org.oilmod.api.unification.item.ItemExpressable;
+import org.oilmod.api.unification.item.UniItem;
+import org.oilmod.api.unification.item.UniItemBuilder;
 import org.oilmod.api.unification.material.MaterialRequestBuilder;
 import org.oilmod.api.unification.material.UniMaterialRegistry;
 
+import java.util.Map;
+import java.util.Set;
+
+import static org.oilmod.util.LamdbaCastUtils.cast;
+
 public class UniMod extends OilMod {
+    private final Map<Class<? extends RegistryBase<?,?,?,?>>, Set<DeferredRegister<?,?>>> eventHandler = new Object2ObjectOpenHashMap<>();
+
+    protected void addDeferredRegister(DeferredRegister<?,?> defReg) {
+        eventHandler.computeIfAbsent(defReg.registry, (k)->new ObjectOpenHashSet<>()).add(defReg);
+    }
+
+    private <Type, TReg extends RegistryBase<Type, TReg, ?, ?>> void handleRegistry(TReg registry) {
+        Set<DeferredRegister<Type, TReg>> defRegs = cast(eventHandler.get(registry.getClass()));
+        if (defRegs != null) {
+            defRegs.forEach((dr)->dr.register(registry));
+        }
+    }
 
     @Override
     protected void onRegisterBlocks(BlockRegistry registry) {
-        super.onRegisterBlocks(registry);
+        handleRegistry(registry);
     }
 
     @Override
     protected void onRegisterItems(ItemRegistry registry) {
-        super.onRegisterItems(registry);
+        handleRegistry(registry);
     }
     
     //(registry\.register\(\"(\w+)\"\, b\-\>b[ \",\.\(\)\w]*\.(\w+)\([ \",\.\(\)\w]*\))\)\;
@@ -43,7 +68,7 @@ public class UniMod extends OilMod {
         registry.register("plate_metal", b->b.generalisation("plate").variantSuppliers("metal").category(), c->Standard.PLATE_METAL=c); //todo metal is not a generalisation but a variant supplier
 
         registry.register("stick", MaterialRequestBuilder::category, c->Standard.STICK=c);
-        registry.register("stick_metal", b->b.generalisation("stick").variantSuppliers("metal").category(), c->Standard.STICK_METAL=c);
+        registry.register("stick_metal", b->b.generalisation("stick").variantSuppliers("metal").category(), c->Standard.STICK_METAL=c); //todo this is a common scheme add shorthand
 
         registry.register("ingot", MaterialRequestBuilder::category, c->Standard.INGOT=c);
         registry.register("ingot_metal", b->b.generalisation("ingot").variantSuppliers("metal").category(), c->Standard.INGOT_METAL=c);
@@ -65,6 +90,8 @@ public class UniMod extends OilMod {
 
     @Override
     protected void onRegisterUnification2(UniExpressibleRegistry registry) {
-      //registry.register("plate", uni->uni.entryPoint(Standard.PLATE).builder()  );
+        registry.register("item_plate", ItemExpressable.class, UniItem.class, (b)->b.builder(new UniItemBuilder(MinecraftItem.IRON_INGOT)).entryPoint(()->Standard.PLATE_METAL));
+
+        //registry.register("plate", uni->uni.entryPoint(Standard.PLATE).builder()  );
     }
 }

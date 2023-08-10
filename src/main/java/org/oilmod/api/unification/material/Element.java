@@ -6,4 +6,10 @@ public class Element extends UniMaterial {
     protected Element(OilMod[] requesters, String... identifiers) {
         super(requesters, identifiers);
     }
+
+
+    @Override
+    public MaterialType getType() {
+        return MaterialType.Element;
+    }
 }

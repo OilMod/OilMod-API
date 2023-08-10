@@ -1,72 +1,39 @@
 package org.oilmod.api.unification;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import org.oilmod.api.registry.DeferredObject;
+import org.oilmod.api.registry.DeferredRegister;
+import org.oilmod.api.registry.RegistryBase;
+import org.oilmod.api.unification.material.IUniMaterial;
 import org.oilmod.api.unification.material.UniMaterialWrapper;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
+
+import static org.oilmod.util.LamdbaCastUtils.cast;
 
 public abstract class ExpressionBuilderBase<Expression extends IExpression, Builder extends ExpressionBuilderBase<Expression, Builder>> implements IExpressionBuilder<Expression, Builder> {
     private UniMaterialWrapper material;
-    private final Set<Consumer<Expression>> futures = new HashSet<>();
-    private Function<Builder, Expression> factory = ExpressionBuilderBase::createExpression;
+    private Consumer<DeferredObject<? extends Expression>> futures = (__) -> {};
 
-    protected ExpressionBuilderBase() {
-        builder().blackhole();
-    }
-    final void blackhole() {}
 
     @Override
-    public UniMaterialWrapper getMaterial() {
-        return material;
+    public void subscribe(Consumer<DeferredObject<? extends Expression>> future) {
+        futures =  futures.andThen(future);
     }
 
     @Override
-    public Builder material(UniMaterialWrapper material) {
-        this.material = material;
-        return builder();
+    public <TReg extends RegistryBase<? super Expression, TReg, ?, ?>> DeferredRegister<Expression, TReg>[] register(IUniMaterial type, IUniMaterial base, String id) {
+        return new DeferredRegister[] {
+                new DeferredRegister<>(Standard.mod.createKey(id), cast(getRegistry()), () -> implement(type, base), futures)
+        };
     }
 
-    @Override
-    public Builder factory(Function<Builder, Expression> factory) {
-        this.factory = factory;
-        return builder();
-    }
 
-    @Override
-    public Builder clone() {
-        try {
-            //noinspection unchecked
-            return (Builder) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    @Override
-    public void build() {
-        register();
-    }
-
-    @Override
-    public void build(Consumer<Expression> future) {
-        futures.add(future);
-        build();
-    }
-
-    @Override
-    public Expression implement() {
-        Expression result = factory.apply(builder());
-        futures.forEach(f -> f.accept(result));
-        return result;
-    }
-
-    protected abstract void register();
-    protected abstract Expression createExpression();
+    protected abstract Expression implement(IUniMaterial type, IUniMaterial base);
     protected Builder builder() {
         //noinspection unchecked
-        return (Builder) this;
+        return cast(this);
     }
 
 }
